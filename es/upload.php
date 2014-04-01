@@ -607,18 +607,15 @@ Los campos que poseen * son obligatorios.
 			<div class="form-group"> <!-- Fecha de Nacimiento -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankbirthdate">Fecha de Nacimiento: * </label> 
 				<div class="col-sm-10">
-					<!-- <input class="form-control" type='date' name='blankbirthdate' id='blankbirthdate' autocomplete="off" placeholder="aaaa-mm-dd" onblur="checkDDMMYYYY(this.id)" required/> -->
-					<!-- <input class="form-control" type='date' name='blankbirthdate' id='blankbirthdate' autocomplete="off" placeholder="aaaa-mm-dd" onblur="checkYYYY-MM-DD(this.id)" required/> -->
-					<input class="form-control" type='date' name='blankbirthdate' id='blankbirthdate' autocomplete="off" placeholder="aaaa-mm-dd" onblur="jsIsAdult(this.id, 18)" required/>
+					<input class="form-control" type='date' name='blankbirthdate' id='blankbirthdate' autocomplete="off" placeholder="aaaa-mm-dd" onChange="jsIsAdult(this.id, 18)" required/>
 				</div>
 			</div>		
 
 			<div class="form-group"> <!-- DNI/NIE -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanknie">DNI/NIE: * </label>
 				<div class="col-sm-10">
-					<!-- <input class="form-control" type='text' name='blanknie' maxlength="9" placeholder="[8 digs.]+[LETRA] ó [LETRA]+[7 digs.]+[LETRA]" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE_ES();" required/> -->
-					<input class="form-control" type='text' name='blanknie' maxlength="9" placeholder="[8 digs.]+[LETRA] ó [LETRA]+[7 digs.]+[LETRA]" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE();" required/>
-					<!-- <input class="form-control" type='text' name='blanknie' maxlength="9" placeholder="[8 digs.]+[LETRA] ó [LETRA]+[7 digs.]+[LETRA]" onblur="jsCheckDNI_NIE();" required/> -->
+					<!-- <input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="[8 digs.]+[LETRA] ó [LETRA]+[7 digs.]+[LETRA]" onkeyup="this.value=this.value.toUpperCase();" onChange="jsCheckDNI_NIE(this.id);" required/> -->
+					<input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="[8 digs.]+[LETRA] ó [LETRA]+[7 digs.]+[LETRA]" onChange="jsCheckDNI_NIE(this.id);" required/>
 				</div>
 			</div>
 
@@ -758,7 +755,8 @@ Los campos que poseen * son obligatorios.
 						<option value="BTP">BTP</option>
 					</select>				
 				<!-- <input class="form-control form-inline" type="date" name="blankdrivingdate" placeholder="aaaa-mm-dd" > -->
-				<input class='form-control form-inline' type='date' name='blankdrivingdate' id='blankdrivingdate' placeholder='aaaa-mm-dd' onblur="jsIsPreviousDate(this.id)">
+				<!-- <input class='form-control form-inline' type='date' name='blankdrivingdate' id='blankdrivingdate' placeholder='aaaa-mm-dd' onblur="jsIsPreviousDate(this.id)"> -->
+				<input class='form-control form-inline' type='date' name='blankdrivingdate' id='blankdrivingdate' placeholder='aaaa-mm-dd' onChange="jsIsPreviousDate(this.id)">
 				</div>				
 			</div>
 			

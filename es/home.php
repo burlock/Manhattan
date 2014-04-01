@@ -239,7 +239,7 @@
 							}
 							//Conditional block for any other profile (which in fact is only 'Candidato')
 							else{
-								echo "<h1 class='page-header'>Introduce tu CV <br><small>" . $userRow['login'] . "</small></h1>";
+								echo "<h1 class='page-header'>Introduce tu CV... <small>" . $userRow['login'] . "</small></h1>";
 								include 'upload.php';
 							}
 							//if($userRow['profile'] != 'Candidato'){
