@@ -7,12 +7,10 @@
 	<meta name="description" content="">
 	<meta name="author" content="David Alfonso Ginés Prieto, Miguel Hita Vicente y Miguel Ángel Melón Pérez">
 	
-	<title>Password management</title>
+	<title>Gestión de contraseña</title>
 
 	<!-- Custom styles for this template -->
 	<link href="../common/css/design.css" rel="stylesheet">
-	<!-- <link href="../common/css/styles.css" rel="stylesheet">
-	<link href="../common/css/docs.css" rel="stylesheet"> -->
 
 	<!-- Using the same favicon from perspectiva-alemania.com site -->
 	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
@@ -29,8 +27,8 @@
 
 		<?php 
 		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
-		//Part of the code read when user is forced to change his/her password	
 
+		//Part of the code read when user is forced to change his/her password	
 		if($_POST['confirmNewPassword']){
 			if(!checkPassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $keyError)){
 				?>
@@ -51,7 +49,7 @@
 					<div class="top-alert-container">
 						<div class="alert alert-danger alert-error top-alert fade in">
 							<a href="#" class="close" data-dismiss="alert">&times;</a>
-							<strong>Error!</strong> New password must different to previous one.
+							<strong>Error!</strong> La nueva contraseña debe ser distinta a la anterior.
 						</div>
 					</div>
 
@@ -63,7 +61,7 @@
 					<div class="top-alert-container">
 						<div class="alert alert-danger alert-error top-alert fade in">
 							<a href="#" class="close" data-dismiss="alert">&times;</a>
-							<strong>Error!</strong> There was a problem updating your password.
+							<strong>Error!</strong> No fue posible actualizar su contraseña.
 						</div>
 					</div>
 
@@ -75,7 +73,7 @@
 						<div class="top-alert-container">
 							<div class="alert alert-danger alert-error top-alert fade in">
 								<a href="#" class="close" data-dismiss="alert">&times;</a>
-								<strong>Error!</strong> There was a problem updating your last connection date.
+								<strong>Error!</strong> No se pudo actualizar la fecha de última conexión.
 							</div>
 						</div>								
 						<?php $wannaGoTo ='index.html'; 
@@ -90,7 +88,7 @@
 						<div class="top-alert-container">
 							<div class="alert alert-success top-alert fade in">
 								<a href="#" class="close" data-dismiss="alert">&times;</a>
-								<strong>Éxito!</strong> Password updated.
+								<strong>Éxito!</strong> Contraseña actualizada.
 							</div>
 						</div>					
 	
@@ -114,7 +112,7 @@
 					<div class="top-alert-container">
 						<div class="alert alert-danger alert-error top-alert fade in">
 							<a href="#" class="close" data-dismiss="alert">&times;</a>
-							<strong>Error!</strong> User not found.
+							<strong>Error!</strong> Usuario no encontrado.
 						</div>
 					</div>
 
@@ -127,7 +125,7 @@
 					<div class="top-alert-container">
 						<div class="alert alert-danger alert-error top-alert fade in">
 							<a href="#" class="close" data-dismiss="alert">&times;</a>
-							<strong>Error!</strong> Wrong password.
+							<strong>Error!</strong> Contraseña incorrecta.
 						</div>
 					</div>						
 					<?php 	$wannaGoTo ='index.html'; $wannaExit = true;
@@ -137,7 +135,7 @@
 					<div class="top-alert-container">
 						<div class="alert alert-danger alert-error top-alert fade in">
 							<a href="#" class="close" data-dismiss="alert">&times;</a>
-							<strong>Error!</strong> Wrong password.
+							<strong>Error!</strong> Contraseña incorrecta.
 						</div>
 					</div>						
 					<?php 	$wannaGoTo ='index.html'; $wannaExit = true;
@@ -148,7 +146,7 @@
 					<div class="top-alert-container">
 						<div class="alert alert-warning alert-error top-alert fade in">
 							<a href="#" class="close" data-dismiss="alert">&times;</a>
-							<strong>Opppsss!</strong> Profile is not active.
+							<strong>Opppsss!</strong> Perfil no activo.
 						</div>
 					</div>						
 					<?php $wannaGoTo ='index.html';
@@ -159,7 +157,7 @@
 					<div class="top-alert-container">
 						<div class="alert alert-warning alert-error top-alert fade in">
 							<a href="#" class="close" data-dismiss="alert">&times;</a>
-							<strong>Opppsss!</strong> User account is not active.
+							<strong>Opppsss!</strong> Cuenta de usuario no activa.
 						</div>
 					</div>						
 					<?php $wannaGoTo ='index.html'; 
@@ -182,27 +180,27 @@
 									<div class='modal-content panel-warning'>
 										<div class='modal-header panel-heading'>
 											<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-											<h4 class='modal-title'>You must change your password before continuing</h4>
+											<h4 class='modal-title'>Debe cambiar la contraseña antes de continuar</h4>
 										</div>
 										<div class='well encapsulated'>
 											<?php include $_SERVER['DOCUMENT_ROOT'] . '/common/passwdRestrictionsES.txt' ?>
 										</div>
 										<div class='modal-body encapsulated'>
 											<div class='form-group'>
-												<label for='newPassword' class='control-label'>New password</label>
+												<label for='newPassword' class='control-label'>Nueva contraseña</label>
 												<div class='center-block'>
 													<input type='password' class='form-control' name='newPassword' id='newPassword' placeholder='' required data-toggle='tooltip' title='Enter new password' autocapitalize='off'>
 												</div>
 											</div>
 											<div class='form-group'>
-												<label for='confirmNewPassword' class='control-label'>Confirm password</label>
+												<label for='confirmNewPassword' class='control-label'>Repita contraseña</label>
 												<div class='center-block'>
 													<input type='password' class='form-control' name='confirmNewPassword' id='confirmNewPassword' placeholder='' required data-toggle='tooltip' title='Confirm password' autocapitalize='off'>
 												</div>
 											</div>
 										</div>
 										<div class='modal-footer'>
-											<button type='submit' class='btn btn-primary'>Change</button>
+											<button type='submit' class='btn btn-primary'>Cambiar</button>
 										</div>
 									</div>
 								</form><!-- id='changePasswordForm'  -->
@@ -218,7 +216,7 @@
 								<div class="top-alert-container">
 									<div class="alert alert-danger alert-error top-alert fade in">
 										<a href="#" class="close" data-dismiss="alert">&times;</a>
-										<strong>Error!</strong> Could not update last connection date.
+										<strong>Error!</strong> No se pudo actualizar la fecha de última conexión.
 									</div>
 								</div>								
 								<?php $wannaGoTo ='index.html'; 
@@ -245,7 +243,7 @@
 				<div class="top-alert-container">
 					<div class="alert alert-warning alert-error top-alert fade in">
 						<a href="#" class="close" data-dismiss="alert">&times;</a>
-						<strong>Opppsss!</strong> Missed field.
+						<strong>Opppsss!</strong> Ha olvidado rellenar alguno de los campos.
 					</div>
 				</div>				
 				<?php $wannaGoTo ='index.html'; 
