@@ -421,6 +421,7 @@ function confirmFormSendES(form){
 	//There is no else for this 'if', If false, will return an alert with all the errors submitted by user
 }
 */
+/*
 function confirmFormSendES(form){
 	if(jsCheckFormES(form)){
 		if(confirm('¿Confirma que ha revisado todos sus datos y que desea enviar el formulario?')){
@@ -432,6 +433,7 @@ function confirmFormSendES(form){
 	}
 	//There is no else for this 'if', If false, will return an alert with all the errors submitted by user
 }
+*/
 function confirmFormSendES(form){
 	if(jsCheckFormES(form)){
 		if(confirm('¿Confirma que ha revisado todos sus datos y que desea enviar el formulario?')){
