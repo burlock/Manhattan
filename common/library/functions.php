@@ -670,6 +670,7 @@ function checkFullAddress($inName, $inNumber, &$outAddrName, &$outAddrNumber, &$
  * Exit (outSurname): Returned string for Surname
  * Exit (checkError): String with text that includes a description of the error
  */
+/*
 function checkFullNameES($inName, $inSurname, &$outName, &$outSurname, &$checkError){
 	$connection = connectDB();
 	
@@ -683,13 +684,15 @@ function checkFullNameES($inName, $inSurname, &$outName, &$outSurname, &$checkEr
 	}
 	return true;
 }
+*/
 function checkFullName($inName, $inSurname, &$outName, &$outSurname, &$checkError){
 	$connection = connectDB();
 	
 	$outName = trim(htmlentities(mysqli_real_escape_string($connection, $inName), ENT_QUOTES, 'UTF-8'));
 	$outSurname = trim(htmlentities(mysqli_real_escape_string($connection, $inSurname), ENT_QUOTES, 'UTF-8'));
 	if((strlen($outName) < 3) || (strlen($outSurname) < 3)){
-		$checkError = "Error: Name and Surname must be at least 3 characters each.";
+		//$checkError = "Error: Name and Surname must be at least 3 characters each.";
+		$checkError = "Nombre y Apellidos deben tener al menos 3 caracteres cada uno.";
 		return false;
 	}
 	return true;

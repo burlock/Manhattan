@@ -431,42 +431,43 @@
 								<div class="modal-body">
 
 									<div class="form-group"> <!-- Nombre -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVname">Nombre: </label> 
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVname">Nombre: * </label> 
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVname' value="<?php echo html_entity_decode($editedCVRow['name']) ?>" autocomplete="off" />
 										</div>
 									</div>
 
 									<div class="form-group"> <!-- Apellidos -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsurname">Apellidos: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsurname">Apellidos: * </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVsurname' value="<?php echo html_entity_decode($editedCVRow['surname']) ?>" autocomplete="off"/>
 										</div>
 									</div>
 
 									<div class="form-group"> <!-- Fecha de Nacimiento -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVbirthdate">Fecha de nacimiento: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVbirthdate">Fecha de nacimiento: * </label>
 										<div class="col-sm-10">
-											<input class="form-control" type='date' name='eCCVbirthdate' value="<?php echo html_entity_decode($editedCVRow['birthdate']) ?>"  />
+											<!-- <input class="form-control" type='date' name='eCCVbirthdate' id='eCCVbirthdate' value="<?php echo html_entity_decode($editedCVRow['birthdate']) ?>" onChange="jsIsAdult_B(this.id, 18)" required> -->
+											<input class="form-control" type='date' name='eCCVbirthdate' id='eCCVbirthdate' value="<?php echo html_entity_decode($editedCVRow['birthdate']) ?>" onChange="jsIsAdult(this.id, 18)" required>
 										</div>
 									</div>
 
 									<div class="form-group">  <!-- NIE -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnie">DNI/NIE: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnie">DNI/NIE: * </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVnie' value="<?php echo html_entity_decode($editedCVRow['nie']) ?>" onkeyup='this.value=this.value.toUpperCase();' readonly/>
 										</div>
 									</div>
 
 									<div class="form-group">  <!-- Nacionalidad -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities">Nacionalidad: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities">Nacionalidad: * </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVnationalities' value="<?php echo html_entity_decode($editedCVRow['nationalities']) ?>" data-role='tagsinput' />
 										</div>
 									</div>
 
 									<div class="form-group"> <!-- Sexo -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsex">Sexo: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsex">Sexo: * </label>
 										<div class="col-sm-10">
 											<div class='radio-inline'>
 												<?php
@@ -562,7 +563,7 @@
 									</div>
 
 									<div class="form-group" >  <!-- Teléfono Móvil -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmobile">Teléfono Móvil: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmobile">Teléfono Móvil: * </label>										
 										<div class="col-sm-10">
 											<!-- <input class="form-control" type='text' name='eCCVmobile' maxlength='9' value="< ?php echo html_entity_decode($editedCVRow['mobile']) ?>"> -->
 											<input class="form-control" type='text' name='eCCVmobile' maxlength='9' value="<?php echo $editedCVRow['mobile'] ?>" onkeypress="return checkOnlyNumbers(event)">										
@@ -578,7 +579,7 @@
 									</div>
 
 									<div class="form-group" >  <!-- Correo Electrónico -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmail">Correo Electrónico: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmail">Correo Electrónico: * </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='mail' name='eCCVmail' value="<?php echo html_entity_decode($editedCVRow['mail']) ?>">										
 										</div>
@@ -588,7 +589,7 @@
 										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVdrivingType">Carnet de Conducir: </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVdrivingType' value="<?php echo html_entity_decode($editedCVRow['drivingType']) ?>">
-											<input class='form-control' type='date' name='eCCVdrivingDate' value="<?php echo html_entity_decode($editedCVRow['drivingDate']) ?>">
+											<input class='form-control' type='date' name='eCCVdrivingDate' placeholder='aaaa-mm-dd' onChange="jsIsPreviousDate(this.id)" value="<?php echo html_entity_decode($editedCVRow['drivingDate']) ?>">
 										</div>
 									</div>
 
@@ -624,7 +625,7 @@
 									</div>
 
 									<div class="form-group" >  <!-- Idiomas -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVlanguagesMerged">Idiomas: </label>			
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVlanguagesMerged">Idiomas: * </label>			
 										<?php 
 											$mergedLanguages = explode('|',$editedCVRow['language']);
 											$mergedLangLevels = explode('|',$editedCVRow['langLevel']);
@@ -636,14 +637,14 @@
 									</div>
 
 									<div class="form-group" >  <!-- Educación -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducation">Educación: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducation">Educación: * </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVeducation' value="<?php echo html_entity_decode($editedCVRow['education']) ?>" data-role='tagsinput'>										
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Profesión -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcareer">Profesiones desempeñadas: </label>	<!-- Se puede omitir -->									
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcareer">Profesiones desempeñadas: * </label>	<!-- Se puede omitir -->									
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVcareer' value='<?php echo html_entity_decode($editedCVRow['career']) ?>' data-role='tagsinput'>										
 										</div>

@@ -709,7 +709,7 @@
 								</div>
 								
 								<div class="container-fluid center-block">
-									<h4>Nueva Educación</h4>
+									<h4>Nueva Profesión</h4>
 									<form class="form-inline" role="form" name="newCareer" action="admGenOptions.php" method="post">
 										<div class="form-group">
 											<label class="sr-only" for="newCareerenName">Nombre Inglés</label>

@@ -215,6 +215,7 @@
 				if($key == prof){
 					//str_educ es 'career' en la BD (en addProf)
 					$str_prof = implode('|', $entry);
+					//$str_prof = trim(htmlentities($str_prof));
 					//echo 'Profesion es: '.$str_educ;
 				}
 				if($key == empr){
@@ -294,7 +295,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Your birthdate indicates you are not an adult.');
+				alert('Error: La fecha indica que no es mayor de edad.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -303,7 +304,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: DNI/NIE is not properly provided.');
+				alert('Error: Revise la fecha de nacimiento. Formato incorrecto.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -312,7 +313,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: No nationality provided.');
+				alert('Error: No se ha indicado Nacionalidad.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -326,7 +327,7 @@
 				unset($_POST['push_button']);
 				?>
 				<script type="text/javascript">
-					alert('Error: Missing address type, name or number.');
+					alert('Error: No se ha indicado tipo, nombre o número en la dirección.');
 					window.location.href='home.php';
 				</script>
 				<?php
@@ -345,7 +346,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Wrong Mobile number provided.');
+				alert('Error: Revise el número de móvil. Formato incorrecto.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -356,7 +357,7 @@
 				unset($_POST['push_button']);
 				?>
 				<script type="text/javascript">
-					alert('Error: Wrong phone number provided.');
+					alert('Error: Revise el número de teléfono. Formato incorrecto.');
 					window.location.href='home.php';
 				</script>
 				<?php 
@@ -366,7 +367,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Wrong mail provided.');
+				alert('Error: Revise el correo electrónico. Formato incorrecto.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -376,7 +377,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: At least 1 language and 1 level are needed.');
+				alert('Error: No se ha indicado idioma y nivel. Indique al menos 1 de cada.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -485,7 +486,7 @@
 				unset($_POST['push_button']);
 				?>
 				<script type="text/javascript">
-					alert('There was a problem saving your CV. Please contact us to solve it.');
+					alert('Hubo un problema guardando su CV. Contacte con el administrador.');
 					window.location.href='home.php';
 				</script>
 				<?php 
@@ -555,7 +556,7 @@
 						#echo "¡Posible ataque de carga de archivos!\n";
 						?>
 						<script type="text/javascript">
-							alert('Problem uploading profile photo (code PUPLOAD0). Anyway, CV was successfully inserted.');
+							alert('Ha habido un problema al guardar su foto (code PUPLOAD0). No obstante su CV ha sido guardado con éxito.');
 							//window.location.href='home.php';
 							window.location.href='endsession.php';
 						</script>
@@ -585,14 +586,16 @@
 
 Los campos que poseen * son obligatorios.
 
-<form id="uploadForm" class="form-horizontal" name="formu" action=""  method="post" enctype="multipart/form-data">
+<!-- <form id="uploadForm" class="form-horizontal" name="formu" action="" method="post" enctype="multipart/form-data"> -->
+<!-- <form id="uploadForm" class="form-horizontal" name="formu" action="" onSubmit="confirmFormSendES(this.form)" method="post" enctype="multipart/form-data"> -->
+<form id="uploadForm" class="form-horizontal" name="formu" action="" method="post" enctype="multipart/form-data">
 	<div class="panel panel-default">
 		<div class="panel-body">
 			<div class="form-group"> <!-- Nombre -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankname">Nombre: * </label> 
 				<div class="col-sm-10">
 					<!-- <input class="form-control" type='text' name='blankname' autocomplete="off" required/> -->
-					<input class="form-control" type='text' name='blankname' placeholder="Min. 3 caracteres" required/>
+					<input class="form-control" type='text' name='blankname' maxlength='50' placeholder="Min. 3 caracteres" required/>
 				</div>
 			</div>
 
@@ -600,25 +603,25 @@ Los campos que poseen * son obligatorios.
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanksurname">Apellidos: * </label> 
 				<div class="col-sm-10">
 					<!-- <input class="form-control" type='text' name='blanksurname' autocomplete="off" required/> -->
-					<input class="form-control" type='text' name='blanksurname' placeholder="Min. 3 caracteres" required/>
+					<input class="form-control" type='text' name='blanksurname' maxlength='50' placeholder="Min. 3 caracteres" required/>
 				</div>
 			</div>
 
 			<div class="form-group"> <!-- Fecha de Nacimiento -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankbirthdate">Fecha de Nacimiento: * </label> 
 				<div class="col-sm-10">
-					<!-- <input class="form-control" type='date' name='blankbirthdate' id='blankbirthdate' autocomplete="off" placeholder="aaaa-mm-dd" onblur="checkDDMMYYYY(this.id)" required/> -->
-					<!-- <input class="form-control" type='date' name='blankbirthdate' id='blankbirthdate' autocomplete="off" placeholder="aaaa-mm-dd" onblur="checkYYYY-MM-DD(this.id)" required/> -->
-					<input class="form-control" type='date' name='blankbirthdate' id='blankbirthdate' autocomplete="off" placeholder="aaaa-mm-dd" onblur="jsIsAdult(this.id, 18)" required/>
+					<!-- <input class="form-control" type='date' name='blankbirthdate' id='blankbirthdate' autocomplete="off" placeholder="aaaa-mm-dd" onChange="jsIsAdult(this.id, 18)" required/> -->
+					<input class="form-control" type='date' name='blankbirthdate' id='blankbirthdate' autocomplete="off" placeholder="aaaa-mm-dd" required/>
 				</div>
 			</div>		
 
 			<div class="form-group"> <!-- DNI/NIE -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanknie">DNI/NIE: * </label>
 				<div class="col-sm-10">
-					<!-- <input class="form-control" type='text' name='blanknie' maxlength="9" placeholder="[8 digs.]+[LETRA] ó [LETRA]+[7 digs.]+[LETRA]" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE_ES();" required/> -->
-					<input class="form-control" type='text' name='blanknie' maxlength="9" placeholder="[8 digs.]+[LETRA] ó [LETRA]+[7 digs.]+[LETRA]" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE();" required/>
-					<!-- <input class="form-control" type='text' name='blanknie' maxlength="9" placeholder="[8 digs.]+[LETRA] ó [LETRA]+[7 digs.]+[LETRA]" onblur="jsCheckDNI_NIE();" required/> -->
+					<!-- <input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="[8 digs.]+[LETRA] ó [LETRA]+[7 digs.]+[LETRA]" onkeyup="this.value=this.value.toUpperCase();" onChange="jsCheckDNI_NIE(this.id);" required/> -->
+					<!-- <input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="[8 digs.]+[LETRA] ó [LETRA]+[7 digs.]+[LETRA]" onChange="jsCheckDNI_NIE(this.id);" required/> -->
+					<!-- <input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="Ej. DNI 12345678L (8 nums.) Ej. NIE X1234567T (7 nums.)" onblur="jsCheckDNI_NIE();" required/> -->
+					<input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="Ej. DNI 12345678L (8 nums.) Ej. NIE X1234567T (7 nums.)" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE();" required/>
 				</div>
 			</div>
 
@@ -632,7 +635,8 @@ Los campos que poseen * son obligatorios.
 						$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
 						$countryName = getDBcompletecolumnID($userLang, 'countries', $userLang);
 						foreach($countryName as $i){
-							echo "<option value=" . getDBsinglefield('key', 'countries', $userLang, $i) . ">" . $i . "</option>";
+							//echo "<option value=" . getDBsinglefield('key', 'countries', $userLang, $i) . ">" . $i . "</option>";
+							echo '<option value="' . getDBsinglefield('key', 'countries', $userLang, $i) . '">' . $i . '</option>';
 						}
 						?>
 					</select>
@@ -696,7 +700,6 @@ Los campos que poseen * son obligatorios.
 						<option value="" selected>-- Código Postal --</option>
 						<?php 
 							//$cpCol = getDBDistCompleteColID('postalCode', 'postalCitiesES', 'postalCode');
-
 							$xmlPostalCodes = simplexml_load_file($_SERVER['DOCUMENT_ROOT'] . '/common/data/postal_codes.xml');
 
 							foreach ($xmlPostalCodes->provincia as $p) {
@@ -704,9 +707,7 @@ Los campos que poseen * son obligatorios.
 									$PostalCodeNumber = $cp['value'];
 									echo "<option value=" . $PostalCodeNumber . ">" . $PostalCodeNumber . "</option>";
 								}
-								
 							}
-
 						?>
 					</select>
 					<div id="txtHint">
@@ -729,7 +730,8 @@ Los campos que poseen * son obligatorios.
 			<div class="form-group"> <!-- Otro Teléfono -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankphone">Otro Tfno.: </label> 
 				<div class="col-sm-10">
-					<input class="form-control" type="text" name="blankphone" maxlength="18" placeholder="00[COD. PAIS]-NUMERO" onkeypress="return checkDashedNumbers(event)">
+					<!-- <input class="form-control" type="text" name="blankphone" maxlength="18" placeholder="00[COD. PAIS]-NUMERO" onkeypress="return checkDashedNumbers(event)"> -->
+					<input class="form-control" type="text" name="blankphone" maxlength="18" placeholder="Ej. 0034-910000000" onkeypress="return checkDashedNumbers(event)">
 				</div>
 			</div>
 
@@ -757,8 +759,8 @@ Los campos que poseen * son obligatorios.
 						<option value="E">E</option>
 						<option value="BTP">BTP</option>
 					</select>				
-				<!-- <input class="form-control form-inline" type="date" name="blankdrivingdate" placeholder="aaaa-mm-dd" > -->
-				<input class='form-control form-inline' type='date' name='blankdrivingdate' id='blankdrivingdate' placeholder='aaaa-mm-dd' onblur="jsIsPreviousDate(this.id)">
+				<!-- <input class='form-control form-inline' type='date' name='blankdrivingdate' id='blankdrivingdate' placeholder='aaaa-mm-dd' onChange="jsIsPreviousDate(this.id)"> -->
+				<input class='form-control form-inline' type='date' name='blankdrivingdate' id='blankdrivingdate' placeholder='aaaa-mm-dd'>
 				</div>				
 			</div>
 			
@@ -834,7 +836,8 @@ Los campos que poseen * son obligatorios.
 			</div>			
 
 			<div class="form-group tooltip-demo"> <!-- Educación -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"> Educacion: </label> 
+				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"> Educacion: </label> --> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Incluye los títulos que tengas de la siguiente forma: Titulo y Especialidad, Centro de estudios, Fechas de inicio y fin"></span> Educación: </label> 
 				<div id="uploadFormDegree" class="col-sm-9">
 					<input class="form-control" type="text" name="add_educ" placeholder='Pulse "+" tras incluir su educación... ' />					
 				</div>
@@ -851,7 +854,10 @@ Los campos que poseen * son obligatorios.
 						<?php 
 							$eduNames = getDBcompleteColumnID(getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']), 'careers', 'id');
 							foreach($eduNames as $i){
-								echo "<option value=" . $i . ">" . $i . "</option>";
+								//echo "<option value=" . $i . ">" . $i . "</option>";
+								//FpSOU=UZ
+								//echo '<option value=' " . $i . " '>' . $i . '</option>';
+								echo '<option value="'.$i.'">' . $i . '</option>';
 							}
 						?>
 					</select>						
@@ -941,7 +947,10 @@ Los campos que poseen * son obligatorios.
 			<div class="btn-group pull-right">
 				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick="this.disabled=true; this.value='Enviando...'; this.form.submit();" >Enviar</button> -->
 				<!-- <button type="submit" name ="push_button" class="btn btn-primary">Enviar</button> -->
-				<button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES()">Enviar</button>
+				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES()">Enviar</button> -->
+				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form)">Enviar</button> -->
+				<!-- <button type="submit" name ="push_button" class="btn btn-primary">Enviar</button> -->
+				<button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form)">Enviar</button>
 			</div>
 		</div> <!-- Panel Footer-->
 	</div> <!-- Panel -->
