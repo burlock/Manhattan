@@ -274,9 +274,9 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 										echo "<tr>";
 										echo "	<td>".$fila[$valores_mostrar[0]]."</td>";
 										echo "	<td><a href=viewCV.php?id_b=".$fila['id']."&reportType=".$reportType." target=_blank>".$fila[$valores_mostrar[1]]."</a></td>";
-										echo "	<td>".html_entity_decode($fila[$valores_mostrar[2]])."</td>";
-										echo "	<td>".html_entity_decode($fila[$valores_mostrar[3]])."</td>";
-										echo "	<td>".html_entity_decode($fila[$valores_mostrar[4]])."</td>";
+										echo "	<td>".($fila[$valores_mostrar[2]])."</td>";
+										echo "	<td>".($fila[$valores_mostrar[3]])."</td>";
+										echo "	<td>".($fila[$valores_mostrar[4]])."</td>";
 										echo "</tr>";
 
 

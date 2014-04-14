@@ -536,7 +536,7 @@
 						<h3 class="panel-title">CV de <?php echo $currentName;?></h3>
 					</div>
 					<div class="panel-body scrollable" > <!-- panel-body -->
-						<?php echo html_entity_decode($texto); ?>
+						<?php echo ($texto); ?>
 					</div> <!-- panel-body -->
 				</div> <!-- Panel -->
 
