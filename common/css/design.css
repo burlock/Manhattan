@@ -142,10 +142,10 @@ body {
     position: absolute;
     height: 100%;
     z-index: 1000;
-    display: block; 
+    display: block;
     padding: 20px 20px 20px 20px;
     background-color: #f5f5f5;
-    border-right: 1px solid #eee; 
+    border-right: 1px solid #eee;
   }
 }
 
@@ -273,7 +273,7 @@ body {
 
 
 
-/* Modal overrides 
+/* Modal overrides
 -------------------------------------------------- */
 .modal-body {
 	overflow-y: auto;
@@ -424,6 +424,7 @@ body {
 	padding-bottom: 0px;
 	width: 100%;
 	background-color: 255,255,255,0;
+	z-index: -10;
 	/* background-color: #f5f5f5; */
 
 }
@@ -503,7 +504,7 @@ h1 small a:link {
 }
 
 .scrollable {
-	overflow: auto; 
+	overflow: auto;
 	height: 90%;
 }
 
@@ -512,7 +513,7 @@ h1 small a:link {
 }
 
 .dummy-shape {
-	position: fixed; 
+	position: fixed;
 	width: 100%;
 	background-color: transparent;
 	border-color: transparent;

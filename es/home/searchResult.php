@@ -24,8 +24,6 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
 	<!-- Using the favicon for touch-devices shortcut -->
 	<link rel="apple-touch-icon" href="../../common/img/apple-touch-icon.png">
-	
-
 </head>
 
 <body>
@@ -179,12 +177,9 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 												}
 											}
 										}
-
 										echo "</ul> <!-- class='nav' -->";
 										echo "</li> <!-- class='active' -->";
-
 									}
-
 									else{
 										echo "<li><a href=../$i.php>" . $mainNamesRow[$j] . "</a></li>";
 										$j++;
@@ -221,12 +216,6 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 							$enlace = connectDB();
 							
 							
-						
-							
-							
-							
-							
-							
 							if(strlen($_POST[blankWordKey])>0){
 							$criteria="where `nie` like '%$_POST[blankWordKey]%' or `nationalities` like '%$_POST[blankWordKey]%' or `sex` like '%$_POST[blankWordKey]%' or `drivingType` like '%$_POST[blankWordKey]%' or `marital` like '%$_POST[blankWordKey]%' or `sons` like '%$_POST[blankWordKey]%' or `language` like '%$_POST[blankWordKey]%' or `career` like '%$_POST[blankWordKey]%' or `city` like '%$_POST[blankWordKey]%' or `experDesc` like '%$_POST[blankWordKey]%' and cvStatus = 'checked';";}
 							else{
@@ -250,49 +239,38 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 								echo "	</tr>";
 								echo "</thead>";
 								while ($fila = $resultado->fetch_assoc()) {
-							
 									$pdf_file_name = "";
 									$pdf_file_name = $fila['userLogin'];
 									$imagen_o=$output_dir.$fila['userLogin']."/fotor.jpg";
 									$logo=$output_dir."/logo.png";
 									$id[$fila['id']] = $fila['nie'];
-									if ($fila['sex']==0){ $fila['sex'] = "hombre"; }
-									if ($fila['sex']==1){ $fila['sex'] = "mujer"; }
+									if ($fila['sex']==0){
+										$fila['sex'] = "hombre";
+									}
+									if ($fila['sex']==1){
+										$fila['sex'] = "mujer";
+									}
 									if ($_POST[reportType] == "custom_report"){
-									$reportType=custom_report;
+										$reportType=custom_report;
 									}
 									if ($_POST[reportType] == "blind_report"){
-									$reportType=blind_report;
+										$reportType=blind_report;
 									}
 									if ($_POST[reportType] == "full_report"){
-									$reportType=full_report;
+										$reportType=full_report;
 									}
-
-								
-									
-											
-										echo "<tr>";
-										echo "	<td>".$fila[$valores_mostrar[0]]."</td>";
-										echo "	<td><a href=viewCV.php?id_b=".$fila['id']."&reportType=".$reportType." target=_blank>".$fila[$valores_mostrar[1]]."</a></td>";
-										echo "	<td>".($fila[$valores_mostrar[2]])."</td>";
-										echo "	<td>".($fila[$valores_mostrar[3]])."</td>";
-										echo "	<td>".($fila[$valores_mostrar[4]])."</td>";
-										echo "</tr>";
-
-
-
-									
+									echo "<tr>";
+									echo "	<td>".$fila[$valores_mostrar[0]]."</td>";
+									echo "	<td><a href=viewCV.php?id_b=".$fila['id']."&reportType=".$reportType." target=_blank>".$fila[$valores_mostrar[1]]."</a></td>";
+									echo "	<td>".($fila[$valores_mostrar[2]])."</td>";
+									echo "	<td>".($fila[$valores_mostrar[3]])."</td>";
+									echo "	<td>".($fila[$valores_mostrar[4]])."</td>";
+									echo "</tr>";
 								}
-
 								echo "</table>";
 								echo "</div>";
-								
 								mysqli_free_result($resultado);
-								
-								
 							}
-							
-
 							$i=0;
 							foreach ($id as $valor) {
 								$id_o[$i]=$valor;

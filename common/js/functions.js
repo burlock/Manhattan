@@ -403,37 +403,6 @@ function confirmCheckedCVDeletion(id) {
 /* Double-checks sending of Candidate's CV submit
  * Called from "upload.php"
  */
-/*
-function confirmFormSendES(form){
-	if(jsCheckFormES(form)){
-		return confirm('¿Confirma que ha revisado todos sus datos y que desea enviar el formulario?');
-	}
-	//There is no else for this 'if', If false, will return an alert with all the errors submitted by user
-}
-*/
-/*
-function confirmFormSendES(form){
-	if(jsCheckFormES(form)){
-		if(confirm('¿Confirma que ha revisado todos sus datos y que desea enviar el formulario?')){
-			return document.formu.submit();
-		}
-	}
-	//There is no else for this 'if', If false, will return an alert with all the errors submitted by user
-}
-*/
-/*
-function confirmFormSendES(form){
-	if(jsCheckFormES(form)){
-		if(confirm('¿Confirma que ha revisado todos sus datos y que desea enviar el formulario?')){
-			return document.formu.submit();
-		}
-		else{
-			return false;
-		}
-	}
-	//There is no else for this 'if', If false, will return an alert with all the errors submitted by user
-}
-*/
 function confirmFormSendES(form){
 	if(jsCheckFormES(form)){
 		if(confirm('¿Confirma que ha revisado todos sus datos y que desea enviar el formulario?')){
@@ -448,7 +417,6 @@ function confirmFormSendES(form){
 		return false;
 	}
 }
-
 
 
 
