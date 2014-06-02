@@ -21,7 +21,6 @@
 			rowNum ++;
 			var row = '<div class="form-group uploadFormChild" style="margin-left: 0px; margin-right: 0px; margin-bottom: 0px;" id="rowLanguage'+rowNum+'"><div class="col-sm-5"><input class="form-control" type="hidden" name="idiomas[]" value="'+frm.add_idiomas.value+'" ><input class="form-control" type="text" name="idiomasf[]" value="'+frm.add_idiomas.value+'" disabled></div><div class="col-sm-5"><input class="form-control" type="hidden" name="nidiomas[]" value="'+frm.add_nidiomas.value+'" ><input class="form-control" type="text" name="fnidiomas[]" value="'+frm.add_nidiomas.value+'" disabled></div><div class="btn-toolbar col-sm-1"><div class="btn-group btn-group-sm"><button type="button" class="btn btn-default" onclick="removeLanguage('+rowNum+');"><span class="glyphicon glyphicon-remove" style="color: #FF0000;"></span></button></div></div></div>';
 			jQuery('#uploadFormLanguage').append(row);
-			ajaxGetLanguage(frm.add_idiomas.value);
 			frm.add_idiomas.value = '';
 			frm.add_nidiomas.value = '';
 		}
@@ -116,6 +115,7 @@
 		function removeNationality(rnum){
 			jQuery('#rowNationality'+rnum).remove();
 		}
+		
 		function addFiles(frm){
 			rowNum ++;
 			var row = '<div class="form-group uploadFormChild" style="margin-left: 0px; margin-right: 0px; margin-bottom: 0px;" id="rowFiles'+rowNum+'"><div class="col-sm-9"><input class="form-control" type="file" name="archivo'+rowNum+'"></div><div class="btn-toolbar col-sm-1"><div class="btn-group btn-group-sm"><button type="button" class="btn btn-default" onclick="removeFiles('+rowNum+');"><span class="glyphicon glyphicon-remove" style="color: #FF0000;"></span></button></div></div></div>';
@@ -181,7 +181,7 @@
 	
 </head>
 
-<body onload="ajaxGetLanguage('inventado');">
+<body>
 
 <?php
 	require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
@@ -309,6 +309,7 @@
 			</script>
 			<?php 
 		}
+		/* SE QUITA PROVISIONALMENTE ESTA COMPROBACIÓN POR NO CONSEGUIR CONTROLARLA DESDE JAVASCRIPT
 		elseif(!isset($str_nat)){
 			unset($_POST['push_button']);
 			?>
@@ -318,6 +319,7 @@
 			</script>
 			<?php 
 		}
+		*/
 		//Sex and Type of address are automatically detected as restricted fields
 		
 		//Address won't be mandatory but, if included, will be necessary to fulfill 'type', 'name' and 'number'
@@ -373,6 +375,7 @@
 			<?php 
 		}
 		//As it is a drop down menu, there is no need to check it with 'htmlentities'
+		/* SE QUITA PROVISIONALMENTE ESTA COMPROBACIÓN POR NO CONSEGUIR CONTROLARLA DESDE JAVASCRIPT
 		elseif($str_idiomas == '' || $str_nidiomas == '' || $str_nidiomas == '%null%'){
 			unset($_POST['push_button']);
 			?>
@@ -382,6 +385,7 @@
 			</script>
 			<?php 
 		}
+		*/
 		elseif((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)){
 			if(!checkDrivingLicense($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $checkError)){
 				unset($_POST['push_button']);
@@ -635,7 +639,6 @@ Los campos que poseen * son obligatorios.
 						$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
 						$countryName = getDBcompletecolumnID($userLang, 'countries', $userLang);
 						foreach($countryName as $i){
-							//echo "<option value=" . getDBsinglefield('key', 'countries', $userLang, $i) . ">" . $i . "</option>";
 							echo '<option value="' . getDBsinglefield('key', 'countries', $userLang, $i) . '">' . $i . '</option>';
 						}
 						?>
@@ -807,13 +810,25 @@ Los campos que poseen * son obligatorios.
 				</div>
 				</div>
 				
-				</div>
-				
+			</div>
+
 			<div class="form-group"> <!-- Nivel de Idiomas -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_idiomas">Idioma/s: * </label> 
 				<div class="col-sm-10" style="padding-left: 0px;">
 					<div class="col-sm-6" id="uploadFormLanguage">
-						<div id="txtHint2"></div>
+						<select class="form-control" name="add_idiomas">
+						<option selected disabled value=""> Pulse "+" tras elegir... </option>
+						<?php
+							$langNames = getDBcompletecolumnID($userLang, 'languages', $userLang);
+							
+							foreach($langNames as $i){
+							$resultado = strpos($_SESSION['langselected'], $i);
+								if ($resultado == FALSE){
+									echo "<option value=" . getDBsinglefield('key', 'languages', $userLang, $i) . ">" . $i ."</option>";
+								}
+							}
+							?>
+
 						</select>
 					</div>
 					<div class="col-sm-5">
@@ -833,7 +848,7 @@ Los campos que poseen * son obligatorios.
 						<div class="btn-group btn-group-sm"><button class="btn btn-default" onclick="addLanguage(this.form);" type="button"><span class="glyphicon glyphicon-plus"></span></button></div>
 					</div>
 				</div>
-			</div>			
+			</div>
 
 			<div class="form-group tooltip-demo"> <!-- Educación -->
 				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"> Educacion: </label> --> 
@@ -847,10 +862,11 @@ Los campos que poseen * son obligatorios.
 			</div>
 			
 			<div class="form-group tooltip-demo"> <!-- Profesión -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Si su título no aparece en el listado, póngase en contacto con nosotros a través de administracion@perspectiva-alemania.com"></span> Profesión: *</label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Si su título no aparece en el listado, seleccione Otra y póngase en contacto con nosotros a traves de administracion@perspectiva-alemania.com"></span> Profesión: *</label>
 				<div id="uploadFormProf" class="col-sm-9">
 					<select class="form-control" name="add_prof">
 						<option selected value=""> Pulse "+" tras elegir... </option>
+						<option value="other"> Otra </option>
 						<?php 
 							$eduNames = getDBcompleteColumnID(getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']), 'careers', 'id');
 							foreach($eduNames as $i){
@@ -932,10 +948,11 @@ Los campos que poseen * son obligatorios.
 									10 => '...');
 					
 					for ($i=1; $i <= 10 ; $i++) { 
-						echo "	<div class='col-sm-5' style='margin-bottom: 10px;'>";
-						//echo "		<input class='form-control' type='text' name='blankskill$i'>";
-						echo "		<input class='form-control' type='text' name='blankskill$i' placeholder='$tipArray[$i]'>";
-						echo "	</div>";
+						echo "<div class='col-sm-5' style='margin-bottom: 10px;'>";
+						//echo "<input class='form-control' type='text' name='blankskill$i'>";
+						//echo "<input class='form-control' type='text' name='blankskill$i' placeholder='$tipArray[$i]'>";
+						echo "<input class='form-control' type='text' name='blankskill$i' maxlength='100' placeholder='$tipArray[$i]'>";
+						echo "</div>";
 					}
 					?>
 				</div>
@@ -950,7 +967,11 @@ Los campos que poseen * son obligatorios.
 				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES()">Enviar</button> -->
 				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form)">Enviar</button> -->
 				<!-- <button type="submit" name ="push_button" class="btn btn-primary">Enviar</button> -->
-				<button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form)">Enviar</button>
+				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form)">Enviar</button> -->
+				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form, nat)">Enviar</button> -->
+				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form, nat[])">Enviar</button> -->
+				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form, frm.add_nat.value)">Enviar</button> -->
+				<button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form, nat)">Enviar</button>
 			</div>
 		</div> <!-- Panel Footer-->
 	</div> <!-- Panel -->
