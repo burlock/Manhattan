@@ -573,8 +573,8 @@
 				unset($_POST['push_button']);
 				?>
 				<script type="text/javascript">
-					//alert('CV insertado con éxito. Gracias!');
-					alert('Gracias por insertar su CV. Por seguridad, su usuario ha sido desactivado.');
+					//alert('Gracias por insertar su CV. Por seguridad, su usuario ha sido desactivado.');
+					alert('Gracias por completar tu CV. En breve nos pondremos en contacto contigo.\n Recuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\n Para cualquier consulta no dudes en ponerte en contacto con nosotros.\n PERSPECTIVA ALEMANIA\n administración@perspectiva-alemania.com');
 					window.location.href='./endsession.php';
 				</script>
 				<?php
@@ -599,7 +599,7 @@ Los campos que poseen * son obligatorios.
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankname">Nombre: * </label> 
 				<div class="col-sm-10">
 					<!-- <input class="form-control" type='text' name='blankname' autocomplete="off" required/> -->
-					<input class="form-control" type='text' name='blankname' maxlength='50' placeholder="Min. 3 caracteres" required/>
+					<input class="form-control" type='text' name='blankname' minlength='3' maxlength='50' placeholder="Min. 3 caracteres" required/>
 				</div>
 			</div>
 
@@ -962,16 +962,7 @@ Los campos que poseen * son obligatorios.
 		<div class="panel-footer">
 			<label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> He leído y acepto las condiciones de uso y política de privacidad</label>
 			<div class="btn-group pull-right">
-				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick="this.disabled=true; this.value='Enviando...'; this.form.submit();" >Enviar</button> -->
-				<!-- <button type="submit" name ="push_button" class="btn btn-primary">Enviar</button> -->
-				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES()">Enviar</button> -->
-				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form)">Enviar</button> -->
-				<!-- <button type="submit" name ="push_button" class="btn btn-primary">Enviar</button> -->
-				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form)">Enviar</button> -->
-				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form, nat)">Enviar</button> -->
-				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form, nat[])">Enviar</button> -->
-				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form, frm.add_nat.value)">Enviar</button> -->
-				<button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form, nat)">Enviar</button>
+				<button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form)">Enviar</button>
 			</div>
 		</div> <!-- Panel Footer-->
 	</div> <!-- Panel -->
