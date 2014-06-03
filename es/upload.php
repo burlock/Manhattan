@@ -304,7 +304,16 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Revise la fecha de nacimiento. Formato incorrecto.');
+				alert('Error: Revise el NIE. El indicado es incorrecto.');
+				window.location.href='home.php';
+			</script>
+			<?php 
+		}
+		elseif(getDBsinglefield(nie, cvitaes, nie, $_POST['blanknie'])){
+			unset($_POST['push_button']);
+			?>
+			<script type="text/javascript">
+				alert('Error: El NIE introducido ya existe en Base de Datos.');
 				window.location.href='home.php';
 			</script>
 			<?php 
