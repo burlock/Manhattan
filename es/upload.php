@@ -583,7 +583,7 @@
 				?>
 				<script type="text/javascript">
 					//alert('Gracias por insertar su CV. Por seguridad, su usuario ha sido desactivado.');
-					alert('Gracias por completar tu CV. En breve nos pondremos en contacto contigo.\n Recuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\n Para cualquier consulta no dudes en ponerte en contacto con nosotros.\n PERSPECTIVA ALEMANIA\n administración@perspectiva-alemania.com');
+					alert('Gracias por completar tu CV. En breve nos pondremos en contacto contigo.\nRecuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nPara cualquier consulta no dudes en ponerte en contacto con nosotros.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');
 					window.location.href='./endsession.php';
 				</script>
 				<?php
