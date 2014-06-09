@@ -406,7 +406,7 @@ function confirmCheckedCVDeletion(id) {
 function confirmFormSendES(form){
 	if(jsCheckFormES(form)){
 		if(confirm('¿Confirma que ha revisado todos sus datos y que desea enviar el formulario?')){
-			return document.formu.submit();
+			return document.formu.submit(form);
 		}
 		else{
 			return false;
