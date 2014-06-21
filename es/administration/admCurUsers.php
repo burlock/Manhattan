@@ -343,6 +343,29 @@
 										}
 									}
 								break;
+								
+								case 'hResPwd':
+									//DEBO LLAMAR A LA FUNCION getRandomPass() Y MARCAR A '1' EL FLAG needPass
+									$userRow = getDBrow('users', 'id', $_GET['codvalue']);
+									$initialPass = getRandomPass();
+									$expirationDate = addMonthsToDate(getDBsinglefield('value', 'otherOptions', 'key', 'expirationMonths'));
+									if(!executeDBquery("UPDATE `users` SET `pass`='".$initialPass."', `needPass`='1', `passExpiration`='".$expirationDate."' WHERE `id`='".$userRow['id']."'")){
+										?>
+										<script type="text/javascript">
+											alert('Error al modificar atributo del usuario');
+											window.location.href='admCurUsers.php';
+										</script>
+										<?php
+									}
+									else{
+										?>
+										<script type="text/javascript">
+											alert('Contraseña de Usuario modificada satisfactoriamente');
+											window.location.href='admCurUsers.php';
+										</script>
+										<?php
+									}
+								break;
 							}
 							?>
 							<script type="text/javascript">
@@ -774,6 +797,17 @@
 
 						</div>
 						<div class="modal-footer">
+							<?php 
+							//If a non 'SuperAdmin' user edits any 'test' user it won't be able to reset its password
+							if($_SESSION['logprofile'] != 'SuperAdmin'){
+								if(strpos($editedUserRow['login'], 'test') === false){
+									echo "<td><a href='admCurUsers.php?codvalue=" . $editedUserRow['id'] . "&hiddenGET=hResPwd' onclick='return confirmPwdResetES();'>Resetear Contraseña</a></td>";
+								}
+							}
+							else{
+								echo "<td><a href='admCurUsers.php?codvalue=" . $editedUserRow['id'] . "&hiddenGET=hResPwd' onclick='return confirmPwdResetES();'>Resetear Contraseña</a></td>";
+							}
+							?>
 							<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 							<button type="submit" class="btn btn-primary" name="eUsersend">Guardar cambios <span class="glyphicon glyphicon-floppy-save"></button>
 						</div>
