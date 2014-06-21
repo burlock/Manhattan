@@ -307,7 +307,7 @@ function jsIsAdult(birthDate, legalAge){
 	var adultResult = "";
 
 	if(inDate == ""){
-		adultResult = 'La Fecha de nacimiento no puede estar vacía.';
+		adultResult = 'La Fecha de nacimiento no puede estar vacía ni ser incorrecta.';
 	}
 	else{
 		if(checkYankieDate(inDate)){
@@ -406,7 +406,8 @@ function confirmCheckedCVDeletion(id) {
 function confirmFormSendES(form){
 	if(jsCheckFormES(form)){
 		if(confirm('¿Confirma que ha revisado todos sus datos y que desea enviar el formulario?')){
-			return document.formu.submit(form);
+			//return document.formu.submit(form);
+			return document.formu.submit();
 		}
 		else{
 			return false;
