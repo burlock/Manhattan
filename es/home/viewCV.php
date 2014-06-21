@@ -168,6 +168,7 @@
 				// Añadido tras el merge de Miguel Hita
 				$texto_pdf="<html>
 					<head>
+					<meta charset=UTF-8>
 					<style>
 					@page {
 						margin-bottom:80px;
@@ -176,7 +177,7 @@
 					#header { position: fixed; left: 0px; top: 0px; right: 0px; height: 150px;  text-align: center; }
 					#footer { position: fixed; left: 0px; bottom: 0px; right: 0px; height: 150px; }
 					#footer .page:after { content: counter(page, upper-roman); }
-					#foto { position: fixed; left: 650px; top: 170px; right: 0px;}
+					#foto { position: fixed; left: 550px; top: 140px; right: 0px;}
 					#cuerpo { position: fixed; left: 50px; top: 90px;}
 					.cuadronegro { background-position: 10px center;   background-repeat: no-repeat;   font-family: Tahoma;   font-size: 14px;   margin: 10px 0px;   padding: 15px 10px 15px 55px; } .cuadronegro { background-color: #A4A4A4;  color: #000000; border:2px solid #242424; border-radius: 2px 2px 2px 2px; }
 					</style>";
@@ -193,7 +194,7 @@
 					$texto_pdf=$texto_pdf."<div id=cuerpo>";
 					$texto_pdf=$texto_pdf."<h2>".dropAccents($fila[name])." ".dropAccents($fila[surname])."</h2>";
 					$texto_pdf=$texto_pdf."<b>Geburtsdatum</b>: ".$fila[birthdate]."<br>";
-					$texto_pdf=$texto_pdf."<b>Staatsangehörigkeit:</b> ".$fila[nationalities]."<br>";
+					$texto_pdf=$texto_pdf."<b>Staatsangehrigkeit</b>......:".$fila[nationalities]."<br>";
 					$texto_pdf=$texto_pdf."<b>Personalausweis:</b> ".$fila[nie]."<br>";
 					$texto_pdf=$texto_pdf."<b>Postleitzahl:</b> ".$fila[addrType]." ".$fila[addrName]." ".$fila[addrNum]." ".$fila[portal]." ".$fila[stair]."<br>";
 					$texto_pdf=$texto_pdf."<b>Stadt:</b> ".$fila[province]."<br>";
@@ -244,14 +245,14 @@
 					$texto=$texto."<table class='table table-striped table-hover'>";
 					
 					for ($i=0;$i<$tot;$i++){
-						$texto_pdf = $texto_pdf."<tr><td><center><b>-".getDBsinglefield(german, languages, key, $lang_a[$i]).".</b></td><td><b>".$langT_a[$i]."</b><br></center></td></tr>";
-						$texto= $texto."<tr><td><center><b>-".getDBsinglefield(german, languages, key, $lang_a[$i]).".</b></td><td><b>".$langT_a[$i]."</b><br></center></td></tr>";
+						$texto_pdf = $texto_pdf."<tr><td><b>-".getDBsinglefield(german, languages, key, $lang_a[$i]).".</b></td><td><b>".$langT_a[$i]."</b><br></td></tr>";
+						$texto= $texto."<tr><td><b>-".getDBsinglefield(german, languages, key, $lang_a[$i]).".</b></td><td><b>".$langT_a[$i]."</b><br></td></tr>";
 					}
 					
 					$texto_pdf=$texto_pdf."</table><br><br>";
 					$texto=$texto."</table><br><br>";
 					$texto_pdf = $texto_pdf."<br><br><img src='../../common/img/Daten.jpg' /><br><br>";
-					$texto_pdf=$texto_pdf."<b>-Führerschein und Ausstellungsdatum :</b>  ".$fila[drivingType]."/".$fila[drivingDate]."<br>";
+					$texto_pdf=$texto_pdf."<b>-Fhrerschein und Ausstellungsdatum</b>...........:".$fila[drivingType]."/".$fila[drivingDate]."<br>";
 					$texto_pdf=$texto_pdf."<b>-Kinder: </b> ".$fila[sons]."<br>";
 					$texto= $texto."<br><br><img src='../../common/img/Daten.jpg' /><br><br>";
 					$texto=$texto."<b>-Führerschein und Ausstellungsdatum :</b> ".$fila[drivingType]."/".$fila[drivingDate]."<br>";

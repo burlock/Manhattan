@@ -187,67 +187,80 @@
 	require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
 	require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/SimpleImage.php');
 	
-	
 	if(isset($_POST['push_button'])){
+		
+		//At the very beggining I will ensure that no local var has a previous value
+		unset($key);
+		unset($entry);
+		unset($str_idiomas);
+		unset($str_nidiomas);
+		unset($str_educ);
+		unset($str_prof);
+		unset($str_empr);
+		unset($str_categ);
+		unset($str_expstart);
+		unset($str_expend);
+		unset($str_desc);
+		unset($str_nat);
+		unset($outNations);
+		unset($outName);
+		unset($outSurname);
+		unset($checkError);
+		unset($outAddrName);
+		unset($outAddrNumber);
+		unset($cleanedOther);
+		unset($cleanedSkill1);
+		unset($cleanedSkill2);
+		unset($cleanedSkill3);
+		unset($cleanedSkill4);
+		unset($cleanedSkill5);
+		unset($cleanedSkill6);
+		unset($cleanedSkill7);
+		unset($cleanedSkill8);
+		unset($cleanedSkill9);
+		unset($cleanedSkill10);
+		unset($userDir);
+		unset($insertCVQuery);
+		unset($photoUploadFile);
+		unset($image);
+		
 		//LO 1º A COMPROBAR SERA QUE EL CHECK LOPD ESTÉ VALIDADO Y QUE NO EXISTA
-		#echo "entro en el if $_POST[senduser]";
 		foreach ($_POST as $key => $entry){
-			//echo $key.'<br>';
-			//echo $key.' es: -->'.$_POST[$key].'<--<br>';
 			if(is_array($entry)){
 				if($key == idiomas){
-					//str_idiomas es 'language' en la BD (en addLanguage)
 					$str_idiomas = implode('|',$entry);
-					//echo 'Idiomas es: '.$str_idiomas.'<br>';
 				}
 				if($key == nidiomas){
-					//str_nidiomas es 'langLevel' en la BD (en addLanguage)
 					$str_nidiomas = implode('|',$entry);
-					//echo 'Nivel de idiomas es: '.$str_nidiomas;
 				}
 				if($key == educ){
-					//str_educ es 'education' en la BD (en addDegree)
 					//Must be checked with htmlentities
 					$str_educ = implode('|', $entry);
 					$str_educ = trim(htmlentities($str_educ));
-					//echo 'Educación es: '.$str_educ.'<br>';
 				}
 				if($key == prof){
-					//str_educ es 'career' en la BD (en addProf)
 					$str_prof = implode('|', $entry);
-					//$str_prof = trim(htmlentities($str_prof));
-					//echo 'Profesion es: '.$str_educ;
 				}
 				if($key == empr){
-					//str_empr es 'experCompany' en la BD (en addRow4)
 					//Must be checked with htmlentities
 					$str_empr = implode('|',$entry);
 					$str_empr = trim(htmlentities($str_empr));
-					//echo 'Empresa es: '.$str_empr;
 				}
 				if($key == categ){
-					//str_categ es 'experPos' en la BD (en addRow4)
 					//Must be checked with htmlentities
 					$str_categ = implode('|',$entry);
 					$str_categ = trim(htmlentities($str_categ));
-					//echo 'Categoria es: '.$str_categ;
 				}
 				if($key == expstart){
-					//str_expstart es 'experStart' en la BD (en addRow4)
 					$str_expstart = implode('|',$entry);
-					//echo 'Ini-exp es: '.$str_expstart;
 				}
 				if($key == expend){
-					//str_expend es 'experEnd' en la BD (en addRow4)
 					$str_expend = implode('|',$entry);
-					//echo 'Fin-exp es: '.$str_expend;
 				}
 				if($key == desc){
-					//str_desc es 'experDesc' en la BD (en addRow4)
 					//Must be checked with htmlentities
 					$str_desc = implode('|',$entry);
 					$str_desc = trim(htmlentities($str_desc));
-					//echo 'Descripción es: '.$str_desc;
 				}
 				/*
 				if($key == nat){
@@ -261,24 +274,19 @@
 						//This is made to avoid as possible SQL Injection
 						checkNationality($entry, $outNations);
 						$str_nat = $outNations;
-						//echo 'str_nat es: '.$str_nat;
 					}
-					//$str_nat = implode('|',$entry);
 				}
-				#print $key . ": " . implode(',',$entry) . "<br>";
-			 }
-			 else {
-			   #print $key . ": " . $entry . "<br>";
 			 }
 		}
-		
 		//This first validation let the system avoid double-recording of the registry if form is refreshed by Candidate via 'CMD+R' or 'F5' in his/her keyboard
 		if(getDBsinglefield('cvSaved', 'users', 'login', $_SESSION['loglogin'])){
+			//If CV had been previously saved user will be blocked and sent to loggin page
+			executeDBquery("UPDATE `users` SET `active`='0', `cvSaved`='1' WHERE `login`='".$_SESSION['loglogin']."'");
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('<?php echo $checkError; ?>');
-				window.location.href='home.php';
+				alert('<?php echo "Usted ya ha guardado su CV. Por seguridad, su usuario ha sido desactivado."; ?>');
+				window.location.href='./endsession.php';
 			</script>
 			<?php 
 		}
@@ -295,7 +303,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: La fecha indica que no es mayor de edad.');
+				alert('Error: La fecha indica que no es mayor de edad o es incorrecta.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -318,6 +326,7 @@
 			</script>
 			<?php 
 		}
+
 		/* SE QUITA PROVISIONALMENTE ESTA COMPROBACIÓN POR NO CONSEGUIR CONTROLARLA DESDE JAVASCRIPT
 		elseif(!isset($str_nat)){
 			unset($_POST['push_button']);
@@ -332,6 +341,7 @@
 		//Sex and Type of address are automatically detected as restricted fields
 		
 		//Address won't be mandatory but, if included, will be necessary to fulfill 'type', 'name' and 'number'
+		/*
 		elseif((strlen($_POST['blankaddrtype']) > 0) || (strlen($_POST['blankaddrname']) > 0) || (strlen($_POST['blankaddrnum']) > 0) || (strlen($_POST['blankaddrportal']) > 0) || 
 		(strlen($_POST['blankaddrstair']) > 0) || (strlen($_POST['blankaddrfloor']) > 0) || (strlen($_POST['blankaddrdoor']) > 0)){
 			if((strlen($_POST['blankaddrtype']) < 1) || (strlen($_POST['blankaddrname']) < 1) || (strlen($_POST['blankaddrnum']) < 1)){
@@ -353,6 +363,32 @@
 				<?php
 			}
 		}
+		*/
+		
+		//Address won't be mandatory but, if included, will be necessary to fulfill 'type', 'name' and 'number'
+		elseif(((strlen($_POST['blankaddrtype']) > 0) || (strlen($_POST['blankaddrname']) > 0) || (strlen($_POST['blankaddrnum']) > 0) || (strlen($_POST['blankaddrportal']) > 0) || 
+		(strlen($_POST['blankaddrstair']) > 0) || (strlen($_POST['blankaddrfloor']) > 0) || (strlen($_POST['blankaddrdoor']) > 0)) && 
+		((strlen($_POST['blankaddrtype']) < 1) || (strlen($_POST['blankaddrname']) < 1) || (strlen($_POST['blankaddrnum']) < 1))){
+			unset($_POST['push_button']);
+			?>
+			<script type="text/javascript">
+				alert('Error: No se ha indicado tipo, nombre o número en la dirección.');
+				window.location.href='home.php';
+			</script>
+			<?php
+		}
+		elseif(((strlen($_POST['blankaddrtype']) > 0) || (strlen($_POST['blankaddrname']) > 0) || (strlen($_POST['blankaddrnum']) > 0) || (strlen($_POST['blankaddrportal']) > 0) || 
+		(strlen($_POST['blankaddrstair']) > 0) || (strlen($_POST['blankaddrfloor']) > 0) || (strlen($_POST['blankaddrdoor']) > 0)) && 
+		(!checkFullAddress($_POST['blankaddrname'], $_POST['blankaddrnum'], $outAddrName, $outAddrNumber, $checkError))){
+			unset($_POST['push_button']);
+			?>
+			<script type="text/javascript">
+				alert('<?php echo $checkError; ?>');
+				window.location.href='home.php';
+			</script>
+			<?php
+		}
+		
 		elseif(!checkMobile($_POST['blankmobile'])){
 			unset($_POST['push_button']);
 			?>
@@ -363,6 +399,7 @@
 			<?php 
 		}
 		//This could be an international phone (should start with '00(49)'. It is not mandatory
+		/*
 		elseif(strlen($_POST['blankphone']) > 0){
 			if(!checkPhone($_POST['blankphone'])){
 				unset($_POST['push_button']);
@@ -374,6 +411,17 @@
 				<?php 
 			}
 		}
+		*/
+		elseif((strlen($_POST['blankphone']) > 0) && (!checkPhone($_POST['blankphone']))){
+			unset($_POST['push_button']);
+			?>
+			<script type="text/javascript">
+				alert('Error: Revise el número de teléfono. Formato incorrecto.');
+				window.location.href='home.php';
+			</script>
+			<?php 
+		}
+		
 		elseif(!filter_var($_POST['blankmail'], FILTER_VALIDATE_EMAIL)){
 			unset($_POST['push_button']);
 			?>
@@ -395,6 +443,7 @@
 			<?php 
 		}
 		*/
+		/*
 		elseif((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)){
 			if(!checkDrivingLicense($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $checkError)){
 				unset($_POST['push_button']);
@@ -405,6 +454,16 @@
 				</script>
 				<?php 
 			}
+		}
+		*/
+		elseif(((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)) && (!checkDrivingLicense($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $checkError))){
+			unset($_POST['push_button']);
+			?>
+			<script type="text/javascript">
+				alert('<?php echo $checkError; ?>');
+				window.location.href='home.php';
+			</script>
+			<?php 
 		}
 		
 		//Only if EVERY check is OK can proceed with process to insert registry in DB
@@ -420,7 +479,6 @@
 			$cleanedSkill8 = cleanFreeText($_POST['blankskill8']);
 			$cleanedSkill9 = cleanFreeText($_POST['blankskill9']);
 			$cleanedSkill10 = cleanFreeText($_POST['blankskill10']);
-				
 			
 			$insertCVQuery = "INSERT INTO `cvitaes` (`id`, `nie`, `cvStatus`, `name`, `surname`, `birthdate`, `nationalities`, `sex`, `addrType`, `addrName`, `addrNum`, `portal`, `stair`, `addrFloor`, `addrDoor`, 
 			`phone`, `postalCode`, `country`, `province`, `city`, `mobile`, `mail`, `drivingType`, `drivingDate`, `marital`, `sons`, `language`, `langLevel`, `education`, `career`, 
@@ -494,7 +552,6 @@
 			echo 'El error ...'.$errorText;
 			exit();
 			*/
-			
 			if(!executeDBquery($insertCVQuery)){
 				unset($_POST['push_button']);
 				?>
@@ -589,7 +646,8 @@
 				<?php
 			}
 		}
-	}//del (isset($_POST[]))
+		
+	}//For (isset($_POST['push_button'])) that check whether FORM has being sent or not
 
 	/**********************************     End of FORM validations     **********************************/
 	
@@ -725,7 +783,7 @@ Los campos que poseen * son obligatorios.
 					<div id="txtHint">
 						<?php 
 						echo '<select class="form-control" name="blankaddrcity" id="blankaddrcity" disabled style="margin-top:5px; width:60%">';
-							echo '<option>Su localidad...</option>';
+							echo '<option>Indique su Código postal...</option>';
 						echo '</select>';
 						?>
 					</div>
@@ -969,9 +1027,12 @@ Los campos que poseen * son obligatorios.
 		</div> <!-- Panel Body -->
 
 		<div class="panel-footer">
-			<label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> He leído y acepto las condiciones de uso y política de privacidad</label>
+			<!-- ORIGINAL <label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> He leído y acepto las condiciones de uso y política de privacidad</label> -->
+			<label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> He leído y acepto las <a href="javascript:alert('Recuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nPara cualquier consulta no dudes en ponerte en contacto con nosotros.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');">condiciones de uso</a> y política de privacidad</label>
+			<!-- <label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> He leído y acepto las <a href="javascript:window.open('../_broadcasting.txt');">condiciones de uso</a> y política de privacidad</label> -->
+			<!-- <label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> He leído y acepto las <a href="javascript:window.open('../_broadcasting.txt', width=3000,height=3000,left=300,top=300,resizable='no');">condiciones de uso</a> y política de privacidad</label> -->
 			<div class="btn-group pull-right">
-				<button type="submit" name ="push_button" class="btn btn-primary" onclick=" return confirmFormSendES(this.form)">Enviar</button>
+				<button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSendES(formu);">Enviar</button>
 			</div>
 		</div> <!-- Panel Footer-->
 	</div> <!-- Panel -->

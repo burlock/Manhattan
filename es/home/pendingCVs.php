@@ -17,9 +17,6 @@
 	<!-- Using the favicon for touch-devices shortcut -->
 	<link rel="apple-touch-icon" href="../../common/img/apple-touch-icon.png">
 
-
-
-
 </head>
 
 <body>
@@ -107,56 +104,51 @@
 		<?php
 			$myFile = 'home';
 			$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-
+			
+			//Extracts the number of pending CVs
 			$pendingCVs = getPendingCVs();
-
-
+			
+			
 			if (isset($_POST['eCurCVsend'])) {
-
-				//Unmounting "Lang:LangLv" structure for insert in DB
+				
+				//Unmounting "Lang:LangLv" structure to insert it into DB (explode breaks a string into an array)
 				$wholeLangInfo = explode('|',$_POST['eCCVlanguagesMerged']);
-
+				
 				$finalLang = "";
 				$finalLangLv = "";
 				foreach($wholeLangInfo as $key => $value) {
+					//Separating each 'Language' and its 'Language Level' as an array
 					$array = explode(':',$value);					
-					//$finalLang = $finalLang . array_values($array)[0] . '|';
-					//$finalLangLv = $finalLangLv . array_values($array)[1] . '|';
-					/* MUESTRA OK LOS VALORES PERO LUEGO NO SOLO NO LOS GUARDA SINO QUE ADEMAS LOS BORRA
-					$finalLang = $finalLang . array_values($array[0]) . '|';
-					$finalLangLv = $finalLangLv . array_values($array[1]) . '|';
-					*/
 					$finalLang = $finalLang . $array[0] . '|';
 					$finalLangLv = $finalLangLv . $array[1] . '|';
 				}
 				
 				$finalLang = substr($finalLang, 0, -1);
 				$finalLangLv = substr($finalLangLv, 0, -1);
-
-				//Mounting experience information
+				
+				//Mounting Experience information
 				$string_experCompany = "";
 				$string_experStart = "";
 				$string_experEnd = "";
 				$string_experPos = "";
-				$string_experDesc = "";			
-
-				for ($i=0; $i < $_POST['eCCV_counterExperience'] ; $i++) { 
+				$string_experDesc = "";
+				
+				for ($i=0; $i < $_POST['eCCV_counterExperience']; $i++) { 
 					$string_experCompany = $string_experCompany . $_POST["eCCVexperCompany$i"] . '|';
 					$string_experStart = $string_experStart . $_POST["eCCVexperStart$i"] . '|';
 					$string_experEnd = $string_experEnd . $_POST["eCCVexperEnd$i"] . '|';
 					$string_experPos = $string_experPos . $_POST["eCCVexperPos$i"] . '|';
 					$string_experDesc = $string_experDesc . $_POST["eCCVexperDesc$i"] . '|';
-				}	
-
-				//Cleaning last '|'
+				}
+				
+				//Cleaning last '|' character from each string
 				$string_experCompany = substr($string_experCompany, 0, -1);
 				$string_experStart = substr($string_experStart, 0, -1);
 				$string_experEnd = substr($string_experEnd, 0, -1);
 				$string_experPos = substr($string_experPos, 0, -1);
 				$string_experDesc = substr($string_experDesc, 0, -1);
-
 				
-				//Minimum security checkings, to avoid malformation in DB
+				//Minimum security checkings, to avoid dangerous information in DB
 				if(eregMySQLCheckDate(htmlentities($_POST['eCCVbirthdate'], ENT_QUOTES, 'UTF-8'))){
 					$inDBBirthdate = trim(htmlentities($_POST['eCCVbirthdate'], ENT_QUOTES, 'UTF-8'));
 				}
@@ -169,6 +161,16 @@
 					$inDBNationalities = false;
 				}
 				else{
+/* Same as previous, but an exception is specified not to be compared
+ * PRE: 'incomingString' is NOT empty
+ * Entry (incomingString): Input string where every word that is intended to be registered in DB is
+ * Entry (searchedTable): Table in which words/strings will be searched if they matches
+ * Entry (keyColumn): Column used in 'searchedTable' to find out if each word is or not
+ * Entry (delimiter): Character used to delimit imploded array (that now is an string)
+ * Entry (exception): String/Word which is the exception, that won't be searched in 'searchedTable'
+ * Exit (): Boolean that indicates TRUE if every word in 'incomingString' is in searched DBTable or FALSE if not
+ */
+//function isImplodedArrayInDBExcept($incomingString, $searchedTable, $keyColumn, $delimiter, $exception){
 					//$inDBNationalities = isImplodedArrayInDB(htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8'), 'countries', 'key', '|');
 					$inDBNationalities = isImplodedArrayInDBExcept(htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8'), 'countries', 'key', '|', 'Spain');
 				}
@@ -458,9 +460,11 @@
 											<input class="form-control" type='text' name='eCCVnie' value="<?php echo ($editedCVRow['nie']) ?>" onkeyup='this.value=this.value.toUpperCase();' readonly/>
 										</div>
 									</div>
-
+									
 									<div class="form-group">  <!-- Nacionalidad -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities">Nacionalidad: * </label>
+										<!-- <label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Tipos admitidos: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Máx: 1024Kb"></span> Archivos Adicionales: </label> -->
+										<!-- <label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities">Nacionalidad: * </label> -->
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Tipos admitidos: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Máx: 1024Kb"></span>Nacionalidad: * </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVnationalities' value="<?php echo ($editedCVRow['nationalities']) ?>" data-role='tagsinput' />
 										</div>
@@ -601,6 +605,7 @@
 												<?php 
 												$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
 												$maritalStatus = getDBcompletecolumnID($userLang, 'maritalStatus', $userLang);
+												echo "<option selected value=''>Sin estado civil seleccionado</option>";
 												foreach($maritalStatus as $i){
 													//echo "<option value=" . getDBsinglefield('key', 'countries', $userLang, $i) . ">" . $i . "</option>";
 													$keyMarital = getDBsinglefield('key', 'maritalStatus', $userLang, $i);
