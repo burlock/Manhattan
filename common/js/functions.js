@@ -430,6 +430,15 @@ function confirmLangDeletionES(id) {
 
 
 
+/* Double-checks reset for a user password
+ * Called in "admCurUsers.php"
+ */
+function confirmPwdResetES(id) {
+	return confirm('¿Confirma que desea resetear la password de este usuario?');
+}
+
+
+
 /* Double-checks deletion of an existing User
  * Called from "onclick" method in "admCurUsers.php"
  * Entry (id): Number/indentifier of user to be deleted if confirmed
