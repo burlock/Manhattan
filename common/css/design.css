@@ -496,6 +496,24 @@ h1 small a:link {
 
 
 
+
+
+/* Redefine tooltips z-index
+-------------------------------------------------- */
+
+.tooltip {
+    z-index: 2000 !important;
+}
+
+
+div.tooltip-inner {
+    max-width: 800px;
+}
+
+
+
+
+
 /* Some usefull properties and elements predefinied
 		 MUST BE AT BOTTOM
 -------------------------------------------------- */
