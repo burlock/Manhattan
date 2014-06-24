@@ -461,10 +461,13 @@
 										</div>
 									</div>
 									
-									<div class="form-group">  <!-- Nacionalidad -->
+									<div class="form-group tooltip-demo">  <!-- Nacionalidad -->
 										<!-- <label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Tipos admitidos: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Máx: 1024Kb"></span> Archivos Adicionales: </label> -->
 										<!-- <label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities">Nacionalidad: * </label> -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Tipos admitidos: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Máx: 1024Kb"></span>Nacionalidad: * </label>
+										<?php $nationalityQueryResult = getDBDistCompleteColID("SPANISH", "countries", "SPANISH"); 
+											$nationalities_string = implode(', ', $nationalityQueryResult);
+										?>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="auto" title='<?php echo $nationalities_string; ?>'></span> Nacionalidad: * </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVnationalities' value="<?php echo ($editedCVRow['nationalities']) ?>" data-role='tagsinput' />
 										</div>
