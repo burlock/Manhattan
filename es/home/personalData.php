@@ -190,8 +190,10 @@
 					<div class="bs-docs-section">
 						<h2 class="page-header">Mis datos</h2>
 						<?php
+						/*****************************  DESDE AQUI...
 						if(isset($_POST['changePassword'])){
-							if(!checkPassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $keyError)){
+							//if(!checkPassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $keyError)){
+							if(!checkPassChangeES($_POST['newPassword'], $_POST['confirmNewPassword'], getDBsinglefield('pass', 'users', 'login', $_SESSION['loglogin']), $keyError)){
 								?>
 								<script type="text/javascript">
 									alert('<?php echo $keyError; ?>');
@@ -224,14 +226,79 @@
 								}
 							}
 						}
+						... HASTA AQUI HABRÁ QUE BORRARLO **********************************/
+						
+						
+						if(isset($_POST['hiddenPOST'])){
+							switch ($_POST['hiddenPOST']){
+								case 'hChangePassSubmit':
+									if(!checkHashedPassChangeES($_POST['newPassword'], $_POST['confirmNewPassword'], getDBsinglefield('pass', 'users', 'login', $_SESSION['loglogin']), $keyError)){
+										?>
+										<script type="text/javascript">
+											alert('<?php echo $keyError; ?>');
+											window.location.href='personalData.php';
+										</script>
+										<?php 
+									}
+									//That's when system generates new Blowfish password
+									else{
+										$newCryptedPass = blowfishCrypt($_POST['newPassword']);
+										//if(!executeDBquery("UPDATE `users` SET `pass`='".$newCryptedPass."', `needPass`='0', `passExpiration`='".addMonthsToDate(6)."' WHERE `login`='".$_SESSION['loglogin']."'")){
+										if(!executeDBquery("UPDATE `users` SET `pass`='".$newCryptedPass."', `needPass`='0', `passExpiration`='".addMonthsToDate(getDBsinglefield('value', 'otherOptions', 'key', 'expirationMonths'))."' WHERE `login`='".$_SESSION['loglogin']."'")){
+											?>
+											<script type="text/javascript">
+												alert('No fue posible actualizar su contraseña.');
+												window.location.href='personalData.php';
+											</script>
+											<?php 
+										}
+										else{
+											$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
+											$_SESSION['logprofile'] = $userRow['profile'];
+											$_SESSION['lastupdate'] = date('Y-m-d H:i:s');
+											$_SESSION['sessionexpiration'] = getDBsinglefield('value', 'otherOptions', 'key', 'sessionexpiration');
+											?>
+											<script type="text/javascript">
+												window.location.href='personalData.php';
+											</script>
+											<?php 
+										}
+									}
+								break;
+								
+								case 'hChangeLangSubmit':
+									if(!executeDBquery("UPDATE `users` SET `language`='".$_POST['changeLanguage']."' WHERE `login`='".$_SESSION['loglogin']."'")){
+										?>
+										<script type="text/javascript">
+											alert('No fue posible actualizar su idioma.');
+											window.location.href='personalData.php';
+										</script>
+										<?php 
+									}
+									else{
+										$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
+										$_SESSION['logprofile'] = $userRow['profile'];
+										$_SESSION['lastupdate'] = date('Y-m-d H:i:s');
+										$_SESSION['sessionexpiration'] = getDBsinglefield('value', 'otherOptions', 'key', 'sessionexpiration');
+										?>
+										<script type="text/javascript">
+											window.location.href='personalData.php';
+										</script>
+										<?php 
+									}
+								break;
+							}
+						}
 						?>
-
+						
+						<!---------------------------------     Start of WebPage code initially showed     ---------------------------------->
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h2 class="panel-title">Cambio de contraseña</h2>
 							</div>
 							
 							<div id="panel-warning" class="panel panel-warning encapsulated center-block">
+								<!-- If "passwdRestrictionsXX.txt" is changed function "checkXXXXXXPassChangeXX" (in validateFront.php) will be needed to be also changed -->
 								<?php include $_SERVER['DOCUMENT_ROOT'] . '/common/passwdRestrictionsES.txt'; ?>
 							</div>
 							<div class="panel-body encapsulated center-block">
@@ -247,6 +314,7 @@
 										<div class="col-xs-8">
 											<input type="password" class="form-control" name="confirmNewPassword" id="confirmNewPassword" placeholder="" required data-toggle="tooltip" title="Confirma la nueva contraseña" autocapitalize="off">
 											<div class="fluid-container pull-right" style="margin-top: 15px;">
+												<input type="hidden" value="hChangePassSubmit" name="hiddenPOST">
 												<button type="submit" class="btn btn-primary" name="changePassword">Cambiar</button>
 											</div>
 										</div>
@@ -254,6 +322,46 @@
 								</form>
 							</div>
 						</div>
+						
+						
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h2 class="panel-title">Idioma</h2>
+							</div>
+							
+							<div class="panel-body encapsulated center-block">
+								<form id="changeLanguageForm" name="changeLanguageForm" class="form-horizontal" action="personalData.php" method="post">
+									<div class="form-group">
+										<label for="changeLanguage" class="control-label col-xs-3">Idioma seleccionado: </label>
+										<div class="col-xs-8">
+											<select name="changeLanguage" class="form-control">
+												<!-- <option selected value=''>Idioma</option> -->
+												<?php 
+												$userLanguage = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
+												//$languageKeys = getDBcompletecolumnID('key', 'siteLanguages', 'id');
+												$localLanguages = getDBcompletecolumnID($userLanguage, 'siteLanguages', $userLanguage);
+												foreach($localLanguages as $i){
+													$keyLang = getDBsinglefield('key', 'siteLanguages', $userLanguage, $i);
+													if($keyLang == $userLanguage){
+														echo "<option selected value=" . $keyLang . ">" . $i . "</option>";
+													}
+													else{
+														echo "<option value=" . $keyLang . ">" . $i . "</option>";
+													}
+												}
+												?>
+											</select>
+											<div class="fluid-container pull-right" style="margin-top: 15px;">
+												<input type="hidden" value="hChangeLangSubmit" name="hiddenPOST">
+												<button type="submit" class="btn btn-primary" name="changeLangSubmit">Cambiar</button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						
+						<!---------------------------------     End of WebPage code initially showed     ---------------------------------->
 					</div> <!-- bs-docs-section -->
 				</div> <!-- col-md-9 scrollable role=main -->
 			</div> <!-- row -->
@@ -263,7 +371,7 @@
 
 	<?php
 
-		} //del "else" de $_SESSION.
+	} //del "else" de $_SESSION.
 
 	?>
 

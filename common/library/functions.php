@@ -456,6 +456,7 @@ function blowfishCrypt($password, $rounds = 7){
  * Entry (key2): String where passed 2nd password attempt
  * Exit (keyError): String with the error when needed (or void)
  */
+/*
 function checkPassChange($key1, $key2, &$keyError){
 	if($key1 != $key2){
 		//$keyError = "Ambas contraseñas deben ser iguales";
@@ -485,6 +486,207 @@ function checkPassChange($key1, $key2, &$keyError){
 	if (!preg_match('`[0-9]`',$key1)){
 		//$keyError = "La contraseña debe tener al menos un caracter numérico";
 		$keyError = "Error: Password must contain at least one numeric character.";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+*/
+/* Checks whether a given password matches every requirement when changed by a new one. And if it is different to previous password. Called from "personalData.php" and "validateFront.php"
+ * Entry (key1): String where passed 1st password attempt
+ * Entry (key2): String where passed 2nd password attempt
+ * Entry (hashedKey): String directly extracted from DB that contains old password
+ * Exit (keyError): String with the error when needed (or void)
+ */
+function checkHashedPassChangeDE($key1, $key2, $hashedKey, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Ambas contraseñas deben ser iguales";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "La contraseña debe tener al menos 6 caracteres";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "La contraseña no puede tener más de 16 caracteres";
+		return false;
+	}
+	if(!preg_match('`[a-z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra minúscula";
+		return false;
+	}
+	if(!preg_match('`[A-Z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra mayúscula";
+		return false;
+	}
+	if(!preg_match('`[0-9]`',$key1)){
+		$keyError = "La contraseña debe tener al menos un caracter numérico";
+		return false;
+	}
+	//elseif((!(crypt($_POST['logpasswd'], $userRow['pass']) == $userRow['pass'])) && (!$userRow['needPass'])){
+	if(!(crypt($hashedKey, $key1) == $key1)){
+		$keyError = "La contraseña debe ser distinta a la última";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+
+function checkHashedPassChangeEN($key1, $key2, $hashedKey, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Error: Both passwords must be identical.";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "Error: Password must be at least 6 characters.";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "Error: Password must not be more than 16 characters.";
+		return false;
+	}
+	if(!preg_match('`[a-z]`',$key1)){
+		$keyError = "Error: Password must contain at least one lowercase letter.";
+		return false;
+	}
+	if(!preg_match('`[A-Z]`',$key1)){
+		$keyError = "Error: Password must contain at least one uppercase letter.";
+		return false;
+	}
+	if(!preg_match('`[0-9]`',$key1)){
+		$keyError = "Error: Password must contain at least one numeric character.";
+		return false;
+	}
+	//elseif((!(crypt($_POST['logpasswd'], $userRow['pass']) == $userRow['pass'])) && (!$userRow['needPass'])){
+	if(!(crypt($hashedKey, $key1) == $key1)){
+		$keyError = "La contraseña debe ser distinta a la última";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+
+function checkHashedPassChangeES($key1, $key2, $hashedKey, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Ambas contraseñas deben ser iguales";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "La contraseña debe tener al menos 6 caracteres";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "La contraseña no puede tener más de 16 caracteres";
+		return false;
+	}
+	if(!preg_match('`[a-z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra minúscula";
+		return false;
+	}
+	if(!preg_match('`[A-Z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra mayúscula";
+		return false;
+	}
+	if(!preg_match('`[0-9]`',$key1)){
+		$keyError = "La contraseña debe tener al menos un caracter numérico";
+		return false;
+	}
+	if(crypt($key1, $hashedKey) == $hashedKey){
+		$keyError = "La contraseña debe ser distinta a la última";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+
+
+
+/* Checks whether a given password is strong enough (and properly written) when changed for a new one. Called from "validateFront.php"
+ * Entry (key1): String where passed 1st password attempt
+ * Entry (key2): String where passed 2nd password attempt
+ * Exit (keyError): String with the error when needed (or void)
+ */
+function checkSimplePassChangeDE($key1, $key2, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Error: Both passwords must be identical.";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "Error: Password must be at least 6 characters.";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "Error: Password must not be more than 16 characters.";
+		return false;
+	}
+	if (!preg_match('`[a-z]`',$key1)){
+		$keyError = "Error: Password must contain at least one lowercase letter.";
+		return false;
+	}
+	if (!preg_match('`[A-Z]`',$key1)){
+		$keyError = "Error: Password must contain at least one uppercase letter.";
+		return false;
+	}
+	if (!preg_match('`[0-9]`',$key1)){
+		$keyError = "Error: Password must contain at least one numeric character.";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+
+function checkSimplePassChangeEN($key1, $key2, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Error: Both passwords must be identical.";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "Error: Password must be at least 6 characters.";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "Error: Password must not be more than 16 characters.";
+		return false;
+	}
+	if (!preg_match('`[a-z]`',$key1)){
+		$keyError = "Error: Password must contain at least one lowercase letter.";
+		return false;
+	}
+	if (!preg_match('`[A-Z]`',$key1)){
+		$keyError = "Error: Password must contain at least one uppercase letter.";
+		return false;
+	}
+	if (!preg_match('`[0-9]`',$key1)){
+		$keyError = "Error: Password must contain at least one numeric character.";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+
+function checkSimplePassChangeES($key1, $key2, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Ambas contraseñas deben ser iguales";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "La contraseña debe tener al menos 6 caracteres";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "La contraseña no puede tener más de 16 caracteres";
+		return false;
+	}
+	if (!preg_match('`[a-z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra minúscula";
+		return false;
+	}
+	if (!preg_match('`[A-Z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra mayúscula";
+		return false;
+	}
+	if (!preg_match('`[0-9]`',$key1)){
+		$keyError = "La contraseña debe tener al menos un caracter numérico";
 		return false;
 	}
 	$keyError = "";

@@ -217,57 +217,68 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 							
 							
 							if(strlen($_POST[blankWordKey])>0){
-							$criteria="where `nie` like '%$_POST[blankWordKey]%' or `nationalities` like '%$_POST[blankWordKey]%' or `sex` like '%$_POST[blankWordKey]%' or `drivingType` like '%$_POST[blankWordKey]%' or `marital` like '%$_POST[blankWordKey]%' or `sons` like '%$_POST[blankWordKey]%' or `language` like '%$_POST[blankWordKey]%' or `career` like '%$_POST[blankWordKey]%' or `city` like '%$_POST[blankWordKey]%' or `experDesc` like '%$_POST[blankWordKey]%' and cvStatus = 'checked';";}
+								$criteria="where `nie` like '%$_POST[blankWordKey]%' or `nationalities` like '%$_POST[blankWordKey]%' or `sex` like '%$_POST[blankWordKey]%' or `drivingType` like '%$_POST[blankWordKey]%' or `marital` like '%$_POST[blankWordKey]%' or `sons` like '%$_POST[blankWordKey]%' or `language` like '%$_POST[blankWordKey]%' or `career` like '%$_POST[blankWordKey]%' or `city` like '%$_POST[blankWordKey]%' or `experDesc` like '%$_POST[blankWordKey]%' and cvStatus = 'checked';";
+							}
 							else{
-							$criteria="where `nie` like '%$_POST[blankNIE]%' and `nationalities` like '%$_POST[blankNationality]%' and `sex` like '%$_POST[blankSex]%' and `drivingType` like '%$_POST[drivingtype]%' and `marital` like '%$_POST[civilStatus]%' and `sons` like '%$_POST[blankSons]%' and `language` like '%$_POST[blankLanguages]%' and `career` like '%$_POST[blankJob]%' and cvStatus = 'checked';";}						
+								$criteria="where `nie` like '%$_POST[blankNIE]%' and `nationalities` like '%$_POST[blankNationality]%' and `sex` like '%$_POST[blankSex]%' and `drivingType` like '%$_POST[drivingtype]%' and `marital` like '%$_POST[civilStatus]%' and `sons` like '%$_POST[blankSons]%' and `language` like '%$_POST[blankLanguages]%' and `career` like '%$_POST[blankJob]%' and cvStatus = 'checked';";
+							}						
 							
 							$consulta = "SELECT * FROM `cvitaes`".$criteria;
 							
 							if ($resultado = mysqli_query($enlace, $consulta)) {
-
-								/* Obtener la informacin de campo de todas las columnas */
+								
+								//echo ">>>  ".mysqli_num_rows($resultado)."  <<<";
+								
+								//Obtaining field information for every column
 								$info_campo = mysqli_fetch_fields($resultado);
 								$valores_mostrar = array("id", "name", "surname", "nationalities","career");
 								echo "<div class='table-responsive'>";
-								echo "<table id='resultTable' class='table table-striped table-hover'>";
-								
-								echo "<thead>";
-								echo "	<tr>";
-								foreach ($valores_mostrar as $valor) {
-										echo "<th>$valor</th>";
-								}
-								echo "	</tr>";
-								echo "</thead>";
-								while ($fila = $resultado->fetch_assoc()) {
-									$pdf_file_name = "";
-									$pdf_file_name = $fila['userLogin'];
-									$imagen_o=$output_dir.$fila['userLogin']."/fotor.jpg";
-									$logo=$output_dir."/logo.png";
-									$id[$fila['id']] = $fila['nie'];
-									if ($fila['sex']==0){
-										$fila['sex'] = "hombre";
+									echo "<table id='resultTable' class='table table-striped table-hover'>";
+										echo "<thead>";
+										echo "	<tr>";
+										foreach ($valores_mostrar as $valor) {
+												echo "<th>$valor</th>";
+										}
+										echo "	</tr>";
+										echo "</thead>";
+										
+										//Extracting number of rows in result
+										//$numRows = mysqli_num_rows($resultado);
+										$auxNumRow = 1;
+										
+									while ($fila = $resultado->fetch_assoc()) {
+										$pdf_file_name = "";
+										$pdf_file_name = $fila['userLogin'];
+										$imagen_o=$output_dir.$fila['userLogin']."/fotor.jpg";
+										$logo=$output_dir."/logo.png";
+										$id[$fila['id']] = $fila['nie'];
+										if ($fila['sex']==0){
+											$fila['sex'] = "hombre";
+										}
+										if ($fila['sex']==1){
+											$fila['sex'] = "mujer";
+										}
+										if ($_POST[reportType] == "custom_report"){
+											$reportType=custom_report;
+										}
+										if ($_POST[reportType] == "blind_report"){
+											$reportType=blind_report;
+										}
+										if ($_POST[reportType] == "full_report"){
+											$reportType=full_report;
+										}
+										echo "<tr>";
+										//Instead of using user's id, will be used an auto-increment id
+										//echo "	<td>".$fila[$valores_mostrar[0]]."</td>";
+										echo "<td>".$auxNumRow."</td>";
+										echo "	<td><a href=viewCV.php?id_b=".$fila['id']."&reportType=".$reportType." target=_blank>".$fila[$valores_mostrar[1]]."</a></td>";
+										echo "	<td>".($fila[$valores_mostrar[2]])."</td>";
+										echo "	<td>".($fila[$valores_mostrar[3]])."</td>";
+										echo "	<td>".($fila[$valores_mostrar[4]])."</td>";
+										echo "</tr>";
+										$auxNumRow++;
 									}
-									if ($fila['sex']==1){
-										$fila['sex'] = "mujer";
-									}
-									if ($_POST[reportType] == "custom_report"){
-										$reportType=custom_report;
-									}
-									if ($_POST[reportType] == "blind_report"){
-										$reportType=blind_report;
-									}
-									if ($_POST[reportType] == "full_report"){
-										$reportType=full_report;
-									}
-									echo "<tr>";
-									echo "	<td>".$fila[$valores_mostrar[0]]."</td>";
-									echo "	<td><a href=viewCV.php?id_b=".$fila['id']."&reportType=".$reportType." target=_blank>".$fila[$valores_mostrar[1]]."</a></td>";
-									echo "	<td>".($fila[$valores_mostrar[2]])."</td>";
-									echo "	<td>".($fila[$valores_mostrar[3]])."</td>";
-									echo "	<td>".($fila[$valores_mostrar[4]])."</td>";
-									echo "</tr>";
-								}
-								echo "</table>";
+									echo "</table>";
 								echo "</div>";
 								mysqli_free_result($resultado);
 							}
