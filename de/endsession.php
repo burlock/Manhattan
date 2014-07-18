@@ -8,7 +8,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	
-	<title>Inicio</title>
+	<title>Beginn</title>
 
 	<!-- Custom styles for this template -->
 	<link href="../common/css/design.css" rel="stylesheet">
@@ -22,30 +22,24 @@
 
 <body>
 	<div class="top-alert-container">
-
 		<?php if(!$_SESSION['loglogin']) { ?>
-		
 		<div class="alert alert-danger alert-error top-alert fade in">
 			<a href="#" class="close" data-dismiss="alert">&times;</a>
-			<strong>Opssss!</strong> Ha ocurrido un error mientras se cerraba la sesión.
+			<strong>Opssss!</strong> Während die Sitzung geschlossen wurde, ist ein Fehler aufgetreten.
 		</div>
-
 		<?php
 	}
 	else{
 		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
 		session_destroy();
 		?>
-
 		<div class="alert alert-success top-alert fade in">
 			<a href="#" class="close" data-dismiss="alert">&times;</a>
-			<strong>Éxito!</strong> Se ha cerrado la sesión correctamente.
+			<strong>Erfolg!</strong> Die Sitzung ordnungsgemäß beendet.
 		</div>
-
 		<?php
 	}
 	?>
-
 	</div> <!-- Container -->
 
 <!-- Footer bar & info

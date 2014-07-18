@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="David Alfonso Ginés Prieto, Miguel Hita Vicente y Miguel Ángel Melón Pérez">
 	
-	<title>Mis Datos</title>
+	<title>Meine Daten</title>
 
 	<!-- Custom styles for this template -->
 	<link href="../../common/css/design.css" rel="stylesheet">
@@ -81,10 +81,10 @@
 							<span class="icon-bar"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
+							<li class="dropdown-header">Angeschossen wie: <?php echo $_SESSION['loglogin']; ?></li>
 							<li class="divider"></li>
-							<li><a href="../home/personalData.php">Configuración personal</a></li>
-							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
+							<li><a href="../home/personalData.php">Persönliche Einstellungen</a></li>
+							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Aussteigen</a></li>
 						</ul>
 					</li>
 				</div>
@@ -99,14 +99,14 @@
 				<form class="modal-content" action="../endsession.php">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Cerrar sesión</h4>
+						<h4 class="modal-title" id="exitRequestLabel">Abmelden</h4>
 					</div>
 					<div class="modal-body">
-						¿Estás seguro de que quieres salir?
+						Haben Sie sich abmelden wollen?
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-						<button type="submit" class="btn btn-primary">Sí, cerrar sesión</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Stormieren</button>
+						<button type="submit" class="btn btn-primary">Wenn, melden</button>
 					</div>
 				</form>
 			</div>
@@ -199,12 +199,12 @@
 				<!--  ****************************************   Start of displayed Modal HTML   ****************************************  -->
 				<div class="col-md-9 scrollable" role="main"> 
 					<div class="bs-docs-section">
-						<h2 class="page-header">Mis Datos</h2>
+						<h2 class="page-header">Meine Daten</h2>
 						<?php
 						if(isset($_POST['hiddenPOST'])){
 							switch ($_POST['hiddenPOST']){
 								case 'hChangePassSubmit':
-									if(!checkHashedPassChangeES($_POST['newPassword'], $_POST['confirmNewPassword'], getDBsinglefield('pass', 'users', 'login', $_SESSION['loglogin']), $keyError)){
+									if(!checkHashedPassChangeDE($_POST['newPassword'], $_POST['confirmNewPassword'], getDBsinglefield('pass', 'users', 'login', $_SESSION['loglogin']), $keyError)){
 										?>
 										<script type="text/javascript">
 											alert('<?php echo $keyError; ?>');
@@ -218,7 +218,7 @@
 										if(!executeDBquery("UPDATE `users` SET `pass`='".$newCryptedPass."', `needPass`='0', `passExpiration`='".addMonthsToDate(getDBsinglefield('value', 'otherOptions', 'key', 'expirationMonths'))."' WHERE `login`='".$_SESSION['loglogin']."'")){
 											?>
 											<script type="text/javascript">
-												alert('No fue posible actualizar su contraseña.');
+												alert('Fehler: Es war nicht möglich ihr passwort zu aktualisieren.');
 												window.location.href='personalData.php';
 											</script>
 											<?php 
@@ -241,7 +241,7 @@
 									if(!executeDBquery("UPDATE `users` SET `language`='".$_POST['changeLanguage']."' WHERE `login`='".$_SESSION['loglogin']."'")){
 										?>
 										<script type="text/javascript">
-											alert('No fue posible actualizar su idioma.');
+											alert('Fehler: Es war nicht möglich ihre sprache zu aktualisieren.');
 											window.location.href='personalData.php';
 										</script>
 										<?php 
@@ -253,7 +253,7 @@
 										$_SESSION['sessionexpiration'] = getDBsinglefield('value', 'otherOptions', 'key', 'sessionexpiration');
 										?>
 										<script type="text/javascript">
-											alert('Idioma actualizado.');
+											alert('Sprache aktualisiert.');
 											window.location.href='personalData.php';
 										</script>
 										<?php
@@ -268,27 +268,27 @@
 						<!---------------------------------     Start of WebPage code initially showed     ---------------------------------->
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h2 class="panel-title">Cambiar Contraseña</h2>
+								<h2 class="panel-title">Passwort Ändern</h2>
 							</div>
 							<div id="panel-warning" class="panel panel-warning encapsulated center-block">
 								<!-- If "passwdRestrictionsXX.txt" is changed function "checkXXXXXXPassChangeXX" (in validateFront.php) will be needed to be also changed -->
-								<?php include $_SERVER['DOCUMENT_ROOT'] . '/common/passwdRestrictionsES.txt'; ?>
+								<?php include $_SERVER['DOCUMENT_ROOT'] . '/common/passwdRestrictionsDE.txt'; ?>
 							</div>
 							<div class="panel-body encapsulated center-block">
-								<form id="changePasswordForm" name="changePasswordForm" class="form-horizontal" action="personalData.php" method="post" onsubmit="return equalPassword(newPassword, confirmNewPassword)">
+								<form id="changePasswordForm" name="changePasswordForm" class="form-horizontal" action="personalData.php" method="post" onsubmit="return equalPasswordDE(newPassword, confirmNewPassword)">
 									<div class="form-group">
-										<label for="newPassword" class="control-label col-xs-3">Nueva contraseña</label>
+										<label for="newPassword" class="control-label col-xs-3">Neues passwort</label>
 										<div class="col-xs-8">
 											<input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="" required data-toggle="tooltip" title="Introduce la nueva contraseña" autocapitalize="off">
 										</div> 
 									</div>
 									<div class="form-group">
-										<label for="confirmNewPassword" class="control-label col-xs-3">Repita contraseña</label>
+										<label for="confirmNewPassword" class="control-label col-xs-3">Wiederholen passwort</label>
 										<div class="col-xs-8">
 											<input type="password" class="form-control" name="confirmNewPassword" id="confirmNewPassword" placeholder="" required data-toggle="tooltip" title="Confirma la nueva contraseña" autocapitalize="off">
 											<div class="fluid-container pull-right" style="margin-top: 15px;">
 												<input type="hidden" value="hChangePassSubmit" name="hiddenPOST">
-												<button type="submit" class="btn btn-primary" name="changePassword">Cambiar</button>
+												<button type="submit" class="btn btn-primary" name="changePassword">Änderung</button>
 											</div>
 										</div>
 									</div>
@@ -299,12 +299,12 @@
 						
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h2 class="panel-title">Cambiar Idioma</h2>
+								<h2 class="panel-title">Sprache ändern</h2>
 							</div>
 							<div class="panel-body encapsulated center-block">
 								<form id="changeLanguageForm" name="changeLanguageForm" class="form-horizontal" action="personalData.php" method="post">
 									<div class="form-group">
-										<label for="changeLanguage" class="control-label col-xs-3">Idioma seleccionado: </label>
+										<label for="changeLanguage" class="control-label col-xs-3">Gewählte sprache: </label>
 										<div class="col-xs-8">
 											<select name="changeLanguage" class="form-control">
 												<?php 
@@ -323,7 +323,7 @@
 											</select>
 											<div class="fluid-container pull-right" style="margin-top: 15px;">
 												<input type="hidden" value="hChangeLangSubmit" name="hiddenPOST">
-												<button type="submit" class="btn btn-primary" name="changeLangSubmit">Cambiar</button>
+												<button type="submit" class="btn btn-primary" name="changeLangSubmit">Änderung</button>
 											</div>
 										</div>
 									</div>

@@ -10,7 +10,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="David Alfonso Ginés Prieto, Miguel Hita Vicente y Miguel Ángel Melón Pérez">
 	
-	<title>Gestión de Usuarios</title>
+	<title>Benutzerverwaltung</title>
 
 	<!-- Custom styles for this template -->
 	<link href="../../common/css/design.css" rel="stylesheet">
@@ -83,10 +83,10 @@
 							<span class="icon-bar"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
+							<li class="dropdown-header">Angeschlossen wie: <?php echo $_SESSION['loglogin']; ?></li>
 							<li class="divider"></li>
-							<li><a href="../home/personalData.php">Configuración Personal</a></li>
-							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
+							<li><a href="../home/personalData.php">Persönliche Einstellungen</a></li>
+							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Aussteigen</a></li>
 						</ul>
 					</li>
 				</div>
@@ -101,14 +101,14 @@
 				<form class="modal-content" action="../endsession.php">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Cerrar sesión</h4>
+						<h4 class="modal-title" id="exitRequestLabel">Abmelden</h4>
 					</div>
 					<div class="modal-body">
-						¿Estás seguro de que quieres salir?
+						Haben Sie sich abmelden wollen?
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-						<button type="submit" class="btn btn-primary">Sí, cerrar sesión</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Stornieren</button>
+						<button type="submit" class="btn btn-primary">Wenn, melden</button>
 					</div>
 				</form>
 			</div>
@@ -206,7 +206,7 @@
 				
 				<div class="col-md-9 scrollable" role="main">
 					<div class="bs-docs-section">
-						<h2 class="page-header">Gestión de usuarios</h2>
+						<h2 class="page-header">Benutzerverwaltung</h2>
 						<?php 
 						if(isset($_POST['newUsubmit'])){
 							if (isset($_POST['newUName']) && !empty($_POST['newUName'])){
@@ -218,7 +218,7 @@
 								if(getDBsinglefield('login', 'users', 'login', $newUser)){
 									?>
 									<script type="text/javascript">
-										alert('El usuario que se intenta crear ya existe');
+										alert('Der ausgewählte Benutzer existiert bereits');
 										window.location.href='admCurUsers.php';
 									</script>
 									<?php
@@ -231,7 +231,7 @@
 									
 										?>
 										<script type="text/javascript">
-											alert('Error al insertar el nuevo usuario');
+											alert('Fehler beim Ausfüllen des neuen Benutzers');
 											window.location.href='admCurUsers.php';
 										</script>
 										<?php
@@ -243,7 +243,7 @@
 										executeDBquery("UPDATE `profiles` SET `numUsers`='".$profileUsers."' WHERE `name`='".$_POST['newUProfile']."'");
 										?>
 										<script type="text/javascript">
-											alert('Usuario <?php echo $newUser; ?> creado con éxito. \nSu contraseña por defecto es: <?php echo $initialPass; ?>');
+											alert('Benutzer <?php echo $newUser; ?> wurde erfolgreich gespeichert. \nIhr Standardpasswort ist: <?php echo $initialPass; ?>');
 											window.location.href='admCurUsers.php';
 										</script>
 										<?php
@@ -261,7 +261,7 @@
 							if(getDBsinglefield('login', 'users', 'login', $newUser)){
 								?>
 								<script type="text/javascript">
-									alert('El usuario que está intentando crear ya existe');
+									alert('Der ausgewählte Benutzer existiert bereits');
 									window.location.href='admCurUsers.php';
 								</script>
 								<?php
@@ -273,7 +273,7 @@
 								(NULL, '".utf8_decode($newUser)."', '".$initialPass."', 'Candidato', '1', 'spanish', '1', CURRENT_TIMESTAMP, '".$expirationDate."')")){
 									?>
 									<script type="text/javascript">
-										alert('Error al crear el nuevo usuario');
+										alert('Fehler beim Ausfüllen des neuen Benutzers');
 										window.location.href='admCurUsers.php';
 									</script>
 									<?php
@@ -288,7 +288,7 @@
 									if(!ifCreateDir($userDir, 0777)){
 										?>
 										<script type="text/javascript">
-											alert('Error al crear el sistema de directorios del usuario');
+											alert('Fehler beim Benutzer Verzeichnissystem erstellen');
 											window.location.href='admCurUsers.php';
 										</script>
 										<?php
@@ -296,7 +296,7 @@
 									else{
 										?>
 										<script type="text/javascript">
-											alert('Estos son los datos de acceso para el usuario creado:\n Login: <?php echo $newUser; ?> \n Password: <?php echo $initialPass; ?> \n URL: http://areaprivada.perspectivaalemania.com ');
+											alert('Dies ist die datenquelle für den benutzer erstellt:\n Login: <?php echo $newUser; ?> \n Password: <?php echo $initialPass; ?> \n URL: http://areaprivada.perspectivaalemania.com ');
 											window.location.href='admCurUsers.php';
 										</script>
 										<?php
@@ -312,7 +312,7 @@
 									if(!deleteDBrow('cvitaes', 'userLogin', getDBsinglefield('login', 'users', 'id', $_GET['codvalue']))){
 										?>
 										<script type="text/javascript">
-											alert('Error al borrar el CV del usuario');
+											alert('Fehler beim benutzer lebenslauf löschen');
 											window.location.href='admCurUsers.php';
 										</script>
 										<?php 
@@ -321,7 +321,7 @@
 										if(!deleteDBrow('users', 'id', $_GET['codvalue'])){
 											?>
 											<script type="text/javascript">
-												alert('Error deleting User.');
+												alert('Konnte den benutzer zu löschen');
 												window.location.href='admCurUsers.php';
 											</script>
 											<?php 
@@ -348,7 +348,7 @@
 									if(!executeDBquery("UPDATE `users` SET `pass`='".$initialPass."', `needPass`='1', `passExpiration`='".$expirationDate."' WHERE `id`='".$userRow['id']."'")){
 										?>
 										<script type="text/javascript">
-											alert('Error al modificar atributo del usuario');
+											alert('Fehler beim benutzer attribut ändern');
 											window.location.href='admCurUsers.php';
 										</script>
 										<?php
@@ -356,7 +356,7 @@
 									else{
 										?>
 										<script type="text/javascript">
-											alert('Contraseña de Usuario modificada correctamente');
+											alert('Passwort korrekt geändert');
 											window.location.href='admCurUsers.php';
 										</script>
 										<?php
@@ -377,7 +377,7 @@
 							?>
 							<div class="panel panel-default"> <!-- Panel de Usuarios Existentes -->
 								<div class="panel-heading">
-									<h3 class="panel-title">Usuarios Existentes</h3>
+									<h3 class="panel-title">Existierende Benutzer</h3>
 								</div>
 								<div class="panel-body">
 									<div class="table-responsive">
@@ -386,14 +386,14 @@
 												<tr>
 													<th>Id</th>
 													<th>Login</th>
-													<th>Perfil</th>
-													<th>Empleado</th>
-													<th>Activo</th>
-													<th>Idioma</th>
-													<th>Creado</th>
-													<th>Ultima conexión</th>
-													<th>Caduca Password</th>
-													<th>Acción</th>
+													<th>Profil</th>
+													<th>Angestellter</th>
+													<th>Gültig</th>
+													<th>Sprache</th>
+													<th>Gegründet</th>
+													<th>Letzter Anschluss</th>
+													<th>Password gültig bis</th>
+													<th>Handlung</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -407,16 +407,16 @@
 													echo "<td><a class='launchModal' href='admCurUsers.php?codvalue=" . $showedUserRow['id'] . "'>" . $showedUserRow['login'] . "</a></td>";
 													echo "<td>" . $showedUserRow['profile'] . "</td>";
 													if($showedUserRow['employee'] == 1){
-														echo "<td>Sí</td>";
+														echo "<td>Ja</td>";
 													}
 													else{
-														echo "<td>No</td>";
+														echo "<td>Nicht</td>";
 													}
 													if($showedUserRow['active']){
-														echo "<td>Sí</td>";
+														echo "<td>Ja</td>";
 													}
 													else{
-														echo "<td>No</td>";
+														echo "<td>Nicht</td>";
 													}
 													echo "<td>" . getDBsinglefield($userRow['language'], 'siteLanguages', 'key', $showedUserRow['language']) . "</td>";
 													echo "<td>" . $showedUserRow['created'] . "</td>";
@@ -432,16 +432,16 @@
 									</div>
 
 									<div class="container-fluid center-block">
-										<h4>Nuevo Usuario</h4>
+										<h4>Neuer Benutzer</h4>
 										<form class="form-inline" role="form" name="newUser" action="admCurUsers.php" method="post">
 											<div class="form-group">
-												<label class="sr-only" for="newUName">Usuario</label>
-												<input type="text" class="form-control" size="6" name="newUName" placeholder="Usuario" />
+												<label class="sr-only" for="newUName">Benutzer</label>
+												<input type="text" class="form-control" size="6" name="newUName" placeholder="Benutzer" />
 											</div>
 											<div class="form-group">
-												<label class="sr-only" for="newUProfile">Perfil</label>
+												<label class="sr-only" for="newUProfile">Profil</label>
 												<select name="newUProfile" class="form-control">
-													<option selected disabled value=''>Perfil</option>
+													<option selected disabled value=''>Profil</option>
 													<?php 
 														$profNames = getDBcompletecolumnID('name', 'profiles', 'id');
 														foreach($profNames as $i){
@@ -452,9 +452,9 @@
 												</select>
 											</div>
 											<div class="form-group">
-												<label class="sr-only" for="newULanguage">Idioma</label>
+												<label class="sr-only" for="newULanguage">Sprache</label>
 												<select name="newULanguage" class="form-control">
-													<option selected disabled value=''>Idioma</option>
+													<option selected disabled value=''>Sprache</option>
 													<?php 
 														$userLanguage = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
 														$siteLanguages = getDBcompletecolumnID($userLanguage, 'siteLanguages', 'id');
@@ -467,8 +467,8 @@
 													?>
 												</select>
 											</div>
-											<button type="submit" class="btn btn-primary" name="newUsubmit" value="Añadir">Añadir</button>
-											<button type="submit" class="btn btn-primary pull-right" name="newUsubmitC" value="AñadirC">Crear Candidato</button>
+											<button type="submit" class="btn btn-primary" name="newUsubmit" value="Añadir">Hinzufügen</button>
+											<button type="submit" class="btn btn-primary pull-right" name="newUsubmitC" value="AñadirC">Erstellen Kandidat</button>
 										</form>
 									</div>
 									
@@ -480,7 +480,7 @@
 							?>
 							<div class="panel panel-default"> <!-- Panel de Usuarios Existentes -->
 								<div class="panel-heading">
-									<h3 class="panel-title">Usuarios Existentes</h3>
+									<h3 class="panel-title">Existierende Benutzer</h3>
 								</div>
 								<div class="panel-body">
 									<div class="table-responsive">
@@ -489,12 +489,12 @@
 												<tr>
 													<th>Id</th>
 													<th>Login</th>
-													<th>Perfil</th>
-													<th>Activo</th>
-													<th>Idioma</th>
-													<th>Creado</th>
-													<th>Ultima conexión</th>
-													<th>Caduca Password</th>
+													<th>Profil</th>
+													<th>Gültig</th>
+													<th>Sprache</th>
+													<th>Gegründet</th>
+													<th>Letzter Anschluss</th>
+													<th>Password gültig bis</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -508,10 +508,10 @@
 													echo "<td><a class='launchModal' href='admCurUsers.php?codvalue=" . $showedUserRow['id'] . "'>" . $showedUserRow['login'] . "</a></td>";
 													echo "<td>" . $showedUserRow['profile'] . "</td>";
 													if($showedUserRow['active']){
-														echo "<td>Sí</td>";
+														echo "<td>Ja</td>";
 													}
 													else{
-														echo "<td>No</td>";
+														echo "<td>Nicht</td>";
 													}
 													echo "<td>" . getDBsinglefield($userRow['language'], 'siteLanguages', 'key', $showedUserRow['language']) . "</td>";
 													echo "<td>" . $showedUserRow['created'] . "</td>";
@@ -526,16 +526,16 @@
 									</div>
 
 									<div class="container-fluid center-block">
-										<h4>Nuevo Usuario</h4>
+										<h4>Neuer Benutzer</h4>
 										<form class="form-inline" role="form" name="newUser" action="admCurUsers.php" method="post">
 											<div class="form-group">
-												<label class="sr-only" for="newUName">Usuario</label>
-												<input type="text" class="form-control" size="6" name="newUName" placeholder="Usuario" />
+												<label class="sr-only" for="newUName">Benutzer</label>
+												<input type="text" class="form-control" size="6" name="newUName" placeholder="Benutzer" />
 											</div>
 											<div class="form-group">
-												<label class="sr-only" for="newUProfile">Perfil</label>
+												<label class="sr-only" for="newUProfile">Profil</label>
 												<select name="newUProfile" class="form-control">
-													<option selected disabled value=''>Perfil</option>
+													<option selected disabled value=''>Profil</option>
 													<?php 
 														$profNames = getDBcompletecolumnID('name', 'profiles', 'id');
 														foreach($profNames as $i){
@@ -546,9 +546,9 @@
 												</select>
 											</div>
 											<div class="form-group">
-												<label class="sr-only" for="newULanguage">Idioma</label>
+												<label class="sr-only" for="newULanguage">Sprache</label>
 												<select name="newULanguage" class="form-control">
-													<option selected disabled value=''>Idioma</option>
+													<option selected disabled value=''>Sprache</option>
 													<?php 
 														$userLanguage = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
 														$siteLanguages = getDBcompletecolumnID($userLanguage, 'siteLanguages', 'id');
@@ -560,8 +560,8 @@
 													?>
 												</select>
 											</div>
-											<button type="submit" class="btn btn-primary" name="newUsubmit" value="Añadir">Añadir</button>
-											<button type="submit" class="btn btn-primary pull-right" name="newUsubmitC" value="AñadirC">Crear Candidato</button>
+											<button type="submit" class="btn btn-primary" name="newUsubmit" value="Añadir">Hinzufügen</button>
+											<button type="submit" class="btn btn-primary pull-right" name="newUsubmitC" value="AñadirC">Erstellen Kandidat</button>
 										</form>
 									</div>
 								</div>
@@ -603,13 +603,13 @@
 				<div class="modal-content panel-info">
 					<div class="modal-header panel-heading">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title">Usuario: <?php echo $editedUserRow['login'] ?></h4>
+						<h4 class="modal-title">Benutzer: <?php echo $editedUserRow['login'] ?></h4>
 					</div>
 					<form id="editedUser" class="form-horizontal" role="form" name="editedUser" autocomplete="off" method="post" action="admCurUsers.php">
 						<div class="modal-body">
 							<?php if($_SESSION['logprofile'] == 'SuperAdmin'){ ?>
 							<div class="form-group">
-								<label id="editedUserLabel" class="control-label col-sm-2" for="newUProfile">Identificador: </label> 
+								<label id="editedUserLabel" class="control-label col-sm-2" for="newUProfile">Referenz: </label> 
 								<div class="col-sm-10">
 									<input class="form-control" type='text' name='newUProfile' value="<?php echo $editedUserRow['id'] ?>" autocomplete="off" disabled />
 									<input type='hidden' name='eUcodUser' value="<?php echo $editedUserRow['id'] ?>">
@@ -625,7 +625,7 @@
 							</div>
 
 							<div class="form-group">
-								<label id="editedUserLabel" class="control-label col-sm-2" for="eUpasswd">Contraseña: </label>
+								<label id="editedUserLabel" class="control-label col-sm-2" for="eUpasswd">Passwort: </label>
 								<div class="col-sm-10">
 									<input class="form-control" type='password' name='eUpasswd' value="<?php echo $editedUserRow['pass'] ?>"  disabled />
 								</div>
@@ -634,7 +634,7 @@
 							<?php 
 								if($_SESSION['logprofile'] == 'SuperAdmin'){
 									echo "<div class='form-group'>";
-									echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUprofile'>Perfil: </label>";
+									echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUprofile'>Profil: </label>";
 									echo "<div class='col-sm-10'>";
 									if($editedUserRow['profile'] == 'Candidato'){
 										echo "<input class='form-control' type='text' name='eUprofile' value='Candidato' disabled />";
@@ -657,7 +657,7 @@
 								}
 								elseif($_SESSION['logprofile'] == 'Administrador'){
 									echo "<div class='form-group'>";
-									echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUprofile'>Perfil: </label>";
+									echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUprofile'>Profil: </label>";
 									echo "<div class='col-sm-10'>";
 									if($editedUserRow['profile'] == 'Candidato'){
 										echo "<input class='form-control' type='text' name='eUprofile' value='Candidato' disabled />";
@@ -682,7 +682,7 @@
 								}
 								else{
 									echo "<div class='form-group'>";
-									echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUprofile'>Perfil: </label>";	
+									echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUprofile'>Profil: </label>";	
 									echo "<div class='col-sm-10'>";
 									echo "<input class='form-control' type='text' name='eUprofile' value='" . $editedUserRow['profile'] . "' disabled />";
 									echo "</div>";
@@ -701,16 +701,16 @@
 
 								if($_SESSION['logprofile'] == 'SuperAdmin'){
 									echo "<div class='form-group'>";
-									echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUemployee'>Empleado: </label>";
+									echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUemployee'>Angestellter: </label>";
 									echo "<div class='col-sm-10'>";
 									echo "<div class='radio-inline'>";
 									if($editedUserRow['employee'] == 0){
-										echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUemployee' value='0' checked>No</label>";
-										echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUemployee' value='1'>Si</label>";
+										echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUemployee' value='0' checked>Nicht</label>";
+										echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUemployee' value='1'>Ja</label>";
 									}
 									else{
-										echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUemployee' value='0'>No</label>";
-										echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUemployee' value='1' checked>Si</label>";
+										echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUemployee' value='0'>Nicht</label>";
+										echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUemployee' value='1' checked>Ja</label>";
 									}
 									echo "</div>";
 									echo "</div>";
@@ -721,23 +721,23 @@
 								if ($_SESSION['logprofile'] == 'Administrador') $isDisabled = 'disabled';
 
 								echo "<div class='form-group'>";
-								echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUactive'>Activo: </label>";
+								echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUactive'>Gültig: </label>";
 								echo "<div class='col-sm-10'>";
 								echo "<div class='radio-inline'>";
 								if($editedUserRow['active'] == 0){
-									echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUactive' value='0'" . $isDisabled . " checked>No</label>";
-									echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUactive' value='1'" . $isDisabled . ">Si</label>";
+									echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUactive' value='0'" . $isDisabled . " checked>Nicht</label>";
+									echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUactive' value='1'" . $isDisabled . ">Ja</label>";
 								}
 								else{
-									echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUactive' value='0'" . $isDisabled . ">No</label>";
-									echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUactive' value='1'" . $isDisabled . " checked>Si</label>";
+									echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUactive' value='0'" . $isDisabled . ">Nicht</label>";
+									echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eUactive' value='1'" . $isDisabled . " checked>Ja</label>";
 								}
 								echo "</div>";
 								echo "</div>";
 								echo "</div>";
 
 								echo "<div class='form-group'>";
-								echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUlanguage'>Idioma: </label>";
+								echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUlanguage'>Sprache: </label>";
 								echo "<div class='col-sm-10'>";
 								echo "<select class='form-control' name='eUlanguage'>";													
 								$languagesColumn = getDBcompletecolumnID('key', 'siteLanguages', 'id');
@@ -754,21 +754,21 @@
 								echo "</div>";
 
 								echo "<div class='form-group'>";
-								echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUcreated'>Creado: </label>";
+								echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUcreated'>Gegündet: </label>";
 								echo "<div class='col-sm-10'>";
 								echo "<input class='form-control' type='text' name='eUcreated' value='" . $editedUserRow['created'] . "' disabled />";
 								echo "</div>";
 								echo "</div>";
 
 								echo "<div class='form-group'>";
-								echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUconnection'>Última conexión: </label>";
+								echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUconnection'>Letzter Anschluss: </label>";
 								echo "<div class='col-sm-10'>";
 								echo "<input class='form-control' type='text' name='eUconnection' value='" . $editedUserRow['lastConnection'] . "' disabled />";
 								echo "</div>";
 								echo "</div>";
 
 								echo "<div class='form-group'>";
-								echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUexpiration'>Caduca password: </label>";
+								echo "<label id='editedUserLabel' class='control-label col-sm-2' for='eUexpiration'>Password gültig bis: </label>";
 								echo "<div class='col-sm-10'>";
 								echo "<input class='form-control' type='text' name='eUexpiration' value='" . $editedUserRow['passExpiration'] . "' disabled />";
 								echo "</div>";
@@ -781,16 +781,16 @@
 							//If a non 'SuperAdmin' user edits any 'test' user it won't be able to reset its password
 							if($_SESSION['logprofile'] != 'SuperAdmin'){
 								if(strpos($editedUserRow['login'], 'test') === false){
-									echo "<td><a href='admCurUsers.php?codvalue=" . $editedUserRow['id'] . "&hiddenGET=hResPwd' onclick='return confirmPwdResetES();'>Resetear Contraseña</a></td>";
+									echo "<td><a href='admCurUsers.php?codvalue=" . $editedUserRow['id'] . "&hiddenGET=hResPwd' onclick='return confirmPwdResetES();'>Passwort zurücksetzen</a></td>";
 								}
 							}
 							else{
-								echo "<td><a href='admCurUsers.php?codvalue=" . $editedUserRow['id'] . "&hiddenGET=hResPwd' onclick='return confirmPwdResetES();'>Resetear Contraseña</a></td>";
+								echo "<td><a href='admCurUsers.php?codvalue=" . $editedUserRow['id'] . "&hiddenGET=hResPwd' onclick='return confirmPwdResetES();'>Passwort zurücksetzen</a></td>";
 							}
 							?>
 							<input type="hidden" value="<?php echo $editedUserRow['id']; ?>" name="hiddenCurUser">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-							<button type="submit" class="btn btn-primary" name="eUsersend">Guardar <span class="glyphicon glyphicon-floppy-save"></button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Stornieren</button>
+							<button type="submit" class="btn btn-primary" name="eUsersend">Speichern <span class="glyphicon glyphicon-floppy-save"></button>
 						</div>
 					</form>
 				</div>
@@ -976,14 +976,14 @@
 			
 			if (isset($_POST['eUsersend'])) {
 				echo "<script type='text/javascript'>";
-				echo "	alert('El usuario " . $editedUserRow['login'] . " ha sido actualizado con éxito.');";
+				echo "	alert('Der Benutzer " . $editedUserRow['login'] . " wurde erfolgreich atualisiert');";
 				echo "	window.location.href='admCurUsers.php';";
 				echo "</script>";
 			}
 		
 		}
 		/***************  Fin del bloque que valida el contenido enviado en el formulario  ***************/
-	
+		
 	} //del "else" de $_SESSION.
 
 	?>

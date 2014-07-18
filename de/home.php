@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="David Alfonso Ginés Prieto, Miguel Hita Vicente y Miguel Ángel Melón Pérez">
 	
-	<title>Inicio</title>
+	<title>Beginn</title>
 
 	<!-- Custom styles for this template -->
 	<link href="../common/css/design.css" rel="stylesheet">
@@ -79,9 +79,9 @@
 								<span class="icon-bar"></span>
 							</button>
 							<ul class="dropdown-menu">
-								<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
+								<li class="dropdown-header">Angeschossen wie: <?php echo $_SESSION['loglogin']; ?></li>
 								<li class="divider"></li>
-								<li><a href="home/personalData.php">Configuración personal</a></li>
+								<li><a href="home/personalData.php">Persönliche Einstellungen</a></li>
 								<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
 							</ul>
 						</li>
@@ -97,14 +97,14 @@
 				<form class="modal-content" action="endsession.php">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Cerrar sesión</h4>
+						<h4 class="modal-title" id="exitRequestLabel">Abmelden</h4>
 					</div>
 					<div class="modal-body">
-						¿Estás seguro de que quieres salir?
+						Haben Sie sich abmelden wollen?
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-						<button type="submit" class="btn btn-primary">Sí, cerrar sesión</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Stormieren</button>
+						<button type="submit" class="btn btn-primary">Wenn, melden</button>
 					</div>
 				</form>
 			</div>
@@ -194,41 +194,41 @@
 						<?php 
 						//Conditional block for 'Administrador' or 'SuperAdmin' profiles
 						if(($userRow['profile'] == 'Administrador') || ($userRow['profile'] == 'SuperAdmin')){
-							echo "<h1 class='page-header'>Noticias <br></h1>";
+							echo "<h1 class='page-header'>Nachrichten <br></h1>";
 							echo "<div class='clearfix'>";
 							if((getDBrowsnumber('cvitaes') == 0) || ($pendingCVs == 0)){
-								echo "<h1 class='page-header'><small>No existen CVs por validar</small></h1>";
+								echo "<h1 class='page-header'><small>Es gibt keine Lebensläufe über überprüfen</small></h1>";
 							}
 							else{
-								echo "<h2><small>Existen <a href=./home/pendingCVs.php>" . $pendingCVs . " </a> CVs por validar </small></h2><br>";
+								echo "<h2><small>Es gibt <a href=./home/pendingCVs.php>" . $pendingCVs . " </a> Lebensläufe zu überprüfen </small></h2><br>";
 							}
 
 							if(suggestPassword(date('Y-m-d'), $userRow['passExpiration'], $days)){
-								echo "<h4 class='text-danger'>&nbsp;Su contraseña caduca en " . $days . " días. <a href=./home/personalData.php>Cambiar</a><span class='label label-danger notice-label pull-left'>Aviso</span></h4>";
+								echo "<h4 class='text-danger'>&nbsp;Ihr passwort läuft in " . $days . " tage. <a href=./home/personalData.php>Ändern</a><span class='label label-danger notice-label pull-left'>Achtung</span></h4>";
 								echo "</div>";
 							}
 						}
 						//Conditional block for 'Lector' profile
 						elseif($userRow['profile'] == 'Lector'){
 							if(suggestPassword(date('Y-m-d'), $userRow['passExpiration'], $days)){
-								echo "<h1 class='page-header'>Noticias <br></h1>";
+								echo "<h1 class='page-header'>Nachrichten <br></h1>";
 								echo "<div class='clearfix'>";
-								echo "<h4 class='text-danger'>&nbsp;Su contraseña caduca en " . $days . " días. <a href=./home/personalData.php>Cambiar</a><span class='label label-danger notice-label pull-left'>Aviso</span></h4>";
+								echo "<h4 class='text-danger'>&nbsp;Ihr passwort läuft in " . $days . " tage. <a href=./home/personalData.php>Ändern</a><span class='label label-danger notice-label pull-left'>Achtung</span></h4>";
 								echo "</div>";
 							}
 							else{
-								echo "<h1 class='page-header'>Noticias <br></h1>";
+								echo "<h1 class='page-header'>Nachrichten <br></h1>";
 								echo "<div class='clearfix'>";
 							}
 						}
 						//Conditional block for any other profile (which in fact is only 'Candidato')
 						else{
-							echo "<h1 class='page-header'>Introduce tu CV... <small>" . $userRow['login'] . "</small></h1>";
+							echo "<h1 class='page-header'>Geben Sie Ihren Lebenslauf... <small>" . $userRow['login'] . "</small></h1>";
 							include 'upload.php';
 						}
 						//This part of code lets the system show a previously written message (SAVED IN FILE "broadcasting.txt")
 						if(($userRow['employee'] == '1') && (file_exists($_SERVER['DOCUMENT_ROOT'].'/broadcasting.txt'))){
-							echo "<br><h4 class='text-danger'><span class='label label-warning notice-label pull-left'>Información importante</span></h4><br>";
+							echo "<br><h4 class='text-danger'><span class='label label-warning notice-label pull-left'>Wichtige Informationen</span></h4><br>";
 							echo "<h4 class='text-warning'>";
 							include '../broadcasting.txt';
 							echo "</h4>";

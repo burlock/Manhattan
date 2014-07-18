@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic|Ubuntu+Condensed&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-	<title>Gestión de Perfiles</title>
+	<title>Profilverwaltung</title>
 	<link href="../../common/css/styles.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="../../common/js/functions.js"></script>
 	<script type="text/javascript" src="../../common/js/jquery-1.10.1.min.js"></script>
@@ -51,9 +51,9 @@
 		}
 		?>
 		<div id="topbar" class="azul">
-			<a style="float:left;" href="#">Opciones</a>
-			<a style="float:center">Conectado como: <?php echo $_SESSION['loglogin']; ?></a>
-			<a href="../endsession.php" style="float:right">Salir</a>
+			<a style="float:left;" href="#">Optionen</a>
+			<a style="float:center">Angeschossen wie: <?php echo $_SESSION['loglogin']; ?></a>
+			<a href="../endsession.php" style="float:right">Aussteigen</a>
 		</div>
 		<?php 
 		$myFile = 'administration';

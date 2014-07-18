@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="David Alfonso Ginés Prieto, Miguel Hita Vicente y Miguel Ángel Melón Pérez">
 	
-	<title>Buscar CVs</title>
+	<title>Suche CVs</title>
 	
 	<!-- Custom styles for this template -->
 	<link href="../../common/css/design.css" rel="stylesheet">
@@ -79,10 +79,10 @@
 							<span class="icon-bar"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
+							<li class="dropdown-header">Angeschossen wie: <?php echo $_SESSION['loglogin']; ?></li>
 							<li class="divider"></li>
-							<li><a href="../home/personalData.php">Configuración personal</a></li>
-							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
+							<li><a href="../home/personalData.php">Persönliche Einstellungen</a></li>
+							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Aussteigen</a></li>
 						</ul>
 					</li>
 				</div>
@@ -97,14 +97,14 @@
 				<form class="modal-content" action="../endsession.php">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Cerrar sesión</h4>
+						<h4 class="modal-title" id="exitRequestLabel">Abmelden</h4>
 					</div>
 					<div class="modal-body">
-						¿Estás seguro de que quieres salir?
+						Haben Sie sich abmelden wollen?
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-						<button type="submit" class="btn btn-primary">Sí, cerrar sesión</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Stormieren</button>
+						<button type="submit" class="btn btn-primary">Wenn, melden</button>
 					</div>
 				</form>
 			</div>
@@ -197,16 +197,16 @@
 				<!--  ****************************************   Start of displayed Modal HTML   ****************************************  -->
 				<div class="col-md-9" role="main"> 
 					<div class="bs-docs-section">
-						<h2 class="page-header">Buscar CVs</h2>
+						<h2 class="page-header">Suche CVs</h2>
 						<div class="panel panel-default scrollable">
 							<div class="panel-heading">
-								<h2 class="panel-title">Introduzca Criterios de Búsqueda</h2>
+								<h2 class="panel-title">Geben Sie Suchkriterien</h2>
 							</div>
 							<div class="panel-body scrollable">
 								
 								<form id="searchForm" name="searchForm" class="form-horizontal" method="post" action="searchResult.php" autocomplete="off" autocapitalize="off" enctype="multipart/form-data" onsubmit="return comprobar()";>
 									<div id="form_WordKey" class="form-group">
-										<label for="blankWordKey" class="control-label col-xs-3">Palabra Clave</label>
+										<label for="blankWordKey" class="control-label col-xs-3">Stichwort</label>
 										<div class="col-xs-9">
 											<input type="text" class="form-control" name="blankWordKey" id="blankWordKey" maxlength="12" placeholder="Max. 12 caracteres" autofocus>
 										</div>
@@ -220,10 +220,10 @@
 									</div> <!-- id="form_NIE" -->
 
 									<div id="form_Driving" class="form-group">
-										<label for="drivingType" class="control-label col-xs-3">Carné de Conducir</label>
+										<label for="drivingType" class="control-label col-xs-3">Führerschein</label>
 										<div class="col-xs-2">
 											<select name="drivingType" class="form-control">
-													<option selected disabled value=''>Tipo</option>
+													<option selected disabled value=''>Muster</option>
 													<option value="1">AM</option>
 													<option value="2">A</option>
 													<option value="3">A1</option>
@@ -243,10 +243,10 @@
 									</div> <!-- id="form_Driving" -->
 									
 									<div id="form_Nationality" class="form-group">
-										<label for="blankNationality" class="control-label col-xs-3">Nacionalidad</label> 
+										<label for="blankNationality" class="control-label col-xs-3">Staatsangehörigkeit</label> 
 										<div class="col-xs-9">
 											<select name="blankNationality" class="form-control">
-												<option value="Spain"> España </option>
+												<option value="Spain"> Spanien </option>
 												<?php 
 												$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
 												$countryName = getDBcompletecolumnID($userLang, 'countries', $userLang);
@@ -259,41 +259,41 @@
 									</div> <!-- id="form_Nationality" -->
 									
 									<div id="form_Status" class="form-group">
-										<label for="civilStatus" class="control-label col-xs-3">Estado civil</label>
+										<label for="civilStatus" class="control-label col-xs-3">Familienstand</label>
 										<div class="col-xs-9">
 											<select name="civilStatus" class="form-control">
-												<option selected disabled value="">-- Estado --</option>
-												<option value="1">Soltero/a</option>
-												<option value="2">Casado/a</option>
-												<option value="3">Divorciado/a</option>
-												<option value="4">Viudo/a</option>
-												<option value="5">Separado/a</option>
+												<option selected disabled value="">-- Status --</option>
+												<option value="1">Ledig</option>
+												<option value="2">Verheiratet</option>
+												<option value="3">Geschieden</option>
+												<option value="4">Verwitwet</option>
+												<option value="5">Getrennt</option>
 											</select>
 										</div>
-									</div> <!-- id="form_Status" -->			
+									</div> <!-- id="form_Status" -->
 
 									<div id="form_genre" class="form-group">
-										<label for="blankSex" class="control-label col-xs-3">Sexo</label>
+										<label for="blankSex" class="control-label col-xs-3">Geschlecht</label>
 										<div class="col-xs-3" style="padding: 10px;">
-											<label><input type="radio" name="blankSex" value="0"> Hombre</label>
+											<label><input type="radio" name="blankSex" value="0"> Mann</label>
 										</div>
 										<div class="col-xs-3" style="padding: 10px;">
-											<label><input type="radio" name="blankSex" value="1"> Mujer</label>
+											<label><input type="radio" name="blankSex" value="1"> Weib</label>
 										</div>
 									</div> <!-- id="form_genre" -->		
 
 									<div id="form_childrens" class="form-group">
-										<label for="blankSons" class="control-label col-xs-3">Hijos</label>
+										<label for="blankSons" class="control-label col-xs-3">Kinder</label>
 										<div class="col-xs-9">
 											<input type="number" class="form-control" name="blankSons" id="blankSons" maxlength="2">
 										</div>
 									</div> <!-- id="form_NIE" -->
 
 									<div id="form_Languages" class="form-group">
-										<label for="blankLanguages" class="control-label col-xs-3">Nivel de idiomas</label>
+										<label for="blankLanguages" class="control-label col-xs-3">Sprachniveau</label>
 										<div class="col-xs-4">
 											<select name="blankLanguages" class="form-control">
-												<option selected disabled value=''>Elija idioma</option>
+												<option selected disabled value=''>Wählen sie sprache</option>
 												<?php
 												$langNames = getDBcompletecolumnID($userRow['language'], 'languages', $userRow['language']);
 												foreach ($langNames as $i){
@@ -304,35 +304,35 @@
 										</div>
 										<div class="col-xs-5">
 											<select name="languagelevel" class="form-control">
-												<option selected value="null">Elija nivel</option>
+												<option selected value="null">Wählen sie ebene</option>
 												<option value="A1">A1</option>
 												<option value="A2">A2</option>
 												<option value="B1">B1</option>
 												<option value="B2">B2</option>
 												<option value="C1">C1</option>
 												<option value="C2">C2</option>
-												<option value="mothertongue">Lengua materna</option>
+												<option value="mothertongue">Muttersprache</option>
 											</select>
 										</div>
-									</div> <!-- id="form_languages" -->
+									</div> <!-- id="form_languages" -->		
 
 									<div id="form_Profession" class="form-group">
-										<label for="blankJob" class="control-label col-xs-3">Profesión</label>
+										<label for="blankJob" class="control-label col-xs-3">Beruf</label>
 										<div class="col-xs-9">
-											<input type="text" class="form-control" name="blankJob" id="blankJob" maxlength="12" placeholder="Profesión actual">
+											<input type="text" class="form-control" name="blankJob" id="blankJob" maxlength="12" placeholder="Aktuelle beruf">
 										</div>
 									</div> <!-- id="form_Profession" -->
 
 									<div id="form_Title" class="form-group">
-										<label for="titleType" class="control-label col-xs-3">Formación</label>
+										<label for="titleType" class="control-label col-xs-3">Ausbildung</label>
 										<div class="col-xs-3">
 											<select name="tittletype" class="form-control">
-												<option selected disabled value="">Sin estudios</option>
-												<option value="1">Educación obligatoria</option>
-												<option value="2">Bachillerato</option>
-												<option value="3">Formación profesional</option>
-												<option value="4">Diplomatura</option>
-												<option value="5">Licenciatura</option>
+												<option selected disabled value="">Ohne ausbildung</option>
+												<option value="1">Pflichtausbildung</option>
+												<option value="2">Abitur</option>
+												<option value="3">Berufsausbildung</option>
+												<option value="4">Diplomstudiengang</option>
+												<option value="5">Titel</option>
 											</select>
 										</div>
 										<div class="col-xs-6">
@@ -343,43 +343,41 @@
 									<div id="report_set" class="panel panel-default">
   										<div class="panel-body">
 											<div id="form_report" class="form-group">
-												<label for="reportType" class="control-label col-xs-3">Tipo de informe</label>
+												<label for="reportType" class="control-label col-xs-3">Typ des berichts</label>
 												<div class="col-xs-3" style="padding: 10px;">
-													<label><input type="radio" name="reportType" value="full_report" onclick="test(2);" checked> Completo</label>
+													<label><input type="radio" name="reportType" value="full_report" onclick="test(2);" checked> Volle</label>
 												</div>
 												<div class="col-xs-3" style="padding: 10px;">
-													<label><input type="radio" name="reportType" value="blind_report" onclick="test(2);"> Ciego</label>
+													<label><input type="radio" name="reportType" value="blind_report" onclick="test(2);"> Blind</label>
 												</div>
 												<div class="col-xs-3" style="padding: 10px;">
-													<label><input type="radio" name="reportType" value="custom_report" onclick="test(1);"> Personalizado</label>
+													<label><input type="radio" name="reportType" value="custom_report" onclick="test(1);"> Personalisiert</label>
 												</div>										
 											</div> <!-- id="form_report" -->	
 
-											<hr>									
-
 											<div id="form_custom_report" class="form-group">
-												<label><input type="checkbox" name="per[]" value="name" disabled> Nombre</label>
-												<label><input type="checkbox" name="per[]" value="surname" disabled> Apellidos</label>
-												<label><input type="checkbox" name="per[]" value="addrName" disabled> Direccion</label>
-												<label><input type="checkbox" name="per[]" value="mobile" disabled> Telefono Movil</label>
-												<label><input type="checkbox" name="per[]" value="phone" disabled> Telefono Fijo</label>
-												<label><input type="checkbox" name="per[]" value="mail" disabled> Email</label>
-												<label><input type="checkbox" name="per[]" value="drivingType" disabled> Carnet Conducir</label>
-												<label><input type="checkbox" name="per[]" value="marital" disabled> Estado Civil</label>
-												<label><input type="checkbox" name="per[]" value="sons" disabled> Hijos Civil</label>
-												<label><input type="checkbox" name="per[]" value="language" disabled> Idiomas</label>
-												<label><input type="checkbox" name="per[]" value="occupation" disabled> Profesion</label>
-												<label><input type="checkbox" name="per[]" value="experDesc" disabled> Experiencia Laboral</label>
+												<label><input type="checkbox" name="per[]" value="name" disabled> Namen</label>
+												<label><input type="checkbox" name="per[]" value="surname" disabled> Nachnamen</label>
+												<label><input type="checkbox" name="per[]" value="addrName" disabled> Adresse</label>
+												<label><input type="checkbox" name="per[]" value="mobile" disabled> Handy</label>
+												<label><input type="checkbox" name="per[]" value="phone" disabled> Andere telefon</label>
+												<label><input type="checkbox" name="per[]" value="mail" disabled> E-mail</label>
+												<label><input type="checkbox" name="per[]" value="drivingType" disabled> Führerschein</label>
+												<label><input type="checkbox" name="per[]" value="marital" disabled> Familienstand</label>
+												<label><input type="checkbox" name="per[]" value="sons" disabled> Kinder</label>
+												<label><input type="checkbox" name="per[]" value="language" disabled> Sprache</label>
+												<label><input type="checkbox" name="per[]" value="occupation" disabled> Beruf</label>
+												<label><input type="checkbox" name="per[]" value="experDesc" disabled> Berufserfahrung</label>
 											</div>
 										</div>
 									</div>
-
+								
 									<div id="form_submit" class="form-group pull-right" style="margin: 1px;">
-										<button type="submit" name="Buscar" class="btn btn-primary" >Buscar <span class="glyphicon glyphicon-search"> </span></button>
+										<button type="submit" name="Buscar" class="btn btn-primary" >Finden <span class="glyphicon glyphicon-search"> </span></button>
 									</div>
 
 								</form> <!-- id="searchForm" -->
-
+								
 							</div> <!-- class="panel-body" -->
 						</div> <!-- class="panel panel-default" -->
 					</div> <!-- bs-docs-section -->

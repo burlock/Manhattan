@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="David Alfonso Ginés Prieto, Miguel Hita Vicente y Miguel Ángel Melón Pérez">
 	
-	<title>Buscar CVs</title>
+	<title>Search CVs</title>
 	
 	<!-- Custom styles for this template -->
 	<link href="../../common/css/design.css" rel="stylesheet">
@@ -79,10 +79,10 @@
 							<span class="icon-bar"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
+							<li class="dropdown-header">Logged in as: <?php echo $_SESSION['loglogin']; ?></li>
 							<li class="divider"></li>
-							<li><a href="../home/personalData.php">Configuración personal</a></li>
-							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
+							<li><a href="../home/personalData.php">Personal Settings</a></li>
+							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Exit</a></li>
 						</ul>
 					</li>
 				</div>
@@ -97,14 +97,14 @@
 				<form class="modal-content" action="../endsession.php">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Cerrar sesión</h4>
+						<h4 class="modal-title" id="exitRequestLabel">Close Session</h4>
 					</div>
 					<div class="modal-body">
-						¿Estás seguro de que quieres salir?
+						Are you sure you want to close session?
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-						<button type="submit" class="btn btn-primary">Sí, cerrar sesión</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button type="submit" class="btn btn-primary">Yes, close session</button>
 					</div>
 				</form>
 			</div>
@@ -197,33 +197,33 @@
 				<!--  ****************************************   Start of displayed Modal HTML   ****************************************  -->
 				<div class="col-md-9" role="main"> 
 					<div class="bs-docs-section">
-						<h2 class="page-header">Buscar CVs</h2>
+						<h2 class="page-header">Search CVs</h2>
 						<div class="panel panel-default scrollable">
 							<div class="panel-heading">
-								<h2 class="panel-title">Introduzca Criterios de Búsqueda</h2>
+								<h2 class="panel-title">Enter Search Criteria</h2>
 							</div>
 							<div class="panel-body scrollable">
 								
 								<form id="searchForm" name="searchForm" class="form-horizontal" method="post" action="searchResult.php" autocomplete="off" autocapitalize="off" enctype="multipart/form-data" onsubmit="return comprobar()";>
 									<div id="form_WordKey" class="form-group">
-										<label for="blankWordKey" class="control-label col-xs-3">Palabra Clave</label>
+										<label for="blankWordKey" class="control-label col-xs-3">Key word</label>
 										<div class="col-xs-9">
-											<input type="text" class="form-control" name="blankWordKey" id="blankWordKey" maxlength="12" placeholder="Max. 12 caracteres" autofocus>
+											<input type="text" class="form-control" name="blankWordKey" id="blankWordKey" maxlength="12" placeholder="Max. 12 characters" autofocus>
 										</div>
 									</div> <!-- id="form_WordKey" -->
 									
 									<div id="form_NIE" class="form-group">
 										<label for="blankNIE" class="control-label col-xs-3">NIE</label>
 										<div class="col-xs-9">
-											<input type="text" class="form-control" name="blankNIE" id="blankNIE" maxlength="12" placeholder="Max. 12 caracteres" autofocus>
+											<input type="text" class="form-control" name="blankNIE" id="blankNIE" maxlength="12" placeholder="Max. 12 characters" autofocus>
 										</div>
 									</div> <!-- id="form_NIE" -->
 
 									<div id="form_Driving" class="form-group">
-										<label for="drivingType" class="control-label col-xs-3">Carné de Conducir</label>
+										<label for="drivingType" class="control-label col-xs-3">Driving license</label>
 										<div class="col-xs-2">
 											<select name="drivingType" class="form-control">
-													<option selected disabled value=''>Tipo</option>
+													<option selected disabled value=''>Type</option>
 													<option value="1">AM</option>
 													<option value="2">A</option>
 													<option value="3">A1</option>
@@ -243,11 +243,11 @@
 									</div> <!-- id="form_Driving" -->
 									
 									<div id="form_Nationality" class="form-group">
-										<label for="blankNationality" class="control-label col-xs-3">Nacionalidad</label> 
+										<label for="blankNationality" class="control-label col-xs-3">Nationality</label> 
 										<div class="col-xs-9">
 											<select name="blankNationality" class="form-control">
-												<option value="Spain"> España </option>
-												<?php 
+												<option value="Spain"> Spain </option>
+												<?php
 												$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
 												$countryName = getDBcompletecolumnID($userLang, 'countries', $userLang);
 												foreach($countryName as $i){
@@ -259,41 +259,41 @@
 									</div> <!-- id="form_Nationality" -->
 									
 									<div id="form_Status" class="form-group">
-										<label for="civilStatus" class="control-label col-xs-3">Estado civil</label>
+										<label for="civilStatus" class="control-label col-xs-3">Marital status</label>
 										<div class="col-xs-9">
 											<select name="civilStatus" class="form-control">
-												<option selected disabled value="">-- Estado --</option>
-												<option value="1">Soltero/a</option>
-												<option value="2">Casado/a</option>
-												<option value="3">Divorciado/a</option>
-												<option value="4">Viudo/a</option>
-												<option value="5">Separado/a</option>
+												<option selected disabled value="">-- Status --</option>
+												<option value="1">Single</option>
+												<option value="2">Married</option>
+												<option value="3">Divorced</option>
+												<option value="4">Widowed</option>
+												<option value="5">Separated</option>
 											</select>
 										</div>
 									</div> <!-- id="form_Status" -->			
 
 									<div id="form_genre" class="form-group">
-										<label for="blankSex" class="control-label col-xs-3">Sexo</label>
+										<label for="blankSex" class="control-label col-xs-3">Gender</label>
 										<div class="col-xs-3" style="padding: 10px;">
-											<label><input type="radio" name="blankSex" value="0"> Hombre</label>
+											<label><input type="radio" name="blankSex" value="0"> Male</label>
 										</div>
 										<div class="col-xs-3" style="padding: 10px;">
-											<label><input type="radio" name="blankSex" value="1"> Mujer</label>
+											<label><input type="radio" name="blankSex" value="1"> Female</label>
 										</div>
 									</div> <!-- id="form_genre" -->		
 
 									<div id="form_childrens" class="form-group">
-										<label for="blankSons" class="control-label col-xs-3">Hijos</label>
+										<label for="blankSons" class="control-label col-xs-3">Sons</label>
 										<div class="col-xs-9">
 											<input type="number" class="form-control" name="blankSons" id="blankSons" maxlength="2">
 										</div>
 									</div> <!-- id="form_NIE" -->
 
 									<div id="form_Languages" class="form-group">
-										<label for="blankLanguages" class="control-label col-xs-3">Nivel de idiomas</label>
+										<label for="blankLanguages" class="control-label col-xs-3">Language level</label>
 										<div class="col-xs-4">
 											<select name="blankLanguages" class="form-control">
-												<option selected disabled value=''>Elija idioma</option>
+												<option selected disabled value=''>Choose language</option>
 												<?php
 												$langNames = getDBcompletecolumnID($userRow['language'], 'languages', $userRow['language']);
 												foreach ($langNames as $i){
@@ -304,78 +304,76 @@
 										</div>
 										<div class="col-xs-5">
 											<select name="languagelevel" class="form-control">
-												<option selected value="null">Elija nivel</option>
+												<option selected value="null">Choose level</option>
 												<option value="A1">A1</option>
 												<option value="A2">A2</option>
 												<option value="B1">B1</option>
 												<option value="B2">B2</option>
 												<option value="C1">C1</option>
 												<option value="C2">C2</option>
-												<option value="mothertongue">Lengua materna</option>
+												<option value="mothertongue">Mother tongue</option>
 											</select>
 										</div>
-									</div> <!-- id="form_languages" -->
+									</div> <!-- id="form_languages" -->		
 
 									<div id="form_Profession" class="form-group">
-										<label for="blankJob" class="control-label col-xs-3">Profesión</label>
+										<label for="blankJob" class="control-label col-xs-3">Career</label>
 										<div class="col-xs-9">
-											<input type="text" class="form-control" name="blankJob" id="blankJob" maxlength="12" placeholder="Profesión actual">
+											<input type="text" class="form-control" name="blankJob" id="blankJob" maxlength="12" placeholder="Current Profession">
 										</div>
 									</div> <!-- id="form_Profession" -->
 
 									<div id="form_Title" class="form-group">
-										<label for="titleType" class="control-label col-xs-3">Formación</label>
+										<label for="titleType" class="control-label col-xs-3">Education</label>
 										<div class="col-xs-3">
 											<select name="tittletype" class="form-control">
-												<option selected disabled value="">Sin estudios</option>
-												<option value="1">Educación obligatoria</option>
-												<option value="2">Bachillerato</option>
-												<option value="3">Formación profesional</option>
-												<option value="4">Diplomatura</option>
-												<option value="5">Licenciatura</option>
+												<option selected disabled value="">Without studies</option>
+												<option value="1">Mandatory education</option>
+												<option value="2">High school degree</option>
+												<option value="3">Vocational training</option>
+												<option value="4">University degree</option>
+												<option value="5">Degree</option>
 											</select>
 										</div>
 										<div class="col-xs-6">
-											<input type="text" class="form-control" name="tittles" placeholder="Estudios" />
+											<input type="text" class="form-control" name="tittles" placeholder="Studies" />
 										</div>
 									</div> <!-- id="form_Title" -->
 
 									<div id="report_set" class="panel panel-default">
   										<div class="panel-body">
 											<div id="form_report" class="form-group">
-												<label for="reportType" class="control-label col-xs-3">Tipo de informe</label>
+												<label for="reportType" class="control-label col-xs-3">Report type</label>
 												<div class="col-xs-3" style="padding: 10px;">
-													<label><input type="radio" name="reportType" value="full_report" onclick="test(2);" checked> Completo</label>
+													<label><input type="radio" name="reportType" value="full_report" onclick="test(2);" checked> Full</label>
 												</div>
 												<div class="col-xs-3" style="padding: 10px;">
-													<label><input type="radio" name="reportType" value="blind_report" onclick="test(2);"> Ciego</label>
+													<label><input type="radio" name="reportType" value="blind_report" onclick="test(2);"> Blind</label>
 												</div>
 												<div class="col-xs-3" style="padding: 10px;">
-													<label><input type="radio" name="reportType" value="custom_report" onclick="test(1);"> Personalizado</label>
+													<label><input type="radio" name="reportType" value="custom_report" onclick="test(1);"> Personalized</label>
 												</div>										
 											</div> <!-- id="form_report" -->	
 
-											<hr>									
-
 											<div id="form_custom_report" class="form-group">
-												<label><input type="checkbox" name="per[]" value="name" disabled> Nombre</label>
-												<label><input type="checkbox" name="per[]" value="surname" disabled> Apellidos</label>
-												<label><input type="checkbox" name="per[]" value="addrName" disabled> Direccion</label>
-												<label><input type="checkbox" name="per[]" value="mobile" disabled> Telefono Movil</label>
-												<label><input type="checkbox" name="per[]" value="phone" disabled> Telefono Fijo</label>
-												<label><input type="checkbox" name="per[]" value="mail" disabled> Email</label>
-												<label><input type="checkbox" name="per[]" value="drivingType" disabled> Carnet Conducir</label>
-												<label><input type="checkbox" name="per[]" value="marital" disabled> Estado Civil</label>
-												<label><input type="checkbox" name="per[]" value="sons" disabled> Hijos Civil</label>
-												<label><input type="checkbox" name="per[]" value="language" disabled> Idiomas</label>
-												<label><input type="checkbox" name="per[]" value="occupation" disabled> Profesion</label>
-												<label><input type="checkbox" name="per[]" value="experDesc" disabled> Experiencia Laboral</label>
+												<label><input type="checkbox" name="per[]" value="name" disabled> Name</label>
+												<label><input type="checkbox" name="per[]" value="surname" disabled> Surnames</label>
+												<label><input type="checkbox" name="per[]" value="addrName" disabled> Address</label>
+												<label><input type="checkbox" name="per[]" value="mobile" disabled> Mobile</label>
+												<label><input type="checkbox" name="per[]" value="phone" disabled> Other phone</label>
+												<label><input type="checkbox" name="per[]" value="mail" disabled> E-mail</label>
+												<label><input type="checkbox" name="per[]" value="drivingType" disabled> Driving license</label>
+												<label><input type="checkbox" name="per[]" value="marital" disabled> Marital status</label>
+												<label><input type="checkbox" name="per[]" value="sons" disabled> Sons</label>
+												<label><input type="checkbox" name="per[]" value="language" disabled> Languages</label>
+												<label><input type="checkbox" name="per[]" value="occupation" disabled> Career</label>
+												<label><input type="checkbox" name="per[]" value="experDesc" disabled> Work experience</label>
 											</div>
 										</div>
 									</div>
-
+								
 									<div id="form_submit" class="form-group pull-right" style="margin: 1px;">
-										<button type="submit" name="Buscar" class="btn btn-primary" >Buscar <span class="glyphicon glyphicon-search"> </span></button>
+										<button type="submit" name="Buscar" class="btn btn-primary" >Search <span class="glyphicon glyphicon-search"> </span></button>
 									</div>
 
 								</form> <!-- id="searchForm" -->

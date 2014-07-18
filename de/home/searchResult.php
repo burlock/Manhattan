@@ -13,7 +13,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 	<meta name="description" content="">
 	<meta name="author" content="David Alfonso Ginés Prieto, Miguel Hita Vicente y Miguel Ángel Melón Pérez">
 	
-	<title>CVs Encontrados</title>
+	<title>CVs Gefunden</title>
 	
 	<!-- Custom styles for this template -->
 	<link href="../../common/css/design.css" rel="stylesheet">
@@ -88,10 +88,10 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 							<span class="icon-bar"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
+							<li class="dropdown-header">Angeschossen wie: <?php echo $_SESSION['loglogin']; ?></li>
 							<li class="divider"></li>
-							<li><a href="../home/personalData.php">Configuración personal</a></li>
-							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
+							<li><a href="../home/personalData.php">Persönliche Einstellungen</a></li>
+							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Aussteigen</a></li>
 						</ul>
 					</li>
 				</div>
@@ -106,14 +106,14 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 				<form class="modal-content" action="../endsession.php">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Cerrar sesión</h4>
+						<h4 class="modal-title" id="exitRequestLabel">Abmelden</h4>
 					</div>
 					<div class="modal-body">
-						¿Estás seguro de que quieres salir?
+						Haben Sie sich abmelden wollen?
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-						<button type="submit" class="btn btn-primary">Sí, cerrar sesión</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Stormieren</button>
+						<button type="submit" class="btn btn-primary">Wenn, melden</button>
 					</div>
 				</form>
 			</div>
@@ -204,7 +204,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 
 				<div class="col-md-9 scrollable" role="main">
 					<div class="bs-docs-section">
-						<h2 class="page-header">Resultados de la Búsqueda</h2>
+						<h2 class="page-header">Die Ergebnisse der Suche</h2>
 						<?php
 						include 'Cezpdf.php';
 
@@ -230,7 +230,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 						if ($resultado = mysqli_query($enlace, $consulta)) {
 							//Obtaining field information for every column
 							//$info_campo = mysqli_fetch_fields($resultado);
-							//$valores_mostrar = array("ID", "Nombre", "Apellidos", "Nacionalidad", "Profesión");
+							//$valores_mostrar = array("ID", "Namen", "Nachnamen", "Nationalität", "Beruf");
 							$valores_mostrar = array("id", "name", "surname", "nationalities", "career");
 							echo "<div class='table-responsive'>";
 								echo "<table id='resultTable' class='table table-striped table-hover'>";
@@ -286,7 +286,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 						}
 						echo "<form id='downloadSearchReport' name='downloadSearchReport' class='form-horizontal' method='post' action='downloadFile.php?doc=$filezip'>";
 							echo "<div id='form_download' class='form-group pull-right' style='margin: 1px;'>";
-								echo "<button type='submit' name='downloadSearchReportButton' class='btn btn-primary' >Descargar Informe   <span class='glyphicon glyphicon-download-alt'> </span></button>";
+								echo "<button type='submit' name='downloadSearchReportButton' class='btn btn-primary' >Bericht Herunterladen   <span class='glyphicon glyphicon-download-alt'> </span></button>";
 							echo "</div>";
 						echo "</form>";
 						$_SESSION["custom"]= serialize($_POST[per]);

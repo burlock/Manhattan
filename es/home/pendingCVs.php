@@ -46,6 +46,19 @@
 			unset($elapsedTime);
 		}
 		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
+			
+		//Checks whether loaded php page/file corresponds to logged user's language
+		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
+		
+		if(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
+			$userRootLang = getUserRoot($userRow['language']);
+			$noRootPath = getNoRootPath($_SERVER['SCRIPT_NAME']);
+			?>
+			<script type="text/javascript">
+				window.location.href='<?php echo $userRootLang.$noRootPath ?>';
+			</script>
+			<?php
+		}
 		?>
 
 
@@ -102,245 +115,215 @@
 		<!-- En $myFile guardo el nombre del fichero php que la APP está tratando en ese instante. Necesario para mostrar
 		el resto de menús de nivel 1 cuando navegue por ellos, y saber cuál es el activo (id='onlink') -->
 		<?php
-			$myFile = 'home';
-			$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
+		$myFile = 'home';
+		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
+		
+		//Extracts the number of pending CVs
+		$pendingCVs = getPendingCVs();
+		
+		
+		if (isset($_POST['eCurCVsend'])) {
 			
-			//Extracts the number of pending CVs
-			$pendingCVs = getPendingCVs();
+			//Unmounting "Lang:LangLv" structure to insert it into DB (explode breaks a string into an array)
+			$wholeLangInfo = explode('|',$_POST['eCCVlanguagesMerged']);
 			
+			$finalLang = "";
+			$finalLangLv = "";
+			foreach($wholeLangInfo as $key => $value) {
+				//Separating each 'Language' and its 'Language Level' as an array
+				$array = explode(':',$value);					
+				$finalLang = $finalLang . $array[0] . '|';
+				$finalLangLv = $finalLangLv . $array[1] . '|';
+			}
 			
-			if (isset($_POST['eCurCVsend'])) {
-				
-				//Unmounting "Lang:LangLv" structure to insert it into DB (explode breaks a string into an array)
-				$wholeLangInfo = explode('|',$_POST['eCCVlanguagesMerged']);
-				
-				$finalLang = "";
-				$finalLangLv = "";
-				foreach($wholeLangInfo as $key => $value) {
-					//Separating each 'Language' and its 'Language Level' as an array
-					$array = explode(':',$value);					
-					$finalLang = $finalLang . $array[0] . '|';
-					$finalLangLv = $finalLangLv . $array[1] . '|';
+			$finalLang = substr($finalLang, 0, -1);
+			$finalLangLv = substr($finalLangLv, 0, -1);
+			
+			//Mounting Experience information
+			$string_experCompany = "";
+			$string_experStart = "";
+			$string_experEnd = "";
+			$string_experPos = "";
+			$string_experDesc = "";
+			
+			for ($i=0; $i < $_POST['eCCV_counterExperience']; $i++) { 
+				$string_experCompany = $string_experCompany . $_POST["eCCVexperCompany$i"] . '|';
+				$string_experStart = $string_experStart . $_POST["eCCVexperStart$i"] . '|';
+				$string_experEnd = $string_experEnd . $_POST["eCCVexperEnd$i"] . '|';
+				$string_experPos = $string_experPos . $_POST["eCCVexperPos$i"] . '|';
+				$string_experDesc = $string_experDesc . $_POST["eCCVexperDesc$i"] . '|';
+			}
+			
+			//Cleaning last '|' character from each string
+			$string_experCompany = substr($string_experCompany, 0, -1);
+			$string_experStart = substr($string_experStart, 0, -1);
+			$string_experEnd = substr($string_experEnd, 0, -1);
+			$string_experPos = substr($string_experPos, 0, -1);
+			$string_experDesc = substr($string_experDesc, 0, -1);
+			
+			//Minimum security checkings, to avoid dangerous information in DB
+			if(eregMySQLCheckDate(htmlentities($_POST['eCCVbirthdate'], ENT_QUOTES, 'UTF-8'))){
+				$inDBBirthdate = trim(htmlentities($_POST['eCCVbirthdate'], ENT_QUOTES, 'UTF-8'));
+			}
+			else{
+				$inDBBirthdate = '0000-00-00';
+			}
+			
+			//Checks if every nationality included is valid or not
+			if(htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8') == ''){
+				$inDBNationalities = false;
+			}
+			else{
+				$inDBNationalities = isImplodedArrayInDBExcept(htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8'), 'countries', 'key', '|', 'Spain');
+			}
+			
+			//Nationalities should be searched in its corresponding DBTable
+			//If any of the mandatory fields are bad formed DB won't be updated
+			if((!checkFullName($_POST['eCCVname'], $_POST['eCCVsurname'], $outName, $outSurname, $checkError)) || ($inDBBirthdate == '0000-00-00') || 
+			(!checkDNI_NIE(htmlentities($_POST['eCCVnie'], ENT_QUOTES, 'UTF-8'))) || (!$inDBNationalities) || 
+			(!checkMobile(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'))) || (!filter_var(htmlentities($_POST['eCCVmail'], ENT_QUOTES, 'UTF-8'), FILTER_VALIDATE_EMAIL)) ||
+			(htmlentities($finalLang, ENT_QUOTES, 'UTF-8') == '' || htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8') == '' || htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8') == '%null%') ||
+			(htmlentities($_POST['eCCVcareer'], ENT_QUOTES, 'UTF-8') == '')){
+				?>
+				<script type="text/javascript">
+					alert('Al menos 1 de los campos obligatorios no es correcto.');
+					window.location.href='pendingCVs.php?codvalue=<?php echo $_POST['eCCVnie'];  ?>';
+				</script>
+				<?php 
+			}
+			else{
+				$inDBOtherPhone = trim(htmlentities($_POST['eCCVphone'], ENT_QUOTES, 'UTF-8'));
+				if(!checkPhone($inDBOtherPhone)){
+					$inDBOtherPhone = '';
 				}
-				
-				$finalLang = substr($finalLang, 0, -1);
-				$finalLangLv = substr($finalLangLv, 0, -1);
-				
-				//Mounting Experience information
-				$string_experCompany = "";
-				$string_experStart = "";
-				$string_experEnd = "";
-				$string_experPos = "";
-				$string_experDesc = "";
-				
-				for ($i=0; $i < $_POST['eCCV_counterExperience']; $i++) { 
-					$string_experCompany = $string_experCompany . $_POST["eCCVexperCompany$i"] . '|';
-					$string_experStart = $string_experStart . $_POST["eCCVexperStart$i"] . '|';
-					$string_experEnd = $string_experEnd . $_POST["eCCVexperEnd$i"] . '|';
-					$string_experPos = $string_experPos . $_POST["eCCVexperPos$i"] . '|';
-					$string_experDesc = $string_experDesc . $_POST["eCCVexperDesc$i"] . '|';
-				}
-				
-				//Cleaning last '|' character from each string
-				$string_experCompany = substr($string_experCompany, 0, -1);
-				$string_experStart = substr($string_experStart, 0, -1);
-				$string_experEnd = substr($string_experEnd, 0, -1);
-				$string_experPos = substr($string_experPos, 0, -1);
-				$string_experDesc = substr($string_experDesc, 0, -1);
-				
-				//Minimum security checkings, to avoid dangerous information in DB
-				if(eregMySQLCheckDate(htmlentities($_POST['eCCVbirthdate'], ENT_QUOTES, 'UTF-8'))){
-					$inDBBirthdate = trim(htmlentities($_POST['eCCVbirthdate'], ENT_QUOTES, 'UTF-8'));
-				}
-				else{
-					$inDBBirthdate = '0000-00-00';
-				}
-				
-				//Checks if every nationality included is valid or not
-				if(htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8') == ''){
-					$inDBNationalities = false;
-				}
-				else{
-/* Same as previous, but an exception is specified not to be compared
- * PRE: 'incomingString' is NOT empty
- * Entry (incomingString): Input string where every word that is intended to be registered in DB is
- * Entry (searchedTable): Table in which words/strings will be searched if they matches
- * Entry (keyColumn): Column used in 'searchedTable' to find out if each word is or not
- * Entry (delimiter): Character used to delimit imploded array (that now is an string)
- * Entry (exception): String/Word which is the exception, that won't be searched in 'searchedTable'
- * Exit (): Boolean that indicates TRUE if every word in 'incomingString' is in searched DBTable or FALSE if not
- */
-//function isImplodedArrayInDBExcept($incomingString, $searchedTable, $keyColumn, $delimiter, $exception){
-					//$inDBNationalities = isImplodedArrayInDB(htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8'), 'countries', 'key', '|');
-					$inDBNationalities = isImplodedArrayInDBExcept(htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8'), 'countries', 'key', '|', 'Spain');
-				}
-				//echo 'La variable de Nacionalidades es...'.htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8').'<br>';
-				
-				//Nationalities should be searched in its corresponding DBTable
-				//If any of the mandatory fields are bad formed DB won't be updated
-				if((!checkFullName($_POST['eCCVname'], $_POST['eCCVsurname'], $outName, $outSurname, $checkError)) || ($inDBBirthdate == '0000-00-00') || 
-				(!checkDNI_NIE(htmlentities($_POST['eCCVnie'], ENT_QUOTES, 'UTF-8'))) || (!$inDBNationalities) || 
-				(!checkMobile(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'))) || (!filter_var(htmlentities($_POST['eCCVmail'], ENT_QUOTES, 'UTF-8'), FILTER_VALIDATE_EMAIL)) ||
-				(htmlentities($finalLang, ENT_QUOTES, 'UTF-8') == '' || htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8') == '' || htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8') == '%null%') ||
-				(htmlentities($_POST['eCCVcareer'], ENT_QUOTES, 'UTF-8') == '')){
-					/*
-					echo 'Name: '.$outName.'<br>';
-					echo 'Surname: '.$outSurname.'<br>';
-					echo 'Name error: '.$checkError.'<br>';
-					echo 'Nacimiento: '.$inDBBirthdate.'<br>';
-					echo 'NIE: '.$_POST['eCCVnie'].'<br>';
-					echo 'Nacionalidad: '.$_POST['eCCVnationalities'].'<br>';
-					echo 'Móvil: '.$_POST['eCCVmobile'].'<br>';
-					echo 'Mail: '.$_POST['eCCVmail'].'<br>';
-					echo 'Idioma: '.$finalLang.'<br>';
-					echo 'Tipo Idioma: '.$finalLangLv.'<br>';
-					echo 'Carrera: '.$_POST['eCCVcareer'].'<br>';
-					echo 'Ciudad: '.$_POST['eCCVcity'].'<br>';
-					*/
+				$updateCVQuery = "	UPDATE `cvitaes` 
+									SET `nie` = '".$_POST['eCCVnie']."',
+										`cvStatus` = 'checked',
+										`name` = '".$outName."',
+										`surname` = '".$outSurname."',
+										`birthdate` = '".$inDBBirthdate."',
+										`nationalities` = '".htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8')."',
+										`sex` = '".htmlentities($_POST['eCCVsex'], ENT_QUOTES, 'UTF-8')."',
+										`addrType` = '".htmlentities($_POST['eCCVaddrtype'], ENT_QUOTES, 'UTF-8')."',
+										`addrName` = '".htmlentities($_POST['eCCVaddrName'], ENT_QUOTES, 'UTF-8')."',
+										`addrNum` = '".htmlentities($_POST['eCCVaddrNum'], ENT_QUOTES, 'UTF-8')."',
+										`portal` = '".htmlentities($_POST['eCCVaddrPortal'], ENT_QUOTES, 'UTF-8')."',
+										`stair` = '".htmlentities($_POST['eCCVaddrStair'], ENT_QUOTES, 'UTF-8')."',
+										`addrFloor` = '".htmlentities($_POST['eCCVaddrFloor'], ENT_QUOTES, 'UTF-8')."',
+										`addrDoor` = '".htmlentities($_POST['eCCVaddrDoor'], ENT_QUOTES, 'UTF-8')."',
+										`phone` = '".$inDBOtherPhone."',
+										`postalCode` = '".htmlentities($_POST['eCCVpostal'], ENT_QUOTES, 'UTF-8')."',
+										`country` = '".htmlentities($_POST['eCCVcountry'], ENT_QUOTES, 'UTF-8')."',
+										`province` = '".htmlentities($_POST['eCCVprovince'], ENT_QUOTES, 'UTF-8')."',
+										`city` = '".htmlentities($_POST['eCCVcity'], ENT_QUOTES, 'UTF-8')."',
+										`mobile` = '".htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8')."',
+										`mail` = '".htmlentities($_POST['eCCVmail'], ENT_QUOTES, 'UTF-8')."',
+										`drivingType` = '".htmlentities($_POST['eCCVdrivingType'], ENT_QUOTES, 'UTF-8')."',
+										`drivingDate` = '".htmlentities($_POST['eCCVdrivingDate'], ENT_QUOTES, 'UTF-8')."',
+										`marital` = '".htmlentities($_POST['eCCVmarital'], ENT_QUOTES, 'UTF-8')."',
+										`sons` = '".htmlentities($_POST['eCCVsons'], ENT_QUOTES, 'UTF-8')."',
+										`language` = '".htmlentities($finalLang, ENT_QUOTES, 'UTF-8')."',
+										`langLevel` = '".htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8')."',
+										`education` = '".htmlentities($_POST['eCCVeducation'], ENT_QUOTES, 'UTF-8')."',
+										`career` = '".htmlentities($_POST['eCCVcareer'], ENT_QUOTES, 'UTF-8')."',
+										`experCompany` = '".htmlentities($string_experCompany, ENT_QUOTES, 'UTF-8')."',
+										`experStart` = '".htmlentities($string_experStart, ENT_QUOTES, 'UTF-8')."',
+										`experEnd` = '".htmlentities($string_experEnd, ENT_QUOTES, 'UTF-8')."',
+										`experPos` = '".htmlentities($string_experPos, ENT_QUOTES, 'UTF-8')."',
+										`experDesc` = '".htmlentities($string_experDesc, ENT_QUOTES, 'UTF-8')."',
+										`otherDetails` = '".htmlentities($_POST['eCCVotherDetails'], ENT_QUOTES, 'UTF-8')."',
+										`skill1` = '".htmlentities($_POST['eCCVskill1'], ENT_QUOTES, 'UTF-8')."',
+										`skill2` = '".htmlentities($_POST['eCCVskill2'], ENT_QUOTES, 'UTF-8')."',
+										`skill3` = '".htmlentities($_POST['eCCVskill3'], ENT_QUOTES, 'UTF-8')."',
+										`skill4` = '".htmlentities($_POST['eCCVskill4'], ENT_QUOTES, 'UTF-8')."',
+										`skill5` = '".htmlentities($_POST['eCCVskill5'], ENT_QUOTES, 'UTF-8')."',
+										`skill6` = '".htmlentities($_POST['eCCVskill6'], ENT_QUOTES, 'UTF-8')."',
+										`skill7` = '".htmlentities($_POST['eCCVskill7'], ENT_QUOTES, 'UTF-8')."',
+										`skill8` = '".htmlentities($_POST['eCCVskill8'], ENT_QUOTES, 'UTF-8')."',
+										`skill9` = '".htmlentities($_POST['eCCVskill9'], ENT_QUOTES, 'UTF-8')."',
+										`skill10` = '".htmlentities($_POST['eCCVskill10'], ENT_QUOTES, 'UTF-8')."',
+										`cvDate` = '".htmlentities($_POST['eCCVcvDate'], ENT_QUOTES, 'UTF-8')."',
+										`salary` = '".htmlentities($_POST['eCCVsalary'], ENT_QUOTES, 'UTF-8')."',
+										`comments` = '".htmlentities($_POST['eCCVcomments'], ENT_QUOTES, 'UTF-8')."',
+										`candidateStatus` = '".htmlentities($_POST['eCCVcandidateStatus'], ENT_QUOTES, 'UTF-8')."'
+									WHERE `nie` = '".htmlentities($_POST['eCCVnie'], ENT_QUOTES, 'UTF-8')."';";
+
+				if((!executeDBquery($updateCVQuery))){
 					?>
 					<script type="text/javascript">
-						alert('Al menos 1 de los campos obligatorios no es correcto.');
+						alert('Error revisando CV.');
 						window.location.href='pendingCVs.php?codvalue=<?php echo $_POST['eCCVnie'];  ?>';
 					</script>
 					<?php 
 				}
-				else{
-					$inDBOtherPhone = trim(htmlentities($_POST['eCCVphone'], ENT_QUOTES, 'UTF-8'));
-					//echo 'Tfno tras trim...'.$inDBOtherPhone.'<br>';
-					if(!checkPhone($inDBOtherPhone)){
-						$inDBOtherPhone = '';
-					}
-					//echo 'Y ahora vale...'.$inDBOtherPhone.'<br>';
-					//exit();
-					$updateCVQuery = "	UPDATE `cvitaes` 
-										SET `nie` = '".$_POST['eCCVnie']."',
-											`cvStatus` = 'checked',
-											`name` = '".$outName."',
-											`surname` = '".$outSurname."',
-											`birthdate` = '".$inDBBirthdate."',
-											`nationalities` = '".htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8')."',
-											`sex` = '".htmlentities($_POST['eCCVsex'], ENT_QUOTES, 'UTF-8')."',
-											`addrType` = '".htmlentities($_POST['eCCVaddrtype'], ENT_QUOTES, 'UTF-8')."',
-											`addrName` = '".htmlentities($_POST['eCCVaddrName'], ENT_QUOTES, 'UTF-8')."',
-											`addrNum` = '".htmlentities($_POST['eCCVaddrNum'], ENT_QUOTES, 'UTF-8')."',
-											`portal` = '".htmlentities($_POST['eCCVaddrPortal'], ENT_QUOTES, 'UTF-8')."',
-											`stair` = '".htmlentities($_POST['eCCVaddrStair'], ENT_QUOTES, 'UTF-8')."',
-											`addrFloor` = '".htmlentities($_POST['eCCVaddrFloor'], ENT_QUOTES, 'UTF-8')."',
-											`addrDoor` = '".htmlentities($_POST['eCCVaddrDoor'], ENT_QUOTES, 'UTF-8')."',
-											`phone` = '".$inDBOtherPhone."',
-											`postalCode` = '".htmlentities($_POST['eCCVpostal'], ENT_QUOTES, 'UTF-8')."',
-											`country` = '".htmlentities($_POST['eCCVcountry'], ENT_QUOTES, 'UTF-8')."',
-											`province` = '".htmlentities($_POST['eCCVprovince'], ENT_QUOTES, 'UTF-8')."',
-											`city` = '".htmlentities($_POST['eCCVcity'], ENT_QUOTES, 'UTF-8')."',
-											`mobile` = '".htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8')."',
-											`mail` = '".htmlentities($_POST['eCCVmail'], ENT_QUOTES, 'UTF-8')."',
-											`drivingType` = '".htmlentities($_POST['eCCVdrivingType'], ENT_QUOTES, 'UTF-8')."',
-											`drivingDate` = '".htmlentities($_POST['eCCVdrivingDate'], ENT_QUOTES, 'UTF-8')."',
-											`marital` = '".htmlentities($_POST['eCCVmarital'], ENT_QUOTES, 'UTF-8')."',
-											`sons` = '".htmlentities($_POST['eCCVsons'], ENT_QUOTES, 'UTF-8')."',
-											`language` = '".htmlentities($finalLang, ENT_QUOTES, 'UTF-8')."',
-											`langLevel` = '".htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8')."',
-											`education` = '".htmlentities($_POST['eCCVeducation'], ENT_QUOTES, 'UTF-8')."',
-											`career` = '".htmlentities($_POST['eCCVcareer'], ENT_QUOTES, 'UTF-8')."',
-											`experCompany` = '".htmlentities($string_experCompany, ENT_QUOTES, 'UTF-8')."',
-											`experStart` = '".htmlentities($string_experStart, ENT_QUOTES, 'UTF-8')."',
-											`experEnd` = '".htmlentities($string_experEnd, ENT_QUOTES, 'UTF-8')."',
-											`experPos` = '".htmlentities($string_experPos, ENT_QUOTES, 'UTF-8')."',
-											`experDesc` = '".htmlentities($string_experDesc, ENT_QUOTES, 'UTF-8')."',
-											`otherDetails` = '".htmlentities($_POST['eCCVotherDetails'], ENT_QUOTES, 'UTF-8')."',
-											`skill1` = '".htmlentities($_POST['eCCVskill1'], ENT_QUOTES, 'UTF-8')."',
-											`skill2` = '".htmlentities($_POST['eCCVskill2'], ENT_QUOTES, 'UTF-8')."',
-											`skill3` = '".htmlentities($_POST['eCCVskill3'], ENT_QUOTES, 'UTF-8')."',
-											`skill4` = '".htmlentities($_POST['eCCVskill4'], ENT_QUOTES, 'UTF-8')."',
-											`skill5` = '".htmlentities($_POST['eCCVskill5'], ENT_QUOTES, 'UTF-8')."',
-											`skill6` = '".htmlentities($_POST['eCCVskill6'], ENT_QUOTES, 'UTF-8')."',
-											`skill7` = '".htmlentities($_POST['eCCVskill7'], ENT_QUOTES, 'UTF-8')."',
-											`skill8` = '".htmlentities($_POST['eCCVskill8'], ENT_QUOTES, 'UTF-8')."',
-											`skill9` = '".htmlentities($_POST['eCCVskill9'], ENT_QUOTES, 'UTF-8')."',
-											`skill10` = '".htmlentities($_POST['eCCVskill10'], ENT_QUOTES, 'UTF-8')."',
-											`cvDate` = '".htmlentities($_POST['eCCVcvDate'], ENT_QUOTES, 'UTF-8')."',
-											`salary` = '".htmlentities($_POST['eCCVsalary'], ENT_QUOTES, 'UTF-8')."',
-											`comments` = '".htmlentities($_POST['eCCVcomments'], ENT_QUOTES, 'UTF-8')."',
-											`candidateStatus` = '".htmlentities($_POST['eCCVcandidateStatus'], ENT_QUOTES, 'UTF-8')."'
-										WHERE `nie` = '".htmlentities($_POST['eCCVnie'], ENT_QUOTES, 'UTF-8')."';";
-
-					if((!executeDBquery($updateCVQuery))){
+				else {
+					?>
+					<script type="text/javascript">
+						alert('CV validado satisfactoriamente.');
+						window.location.href='pendingCVs.php';
+					</script>
+					<?php
+				}
+			}
+		}
+		elseif(isset($_GET['hiddenGET'])){
+			switch($_GET['hiddenGET']){
+				case 'hDelPendingCV':
+					$pendingCVRow = getDBrow('cvitaes', 'id', $_GET['codvalue']);
+					if(!deleteDBrow('users', 'login', $pendingCVRow['userLogin'])){
+						unset ($_GET['codvalue']);
+						unset ($pendingCVRow);
 						?>
 						<script type="text/javascript">
-							alert('Error revisando CV');
-							window.location.href='pendingCVs.php?codvalue=<?php echo $_POST['eCCVnie'];  ?>';
+							alert('Error deleting user from pending CVs.');
+							window.location.href='pendingCVs.php';
 						</script>
 						<?php 
 					}
-					else {
+					elseif(!deleteDBrow('cvitaes', 'id', $_GET['codvalue'])){
+						unset ($_GET['codvalue']);
+						unset ($pendingCVRow);
 						?>
 						<script type="text/javascript">
-							alert('CV validado satisfactoriamente.');
+							alert('Error deleting pending CV.');
 							window.location.href='pendingCVs.php';
 						</script>
-						<?php
+						<?php 
 					}
-				}
+					else{
+						$numCandidateUsers = getDBsinglefield('numUsers', 'profiles', 'name', 'Candidato');
+						$numCandidateUsers--;
+						executeDBquery("UPDATE `profiles` SET `numUsers`='".$numCandidateUsers."' WHERE `name`='Candidato'");
+						$userDir = $_SERVER['DOCUMENT_ROOT'] . "/cvs/".$pendingCVRow['userLogin']."/";
+						$files  = scandir($userDir);
+						foreach ($files as $value){
+							unlink($userDir.$value);
+						}
+						rmdir($userDir);
+					}
+				break;
 			}
-			elseif(isset($_GET['hiddenGET'])){
-				switch($_GET['hiddenGET']){
-					case 'hDelPendingCV':
-						$pendingCVRow = getDBrow('cvitaes', 'id', $_GET['codvalue']);
-						if(!deleteDBrow('users', 'login', $pendingCVRow['userLogin'])){
-							unset ($_GET['codvalue']);
-							unset ($pendingCVRow);
-							?>
-							<script type="text/javascript">
-								alert('Error deleting user from pending CVs.');
-								window.location.href='pendingCVs.php';
-							</script>
-							<?php 
-						}
-						elseif(!deleteDBrow('cvitaes', 'id', $_GET['codvalue'])){
-							unset ($_GET['codvalue']);
-							unset ($pendingCVRow);
-							?>
-							<script type="text/javascript">
-								alert('Error deleting pending CV.');
-								window.location.href='pendingCVs.php';
-							</script>
-							<?php 
-						}
-						else{
-							$numCandidateUsers = getDBsinglefield('numUsers', 'profiles', 'name', 'Candidato');
-							$numCandidateUsers--;
-							executeDBquery("UPDATE `profiles` SET `numUsers`='".$numCandidateUsers."' WHERE `name`='Candidato'");
-							$userDir = $_SERVER['DOCUMENT_ROOT'] . "/cvs/".$pendingCVRow['userLogin']."/";
-							//chdir($userDir);
-							$files  = scandir($userDir);
-							foreach ($files as $value){
-								unlink($userDir.$value);
-							}
-							rmdir($userDir);
-						}
-					break;
-				}
-				?>
-				<script type="text/javascript">
-					window.location.href='pendingCVs.php';
-				</script>
-				<?php 
-			}//end of GET
-			
-			/**********************************     End of FORM validations     **********************************/
-	
-			/******************************     Start of WebPage code as showed     ******************************/
+			?>
+			<script type="text/javascript">
+				window.location.href='pendingCVs.php';
+			</script>
+			<?php 
+		}//end of GET
+		
+		/**********************************     End of FORM validations     **********************************/
+
+		/******************************     Start of WebPage code as showed     ******************************/
 		?>
-
-
 		<div id="main-content" class="container bs-docs-container">
 			<div class="row">
 				<div class="col-md-3">
 					<div id="sidebar-navigation-list" class="bs-sidebar hidden-print affix-top" role="complementary">
 						<ul class="nav bs-sidenav">
 							<?php 
+							$digitLang = getUserLangDigits($userRow['language']);
+							$LangDigitsName = $digitLang."Name";
 							$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');
-							$mainNamesRow = getDBcompletecolumnID('esName', 'mainNames', 'id');
+							$mainNamesRow = getDBcompletecolumnID($LangDigitsName, 'mainNames', 'id');
 							$j = 0;
 							foreach($mainKeysRow as $i){
 								if(getDBsinglefield('active', $i, 'profile', $userRow['profile'])){
@@ -355,9 +338,9 @@
 										$myFileProfileRow = getDBrow($myFile, 'profile', $userRow['profile']);
 										for($k=3;$k<$numCols;$k++) {
 											$colNamej = getDBcolumnname($myFile, $k);
-											if(($myFileProfileRow[$k] == 1) && ($subLevelMenu = getDBsinglefield2('esName', $namesTable, 'key', $colNamej, 'level', '2'))) {
-												if(!getDBsinglefield2('esName', $namesTable, 'fatherKey', $colNamej, 'level', '3')){
-													$level2File = getDBsinglefield('key', $namesTable, 'esName', $subLevelMenu);
+											if(($myFileProfileRow[$k] == 1) && ($subLevelMenu = getDBsinglefield2($LangDigitsName, $namesTable, 'key', $colNamej, 'level', '2'))) {
+												if(!getDBsinglefield2($LangDigitsName, $namesTable, 'fatherKey', $colNamej, 'level', '3')){
+													$level2File = getDBsinglefield('key', $namesTable, $LangDigitsName, $subLevelMenu);
 													// Because the file we are is a level 2 file, we do this comparision to make active element in list if it's this same file
 													if ($level2File == 'pendingCVs') 
 														$badge = "<span class='badge'>$pendingCVs</span>";
@@ -388,12 +371,9 @@
 												}
 											}
 										}
-
 										echo "</ul> <!-- class='nav' -->";
 										echo "</li> <!-- class='active' -->";
-
 									}
-
 									else{
 										echo "<li><a href=../$i.php>" . $mainNamesRow[$j] . "</a></li>";
 										$j++;
@@ -406,7 +386,7 @@
 				</div> <!-- col-md-3 -->
 
 
-				<!-- Modal HTML -->
+				<!--  ****************************************   Start of displayed Modal HTML   ****************************************  -->
 				<div id="editCVModal" class="modal fade bs-example-modal-lg">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content panel-info">
@@ -415,20 +395,20 @@
 								<h4 class="modal-title">Validando CV <?php echo $_GET['codvalue'] ?></h4>
 							</div>
 
-							<?php	
-								$editedCVRow = getDBrow('cvitaes', 'nie', $_GET['codvalue']);
-								$userFilesDir = $_SERVER['DOCUMENT_ROOT'] . "/cvs/".($editedCVRow['userLogin'])."/";
-								
-								if(!ifCreateDir($userFilesDir, 0777)){
-									?>
-									<script type="text/javascript">
-										alert('Error retrieving User Directory Information. Please contact administrator.');
-										window.location.href='../home.php';
-									</script>
-									<?php 
-								}
+							<?php
+							$editedCVRow = getDBrow('cvitaes', 'nie', $_GET['codvalue']);
+							$userFilesDir = $_SERVER['DOCUMENT_ROOT'] . "/cvs/".($editedCVRow['userLogin'])."/";
+							
+							if(!ifCreateDir($userFilesDir, 0777)){
 								?>
-
+								<script type="text/javascript">
+									alert('Error retrieving User Directory Information. Please contact administrator.');
+									window.location.href='../home.php';
+								</script>
+								<?php 
+							}
+							?>
+							
 							<form id="editedCV" class="form-horizontal" role="form" name="editedCV" autocomplete="off" method="post" action="pendingCVs.php">
 								<div class="modal-body">
 
@@ -449,7 +429,6 @@
 									<div class="form-group"> <!-- Fecha de Nacimiento -->
 										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVbirthdate">Fecha de nacimiento: * </label>
 										<div class="col-sm-10">
-											<!-- <input class="form-control" type='date' name='eCCVbirthdate' id='eCCVbirthdate' value="<?php echo ($editedCVRow['birthdate']) ?>" onChange="jsIsAdult_B(this.id, 18)" required> -->
 											<input class="form-control" type='date' name='eCCVbirthdate' id='eCCVbirthdate' value="<?php echo ($editedCVRow['birthdate']) ?>" onChange="jsIsAdult(this.id, 18)" required>
 										</div>
 									</div>
@@ -462,8 +441,6 @@
 									</div>
 									
 									<div class="form-group tooltip-demo">  <!-- Nacionalidad -->
-										<!-- <label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Tipos admitidos: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Máx: 1024Kb"></span> Archivos Adicionales: </label> -->
-										<!-- <label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities">Nacionalidad: * </label> -->
 										<?php $nationalityQueryResult = getDBDistCompleteColID("SPANISH", "countries", "SPANISH"); 
 											$nationalities_string = implode(', ', $nationalityQueryResult);
 										?>
@@ -541,9 +518,8 @@
 									</div>		
 
 									<div class="form-group" >  <!-- Código Postal -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVpostal">Código Postal: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVpostal">Código postal: </label>										
 										<div class="col-sm-10">
-											<!-- <input class="form-control" type='text' name='eCCVpostal' maxlength='5' value="<?php echo ($editedCVRow['postalCode']) ?>"> -->
 											<input class="form-control" type='text' name='eCCVpostal' maxlength='5' value="<?php echo $editedCVRow['postalCode'] ?>" onkeypress="return checkOnlyNumbers(event)">
 										</div>
 									</div>		
@@ -570,30 +546,28 @@
 									</div>
 
 									<div class="form-group" >  <!-- Teléfono Móvil -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmobile">Teléfono Móvil: * </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmobile">Teléfono móvil: * </label>										
 										<div class="col-sm-10">
-											<!-- <input class="form-control" type='text' name='eCCVmobile' maxlength='9' value="< ?php echo ($editedCVRow['mobile']) ?>"> -->
 											<input class="form-control" type='text' name='eCCVmobile' maxlength='9' value="<?php echo $editedCVRow['mobile'] ?>" onkeypress="return checkOnlyNumbers(event)">										
 										</div>
 									</div>	
 
 									<div class="form-group" >  <!-- Otro Teléfono -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVphone">Otro Teléfono: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVphone">Otro teléfono: </label>										
 										<div class="col-sm-10">
-											<!-- <input class="form-control" type='text' name='eCCVphone' value="< ?php echo ($editedCVRow['phone']) ?>"> -->
 											<input class="form-control" type='text' name='eCCVphone' maxlength='18' placeholder='00[COD. PAIS]-NUMERO' value="<?php echo $editedCVRow['phone'] ?>" onkeypress="return checkDashedNumbers(event)">
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Correo Electrónico -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmail">Correo Electrónico: * </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmail">Correo electrónico: * </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='mail' name='eCCVmail' value="<?php echo ($editedCVRow['mail']) ?>">										
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Carnet de Conducir -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVdrivingType">Carnet de Conducir: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVdrivingType">Carnet de conducir: </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVdrivingType' value="<?php echo ($editedCVRow['drivingType']) ?>">
 											<input class='form-control' type='date' name='eCCVdrivingDate' placeholder='aaaa-mm-dd' onChange="jsIsPreviousDate(this.id)" value="<?php echo ($editedCVRow['drivingDate']) ?>">
@@ -601,16 +575,14 @@
 									</div>
 
 									<div class="form-group" >  <!-- Estado Civil -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmarital">Estado Civil: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmarital">Estado Civil: </label>
 										<div class="col-sm-10">
-											<!-- <input class="form-control" type='text' name='eCCVmarital' value="< ?php echo getDBsinglefield(getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']), 'maritalStatus', 'key', ($editedCVRow['marital'])) ?>"> -->
 											<select class="form-control" name="eCCVmarital" >
 												<?php 
 												$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
 												$maritalStatus = getDBcompletecolumnID($userLang, 'maritalStatus', $userLang);
-												echo "<option selected value=''>Sin estado civil seleccionado</option>";
+												echo "<option selected value=''>Estado civil</option>";
 												foreach($maritalStatus as $i){
-													//echo "<option value=" . getDBsinglefield('key', 'countries', $userLang, $i) . ">" . $i . "</option>";
 													$keyMarital = getDBsinglefield('key', 'maritalStatus', $userLang, $i);
 													if($keyMarital == $editedCVRow['marital']){
 														echo "<option selected value=" . $keyMarital . ">" . $i . "</option>";
@@ -625,15 +597,14 @@
 									</div>
 
 									<div class="form-group" >  <!-- Hijos -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsons">Hijos: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsons">Hijos: </label>
 										<div class="col-sm-10">
-											<!-- <input class="form-control" type='text' name='eCCVsons' maxlength='2' value="< ?php echo ($editedCVRow['sons']) ?>"> -->
 											<input class="form-control" type='number' name='eCCVsons' maxlength='2' min='0' value="<?php echo $editedCVRow['sons'] ?>">
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Idiomas -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVlanguagesMerged">Idiomas: * </label>			
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVlanguagesMerged">Idiomas: * </label>
 										<?php 
 											$mergedLanguages = explode('|',$editedCVRow['language']);
 											$mergedLangLevels = explode('|',$editedCVRow['langLevel']);
@@ -645,96 +616,94 @@
 									</div>
 
 									<div class="form-group" >  <!-- Educación -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducation">Educación: * </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducation">Educación: * </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVeducation' value="<?php echo ($editedCVRow['education']) ?>" data-role='tagsinput'>										
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Profesión -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcareer">Profesiones desempeñadas: * </label>	<!-- Se puede omitir -->									
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcareer">Profesiones desempeñadas: * </label>	<!-- Se puede omitir -->
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVcareer' value='<?php echo ($editedCVRow['career']) ?>' data-role='tagsinput'>										
 										</div>
 									</div>
 
 									<?php 
-										$array_experCompany = explode('|',$editedCVRow['experCompany']);
-										$array_experStart = explode('|',$editedCVRow['experStart']);
-										$array_experEnd = explode('|',$editedCVRow['experEnd']);
-										$array_experPos = explode('|',$editedCVRow['experPos']);
-										$array_experDesc = explode('|',$editedCVRow['experDesc']);
+									$array_experCompany = explode('|',$editedCVRow['experCompany']);
+									$array_experStart = explode('|',$editedCVRow['experStart']);
+									$array_experEnd = explode('|',$editedCVRow['experEnd']);
+									$array_experPos = explode('|',$editedCVRow['experPos']);
+									$array_experDesc = explode('|',$editedCVRow['experDesc']);
 
-										echo "<div class='form-group' >  <!-- Experiencia -->";
-										echo "	<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperience'>Últimos años: </label>";
-										echo "	<div class='col-sm-10'>";
-										
-										for ($counterExperience=0; $counterExperience < count($array_experCompany); $counterExperience++) { 
-											echo "		<div class='panel panel-default'>";
-											echo "			<div class='panel-heading'>";
-											echo "				<h3 class='panel-title'>Experiencia #".($counterExperience+1) . "</h3>";
-											echo "			</div>";
-											echo "			<div class='panel-body'>";
-											echo "				<div class='form-group'>";
-											echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperCompany$counterExperience'>Compañía: </label>";
-											echo " 					<div class='col-sm-10'>";
-											echo "						<input class='form-control' type='text' name='eCCVexperCompany$counterExperience' value='" . ($array_experCompany[$counterExperience]) . "' >";
-											echo " 					</div>";
-											echo "				</div>";
-											echo "				<div class='form-group'>";
-											echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperStart$counterExperience'>Inicio: </label>";
-											echo " 					<div class='col-sm-10'>";
-											echo "						<input class='form-control' type='text' name='eCCVexperStart$counterExperience' value='" . ($array_experStart[$counterExperience]) . "' >";
-											echo " 					</div>";
-											echo "				</div>";											
-											echo "				<div class='form-group'>";
-											echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperEnd$counterExperience'>Final: </label>";
-											echo " 					<div class='col-sm-10'>";
-											echo "						<input class='form-control' type='text' name='eCCVexperEnd$counterExperience' value='" . ($array_experEnd[$counterExperience]) . "' >";
-											echo " 					</div>";
-											echo "				</div>";
-											echo "				<div class='form-group'>";
-											echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperPos$counterExperience'>Posición: </label>";
-											echo " 					<div class='col-sm-10'>";
-											echo "						<input class='form-control' type='text' name='eCCVexperPos$counterExperience' value='" . ($array_experPos[$counterExperience]) . "' >";
-											echo " 					</div>";
-											echo "				</div>";
-											echo "				<div class='form-group'>";
-											echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperDesc$counterExperience'>Descripción: </label>";
-											echo " 					<div class='col-sm-10'>";
-											echo "						<input class='form-control' type='text' name='eCCVexperDesc$counterExperience' value='" . ($array_experDesc[$counterExperience]) . "' >";
-											echo " 					</div>";
-											echo "				</div>";											
-											echo "			</div>";
-											echo "		</div>";
-										}
+									echo "<div class='form-group' >  <!-- Experiencia -->";
+									echo "	<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperience'>Últimos años: </label>";
+									echo "	<div class='col-sm-10'>";
+									
+									for ($counterExperience=0; $counterExperience < count($array_experCompany); $counterExperience++) { 
+										echo "		<div class='panel panel-default'>";
+										echo "			<div class='panel-heading'>";
+										echo "				<h3 class='panel-title'>Experiencia #".($counterExperience+1) . "</h3>";
+										echo "			</div>";
+										echo "			<div class='panel-body'>";
+										echo "				<div class='form-group'>";
+										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperCompany$counterExperience'>Compañía: </label>";
+										echo " 					<div class='col-sm-10'>";
+										echo "						<input class='form-control' type='text' name='eCCVexperCompany$counterExperience' value='" . ($array_experCompany[$counterExperience]) . "' >";
+										echo " 					</div>";
+										echo "				</div>";
+										echo "				<div class='form-group'>";
+										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperStart$counterExperience'>Inicio: </label>";
+										echo " 					<div class='col-sm-10'>";
+										echo "						<input class='form-control' type='text' name='eCCVexperStart$counterExperience' value='" . ($array_experStart[$counterExperience]) . "' >";
+										echo " 					</div>";
+										echo "				</div>";											
+										echo "				<div class='form-group'>";
+										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperEnd$counterExperience'>Final: </label>";
+										echo " 					<div class='col-sm-10'>";
+										echo "						<input class='form-control' type='text' name='eCCVexperEnd$counterExperience' value='" . ($array_experEnd[$counterExperience]) . "' >";
+										echo " 					</div>";
+										echo "				</div>";
+										echo "				<div class='form-group'>";
+										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperPos$counterExperience'>Posición: </label>";
+										echo " 					<div class='col-sm-10'>";
+										echo "						<input class='form-control' type='text' name='eCCVexperPos$counterExperience' value='" . ($array_experPos[$counterExperience]) . "' >";
+										echo " 					</div>";
+										echo "				</div>";
+										echo "				<div class='form-group'>";
+										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperDesc$counterExperience'>Descripción: </label>";
+										echo " 					<div class='col-sm-10'>";
+										echo "						<input class='form-control' type='text' name='eCCVexperDesc$counterExperience' value='" . ($array_experDesc[$counterExperience]) . "' >";
+										echo " 					</div>";
+										echo "				</div>";											
+										echo "			</div>";
+										echo "		</div>";
+									}
 
-										echo "	</div>";
-										echo "</div>";
-										echo "<input type='hidden' name='eCCV_counterExperience' value='$counterExperience' >";
-
+									echo "	</div>";
+									echo "</div>";
+									echo "<input type='hidden' name='eCCV_counterExperience' value='$counterExperience' >";
 									?>
 
 									<div class="form-group" >  <!-- Salario Deseado -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsalary">Salario deseado: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsalary">Salario deseado: </label>
 										<div class="col-sm-10 input-group">
-											<!-- <input class="form-control" type='text' name='eCCVsalary' maxlength='7' value="< ?php echo ($editedCVRow['salary']) ?>"> -->
 											<input class="form-control" type='text' name='eCCVsalary' maxlength='7' value="<?php echo ($editedCVRow['salary']) ?>" onkeypress="return checkOnlyNumbers(event)">
 											<span class="input-group-addon">€ neto/año</span>
 										</div>
 									</div>										
 
 									<div class="form-group" >  <!-- Otros Detalles -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVotherDetails">Otros Detalles: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVotherDetails">Otros detalles: </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVotherDetails' value="<?php echo ($editedCVRow['otherDetails']) ?>">
 										</div>
 									</div>		
 
 									<div class="form-group" >  <!-- Ficheros -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVfiles">Ficheros: </label>		
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVfiles">Ficheros: </label>
 										<div class="col-sm-10">
-										<?php
+											<?php
 											$userFilesArray  = scandir($userFilesDir);
 											foreach ($userFilesArray as $value){
 												if (preg_match("/\w+/i", $value)) {
@@ -764,14 +733,14 @@
 									</div>
 
 									<div class="form-group" >  <!-- Comentarios -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcomments">Comentarios: </label>	
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcomments">Comentarios: </label>
 										<div class="col-sm-10">
 											<textarea class="form-control" type='text' name='eCCVcomments' value="<?php echo ($editedCVRow['comments']) ?>"><?php echo ($editedCVRow['comments']) ?></textarea>
 										</div>
 									</div>	
 
 									<div class="form-group" >  <!-- Estado del Candidato -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcandidateStatus">Estado del Candidato: </label>	
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcandidateStatus">Estado del candidato: </label>
 										<div class="col-sm-10">
 											<select class="form-control" name='eCCVcandidateStatus'>
 												<option value=''>Sin estado</option>
@@ -797,63 +766,56 @@
 							</form>
 						</div>
 					</div>
-				</div>	<!-- Modal HTML -->
+				</div>
+				<!--  ****************************************   End of displayed Modal HTML   ****************************************  -->
 
 
-
+				<!--  ***********************************   Start of Web Page as initially showed   ***********************************  -->
 				<div class="col-md-9 scrollable" role="main"> 
 					<div class="bs-docs-section">
-						<h2 class="page-header">CVs pendientes de validar</h2>
-
-					<?php 
-
-						if((getDBrowsnumber('cvitaes') == 0) || (count($cvIDs = getDBcolumnvalue('id', 'cvitaes', 'cvStatus', 'pending')) == 0)){
-						echo 'No hay CVs por clasificar';
-					}
-					else{
-						?>
-						<div class="table-responsive">
-							<table class="table table-striped table-hover">
-								<thead>
-									<tr>
-										<th>NIE</th>
-										<th>Nombre</th>
-										<th>Apellidos</th>
-										<th>Acción (Eliminar)</th>
-									</tr>
-								</thead>
-
-								<tbody>
-								<?php 
-								foreach($cvIDs as $i){
-									$cvRow = getDBrow('cvitaes', 'id', $i);
-									echo "<tr>";
-									echo "<td><a href='pendingCVs.php?codvalue=" . ($cvRow['nie']) . "'>" . ($cvRow['nie']) . "</a></td>";
-									echo "<td>" . ($cvRow['name']) . "</td>";
-									echo "<td>" . ($cvRow['surname']) . "</td>";
-									//echo "<td><a href='delCurCV.php?codvalue=" . ($cvRow['nie']) . "'>Borrar</a></td>";
-									echo "<td><a href='pendingCVs.php?codvalue=" . $cvRow['id'] . "&hiddenGET=hDelPendingCV' onclick='return confirmPendingCVDeletion();'>Borrar</a></td>";
-									echo "</tr>";
-								}
-								?>
-								</tbody>
-							</table>
-						</div>
+						<h2 class="page-header">CVs Pendientes de Revisar</h2>
 						<?php 
-					}
-					?>
+							if((getDBrowsnumber('cvitaes') == 0) || (count($cvIDs = getDBcolumnvalue('id', 'cvitaes', 'cvStatus', 'pending')) == 0)){
+							echo 'No hay CVs por revisar';
+						}
+						else{
+							?>
+							<div class="table-responsive">
+								<table class="table table-striped table-hover">
+									<thead>
+										<tr>
+											<th>NIE</th>
+											<th>Nombre</th>
+											<th>Apellidos</th>
+											<th>Acción</th>
+										</tr>
+									</thead>
+	
+									<tbody>
+									<?php 
+									foreach($cvIDs as $i){
+										$cvRow = getDBrow('cvitaes', 'id', $i);
+										echo "<tr>";
+										echo "<td><a href='pendingCVs.php?codvalue=" . ($cvRow['nie']) . "'>" . ($cvRow['nie']) . "</a></td>";
+										echo "<td>" . ($cvRow['name']) . "</td>";
+										echo "<td>" . ($cvRow['surname']) . "</td>";
+										echo "<td><a href='pendingCVs.php?codvalue=" . $cvRow['id'] . "&hiddenGET=hDelPendingCV' onclick='return confirmPendingCVDeletionES();'>Borrar</a></td>";
+										echo "</tr>";
+									}
+									?>
+									</tbody>
+								</table>
+							</div>
+							<?php 
+						}
+						?>
+					</div> <!-- bs-docs-section -->
+				</div> <!-- col-md-9 scrollable role=main -->
+			</div> <!-- row -->
+		</div> <!-- class="container bs-docs-container" -->
+		<?php
 
-				</div> <!-- bs-docs-section -->
-			</div> <!-- col-md-9 scrollable role=main -->
-		</div> <!-- row -->
-	</div> <!-- class="container bs-docs-container" -->
-
-
-
-
-	<?php
-
-		} //del "else" de $_SESSION.
+	} //del "else" de $_SESSION.
 
 	?>
 
