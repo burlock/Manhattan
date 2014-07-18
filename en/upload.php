@@ -1,7 +1,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Validación de formulario</title>
+	<title>Form Validation</title>
 	
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/jquery-1.9.1.js"></script>
@@ -154,7 +154,7 @@
 			var acceptedExts = /(jpg|png|jpeg)$/i.test(fileExt);
 			if(!acceptedExts){
 				var cleared = document.getElementById(fileId).value = "";
-				alert ("\'"+fileExt+"\' no es una extensión válida para su fotografía.");
+				alert ("\'"+fileExt+"\' is not a valid extension for your photography.");
 				return false;
 			}
 		}
@@ -168,7 +168,7 @@
 			var acceptedExts = /(pdf|doc|docx|xls|xlsx|csv|txt|rtf)$/i.test(fileExt);
 			if(!acceptedExts){
 				var cleared = document.getElementById(fileId).value = "";
-				alert ("\'"+fileExt+"\' no es una extensión válida para su documento.");
+				alert ("\'"+fileExt+"\' is not a valid extension for your document.");
 				return false;
 			}
 		}
@@ -274,12 +274,12 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('<?php echo "Usted ya ha guardado su CV. Por seguridad, su usuario ha sido desactivado."; ?>');
+				alert('<?php echo "You have already saved your CV. For security, your user has been disabled."; ?>');
 				window.location.href='./endsession.php';
 			</script>
 			<?php 
 		}
-		elseif(!checkFullNameES($_POST['blankname'], $_POST['blanksurname'], $outName, $outSurname, $checkError)){
+		elseif(!checkFullNameEN($_POST['blankname'], $_POST['blanksurname'], $outName, $outSurname, $checkError)){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
@@ -292,7 +292,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: La fecha indica que no es mayor de edad o es incorrecta.');
+				alert('Error: Given date is incorrect or indicates that you are not over legal age.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -301,7 +301,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Revise el NIE. El indicado es incorrecto.');
+				alert('Error: Given NIE is incorrect.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -310,7 +310,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: El NIE introducido ya existe en Base de Datos.');
+				alert('Error: Given NIE already exists in database.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -361,14 +361,14 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: No se ha indicado tipo, nombre o número en la dirección.');
+				alert('Error: Type, name or number was not indicated in address.');
 				window.location.href='home.php';
 			</script>
 			<?php
 		}
 		elseif(((strlen($_POST['blankaddrtype']) > 0) || (strlen($_POST['blankaddrname']) > 0) || (strlen($_POST['blankaddrnum']) > 0) || (strlen($_POST['blankaddrportal']) > 0) || 
 		(strlen($_POST['blankaddrstair']) > 0) || (strlen($_POST['blankaddrfloor']) > 0) || (strlen($_POST['blankaddrdoor']) > 0)) && 
-		(!checkFullAddressES($_POST['blankaddrname'], $_POST['blankaddrnum'], $outAddrName, $outAddrNumber, $checkError))){
+		(!checkFullAddressEN($_POST['blankaddrname'], $_POST['blankaddrnum'], $outAddrName, $outAddrNumber, $checkError))){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
@@ -382,7 +382,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: El número de móvil es incorrecto.');
+				alert('Error: Mobile number is incorrect.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -392,7 +392,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: El número de teléfono adicional es incorrecto.');
+				alert('Error: Aditional phone number is incorrect.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -402,7 +402,7 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Revise el correo electrónico. Formato incorrecto.');
+				alert('Error: E-mail is incorrect.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -432,7 +432,7 @@
 			}
 		}
 		*/
-		elseif(((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)) && (!checkDrivingLicenseES($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $checkError))){
+		elseif(((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)) && (!checkDrivingLicenseEN($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $checkError))){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
@@ -532,7 +532,7 @@
 				unset($_POST['push_button']);
 				?>
 				<script type="text/javascript">
-					alert('Hubo un problema guardando su CV.');
+					alert('There was a problem saving your CV.');
 					window.location.href='home.php';
 				</script>
 				<?php 
@@ -602,7 +602,7 @@
 						#echo "¡Posible ataque de carga de archivos!\n";
 						?>
 						<script type="text/javascript">
-							alert('Ha habido un problema al guardar su foto (code PUPLOAD0). No obstante su CV ha sido guardado con éxito.');
+							alert('There was a problem saving your photo (code PUPLOAD0). Anyway your CV was successfully uploaded.');
 							window.location.href='endsession.php';
 						</script>
 						<?php 
@@ -614,8 +614,8 @@
 				unset($_POST['push_button']);
 				?>
 				<script type="text/javascript">
-					//alert('Gracias por insertar su CV. Por seguridad, su usuario ha sido desactivado.');
-					alert('Gracias por completar tu CV. En breve nos pondremos en contacto contigo.\nRecuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nPara cualquier consulta no dudes en ponerte en contacto con nosotros.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');
+					//alert('Thank you for uploading your CV. For security, your user was deactivated.');
+					alert('Thank you for uploading your CV. In a brief period we will contact you.\nRemember that at any time you can exercise your right to opposition, access, rectification and cancellation regarding to the processing of your personal data by PERSPECTIVA ALEMANIA, through a letter to the following address: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nFor any doubt please contact us.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');
 					window.location.href='./endsession.php';
 				</script>
 				<?php
@@ -631,27 +631,27 @@
 ?>
 <!-- EN CADA CAMPO COMPROBARÉ SI EL USUARIO YA INSERTÓ PREVIAMENTE EL CV if(getDBsinglefield('cvSaved', 'users', 'login', $_SESSION['loglogin'])) -->
 
-Los campos que poseen * son obligatorios.
+Fields with * are mandatory.
 
 <form id="uploadForm" class="form-horizontal" name="formu" action="" method="post" enctype="multipart/form-data">
 	<div class="panel panel-default">
 		<div class="panel-body">
 			<div class="form-group"> <!-- Nombre -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankname">Nombre: * </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankname">Name: * </label> 
 				<div class="col-sm-10">
-					<input class="form-control" type='text' name='blankname' minlength='3' maxlength='50' placeholder="Min. 3 caracteres" required/>
+					<input class="form-control" type='text' name='blankname' minlength='3' maxlength='50' placeholder="Min. 3 characters" required/>
 				</div>
 			</div>
 
 			<div class="form-group"> <!-- Apellidos -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanksurname">Apellidos: * </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanksurname">Surname: * </label> 
 				<div class="col-sm-10">
-					<input class="form-control" type='text' name='blanksurname' maxlength='50' placeholder="Min. 3 caracteres" required/>
+					<input class="form-control" type='text' name='blanksurname' maxlength='50' placeholder="Min. 3 characters" required/>
 				</div>
 			</div>
 
 			<div class="form-group"> <!-- Fecha de Nacimiento -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankbirthdate">Fecha de Nacimiento: * </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankbirthdate">Birthdate: * </label> 
 				<div class="col-sm-10">
 					<input class="form-control" type='date' name='blankbirthdate' id='blankbirthdate' autocomplete="off" placeholder="aaaa-mm-dd" required/>
 				</div>
@@ -660,15 +660,15 @@ Los campos que poseen * son obligatorios.
 			<div class="form-group"> <!-- DNI/NIE -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanknie">DNI/NIE: * </label>
 				<div class="col-sm-10">
-					<input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="Ej. DNI 12345678L (8 nums.) Ej. NIE X1234567T (7 nums.)" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE();" required/>
+					<input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="i.e. DNI 12345678L (8 nums.) i.e. NIE X1234567T (7 nums.)" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE();" required/>
 				</div>
 			</div>
 
 			<div class="form-group"> <!-- Nacionalidad -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_nat">Nacionalidad: * </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_nat">Nationality: * </label> 
 				<div class="col-sm-9" id="uploadFormNationality">
 					<select class="form-control" name="add_nat" >
-						<option value="" selected disabled> Pulse "+" tras elegir... </option>
+						<option value="" selected disabled> Press "+" after choose... </option>
 						<option value="Spain"> España </option>
 						<?php 
 						$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
@@ -685,57 +685,49 @@ Los campos que poseen * son obligatorios.
 			</div>	
 
 			<div class="form-group"> <!-- Sexo -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanksex">Sexo: * </label>
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanksex">Gender: * </label>
 				<div class="col-sm-10">
 					<div class='radio-inline'>
-						<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='blanksex' value='0' required>Hombre</label>
-						<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='blanksex' value='1'>Mujer</label>
+						<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='blanksex' value='0' required>Male</label>
+						<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='blanksex' value='1'>Female</label>
 					</div>
 				</div>
 			</div>							
 
 			<div class="form-group">  <!-- Dirección -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankaddrtype">Dirección: </label>
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankaddrtype">Address: </label>
 				<div class="col-sm-10 form-inline">
 					<select class="form-control form-inline" name="blankaddrtype" >
-						<option value="" selected>-- Tipo --</option>
-						<option value="Acceso">Acceso</option>
-						<option value="Acera">Acera</option>
-						<option value="Alameda">Alameda</option>
-						<option value="Autopista">Autopista</option>
-						<option value="Autovía">Autovía</option>
-						<option value="Avenida">Avenida</option>
-						<option value="C. Comercial">C. Comercial</option>
-						<option value="Calle">Calle</option>
-						<option value="Callejón">Callejón</option>
-						<option value="Camino">Camino</option>
-						<option value="Cañada">Cañada</option>
-						<option value="Carrer">Carrer</option>
-						<option value="Carrera">Carrera</option>
-						<option value="Carretera">Carretera</option>
-						<option value="Cuesta">Cuesta</option>
-						<option value="Glorieta">Glorieta</option>
-						<option value="Pasadizo">Pasadizo</option>
-						<option value="Pasaje">Pasaje</option>
-						<option value="Paseo">Paseo</option>
-						<option value="Plaza">Plaza</option>
-						<option value="Rambla">Rambla</option>
-						<option value="Ronda">Ronda</option>
-						<option value="Sendero">Sendero</option>
-						<option value="Travesía">Travesía</option>
-						<option value="Urbanización">Urbanización</option>
-						<option value="Vía">Vía</option>
+						<option value="" selected>-- Type --</option>
+						<option value="Acceso">Access</option>
+						<option value="Callejón">Alley</option>
+						<option value="Avenida">Avenue</option>
+						<option value="Ronda">Beltway</option>
+						<option value="Rambla">Boulevard</option>
+						<option value="Travesía">Cross street</option>
+						<option value="Autovía">Highway</option>
+						<option value="Urbanización">Housing state</option>
+						<option value="Carretera">Main road</option>
+						<option value="Autopista">Motorway</option>
+						<option value="Pasaje">Passage</option>
+						<option value="Sendero">Path</option>
+						<option value="Camino">Road</option>
+						<option value="C. Comercial">Shopping Center</option>
+						<option value="Acera">Sidewalk</option>
+						<option value="Cuesta">Slope</option>
+						<option value="Plaza">Square</option>
+						<option value="Calle">Street</option>
 					</select>					
-					<input class="form-control form-inline" type="text" name="blankaddrname" size="25" maxlength="50" placeholder="Nombre">
+					<input class="form-control form-inline" type="text" name="blankaddrname" size="25" maxlength="50" placeholder="Name">
 					<input class="form-control form-inline" type="text" name="blankaddrnum" size="1" maxlength="4" placeholder="Num" onkeyup="this.value=this.value.toUpperCase();">
 					<input class="form-control form-inline" type="text" name="blankaddrportal" size="2" maxlength="4" placeholder="Portal" onkeyup="this.value=this.value.toUpperCase();">
-					<input class="form-control form-inline" type="text" name="blankaddrstair" size="1" maxlength="4" placeholder="Esc" onkeyup="this.value=this.value.toUpperCase();">
-					<input class="form-control form-inline" type="text" name="blankaddrfloor" size="1" maxlength="4" placeholder="Piso">
-					<input class="form-control form-inline" type="text" name="blankaddrdoor" size="2" maxlength="4" placeholder="Puerta" onkeyup="this.value=this.value.toUpperCase();">
+					<input class="form-control form-inline" type="text" name="blankaddrstair" size="1" maxlength="4" placeholder="Ladd" onkeyup="this.value=this.value.toUpperCase();">
+					<input class="form-control form-inline" type="text" name="blankaddrfloor" size="1" maxlength="4" placeholder="Floor">
+					<input class="form-control form-inline" type="text" name="blankaddrdoor" size="2" maxlength="4" placeholder="Door" onkeyup="this.value=this.value.toUpperCase();">
 					<br><br>
 					
 					<select class="form-control form-inline pull-right" name="blankaddrpostalcode" onchange="ajaxGetAddress(this.value)" style="margin-top:5px;">
-						<option value="" selected>-- Código postal --</option>
+						<option value="" selected>-- Postal code--</option>
 						<?php 
 							$xmlPostalCodes = simplexml_load_file($_SERVER['DOCUMENT_ROOT'] . '/common/data/postal_codes.xml');
 
@@ -750,7 +742,7 @@ Los campos que poseen * son obligatorios.
 					<div id="txtHint">
 						<?php 
 						echo '<select class="form-control" name="blankaddrcity" id="blankaddrcity" disabled style="margin-top:5px; width:60%">';
-							echo '<option>Indique su Código postal...</option>';
+							echo '<option>Choose your Postal code...</option>';
 						echo '</select>';
 						?>
 					</div>
@@ -758,16 +750,16 @@ Los campos que poseen * son obligatorios.
 			</div>	
 
 			<div class="form-group"> <!-- Teléfono Móvil -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankmobile">Tfno. móvil: * </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankmobile">Mobile: * </label> 
 				<div class="col-sm-10">
 					<input class="form-control" type="text" name="blankmobile" maxlength="9" placeholder="[6-7]XXXXXXXX" required onkeypress="return checkOnlyNumbers(event)">
 				</div>
 			</div>
 
 			<div class="form-group"> <!-- Otro Teléfono -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankphone">Tlf. adicional: </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankphone">Additional Tlf.: </label> 
 				<div class="col-sm-10">
-					<input class="form-control" type="text" name="blankphone" maxlength="18" placeholder="Ej. 0034-910000000" onkeypress="return checkDashedNumbers(event)">
+					<input class="form-control" type="text" name="blankphone" maxlength="18" placeholder="i.e. 0034-910000000" onkeypress="return checkDashedNumbers(event)">
 				</div>
 			</div>
 
@@ -779,10 +771,10 @@ Los campos que poseen * son obligatorios.
 			</div>		
 
 			<div class="form-group">  <!-- Carnet de Conducir -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankdrivingtype">Carnet conducir: </label>
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankdrivingtype">Driving license: </label>
 				<div class="col-sm-10 form-inline">
 					<select class="form-control form-inline" name="blankdrivingtype">
-						<option value=""> Tipo </option>
+						<option value=""> Type </option>
 						<option value="AM">AM</option>
 						<option value="A">A</option>
 						<option value="A1">A1</option>
@@ -800,10 +792,10 @@ Los campos que poseen * son obligatorios.
 			</div>
 			
 			<div class="form-group"> <!-- Estado Civil -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankmarital">Estado civil: </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankmarital">Marital status: </label> 
 				<div class="col-sm-10">
 					<select class="form-control" name="blankmarital">
-						<option selected disabled value="">Estoy...</option>
+						<option selected disabled value="">I am...</option>
 						<?php
 						$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
 						$maritStatus = getDBcompletecolumnID($userLang, 'maritalStatus', 'id');
@@ -817,38 +809,38 @@ Los campos que poseen * son obligatorios.
 			</div>
 
 			<div class="form-group"> <!-- Hijos -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanksons">Hijos: </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanksons">Sons: </label> 
 				<div class="col-sm-10">
 					<input class="form-control" type="number" name="blanksons" maxlength="2" min="0">
 				</div>
 			</div>		
 
 			<div class="form-group"> <!-- Foto -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="foto">Foto: </label>
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="foto">Photo: </label>
 				<div class="col-sm-10">
 					<input class="form-control" type="file" name="foto" id="foto" onchange="checkJSPhotoExtension(this.id)">
-					<p class="help-block">Tipos admitidos: JPG, JPEG o PNG. Máx: 1024Kb</p>
+					<p class="help-block">Supported types: JPG, JPEG o PNG. Máx: 1024Kb</p>
 				</div>
 			</div>
 
 			<div class="form-group tooltip-demo"> <!-- Archivos -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Tipos admitidos: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Máx: 1024Kb"></span> Archivos adicionales: </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Supported types: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Máx: 1024Kb"></span> Additional files: </label> 
 				<div class="col-sm-10" style="padding-left: 0px;">
 				<div id="uploadFiles" class="col-sm-9">
 					<input class="form-control" type="file" name="archivo" />	
 				</div>
 				<div class="btn-toolbar col-sm-1">
-					<div class="btn-group btn-group-sm"><button class="btn btn-default" onclick="addFiles(this.form);" type="button"><span >Añadir otro archivo</span></button></div>
+					<div class="btn-group btn-group-sm"><button class="btn btn-default" onclick="addFiles(this.form);" type="button"><span >Add other file</span></button></div>
 				</div>
 				</div>
 			</div>
 
 			<div class="form-group"> <!-- Nivel de Idiomas -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_idiomas">Idioma/s: * </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_idiomas">Language/s: * </label> 
 				<div class="col-sm-10" style="padding-left: 0px;">
 					<div class="col-sm-6" id="uploadFormLanguage">
 						<select class="form-control" name="add_idiomas">
-						<option selected disabled value=""> Pulse "+" tras elegir... </option>
+						<option selected disabled value=""> Press "+" after choose... </option>
 						<?php
 							$langNames = getDBcompletecolumnID($userLang, 'languages', $userLang);
 							
@@ -863,16 +855,16 @@ Los campos que poseen * son obligatorios.
 					</div>
 					<div class="col-sm-5">
 						<select class="form-control" name="add_nidiomas">
-							<option selected value="null"> Pulse "+" tras elegir...</option>
+							<option selected value="null"> Press "+" after choose...</option>
 							<option value="A1">A1</option>
 							<option value="A2">A2</option>
 							<option value="B1">B1</option>
 							<option value="B2">B2</option>
 							<option value="C1">C1</option>
 							<option value="C2">C2</option>
-							<option value="mothertongue">Lengua materna</option>
+							<option value="mothertongue">Mother tongue</option>
 						</select>
-						<a href="http://europass.cedefop.europa.eu/es/resources/european-language-levels-cefr/cef-ell-document.pdf">Niveles europeos – Tabla de auto evaluación (PDF)</a>
+						<a href="http://europass.cedefop.europa.eu/en/resources/european-language-levels-cefr/cef-ell-document.pdf">European levels – Auto evaluation table (PDF)</a>
 					</div>
 					<div class="btn-toolbar col-sm-1">
 						<div class="btn-group btn-group-sm"><button class="btn btn-default" onclick="addLanguage(this.form);" type="button"><span class="glyphicon glyphicon-plus"></span></button></div>
@@ -881,9 +873,9 @@ Los campos que poseen * son obligatorios.
 			</div>
 
 			<div class="form-group tooltip-demo"> <!-- Educación -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Incluye los títulos que tengas de la siguiente forma: Titulo y Especialidad, Centro de estudios, Fechas de inicio y fin"></span> Educación: </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Include all the titles you have as follows: Title and Specialty, Study center, Start and end dates"></span> Education: </label> 
 				<div id="uploadFormDegree" class="col-sm-9">
-					<input class="form-control" type="text" name="add_educ" placeholder='Pulse "+" tras elegir su educación... ' />					
+					<input class="form-control" type="text" name="add_educ" placeholder='Press "+" after selecting your education... ' />					
 				</div>
 				<div class="btn-toolbar col-sm-1">
 					<div class="btn-group btn-group-sm"><button class="btn btn-default" onclick="addDegree(this.form);" type="button"><span class="glyphicon glyphicon-plus"></span></button></div>
@@ -891,11 +883,11 @@ Los campos que poseen * son obligatorios.
 			</div>
 			
 			<div class="form-group tooltip-demo"> <!-- Profesión -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Si su título no aparece en el listado, seleccione Otra y póngase en contacto con nosotros a traves de administracion@perspectiva-alemania.com"></span> Profesión: *</label>
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="If your title does not appear in the list select Other and contact us through administracion@perspectiva-alemania.com"></span> Career: *</label>
 				<div id="uploadFormProf" class="col-sm-9">
 					<select class="form-control" name="add_prof">
-						<option selected value=""> Pulse "+" tras elegir... </option>
-						<option value="other"> Otra </option>
+						<option selected value=""> Press "+" after choose... </option>
+						<option value="other"> Oher </option>
 						<?php 
 							$eduNames = getDBcompleteColumnID(getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']), 'careers', 'id');
 							foreach($eduNames as $i){
@@ -910,30 +902,30 @@ Los campos que poseen * son obligatorios.
 			</div>	
 
 			<div class="form-group"> <!-- Trayectoria -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_career">¿Qué has hecho estos últimos años? </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_career">What have you done these last years? </label> 
 				<div class="col-sm-10" id="uploadFormCareer">
 					<div class="row" style="padding-left: 0px; margin-bottom: 10px;">
 						<div class="col-sm-5">
 							<div class="row">
 								<div class="col-sm-6">
-									<input class="form-control" type="text" name="add_empr" placeholder="Empresa" />
+									<input class="form-control" type="text" name="add_empr" placeholder="Company" />
 								</div>
 								<div class="col-sm-6">
-									<input class="form-control" type="text" name="add_categ" placeholder="Posición" />
+									<input class="form-control" type="text" name="add_categ" placeholder="Position" />
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-sm-6">
-									<input class="form-control" type="date" name="add_expstart" placeholder="Inicio" />
+									<input class="form-control" type="date" name="add_expstart" placeholder="Start" />
 								</div>			
 								<div class="col-sm-6">
-									<input class="form-control" type="date" name="add_expend" placeholder="Fin" />
+									<input class="form-control" type="date" name="add_expend" placeholder="End" />
 								</div>
 							</div>
 						</div>
 						<div class=" row col-sm-4">
 							<div class="col-sm-10">
-								<textarea class="form-control" name="add_desc" placeholder="Descripción del puesto"></textarea>
+								<textarea class="form-control" name="add_desc" placeholder="Job description"></textarea>
 							</div>	
 							<div class="btn-toolbar col-sm-1">
 								<div class="btn-group btn-group-sm"><button class="btn btn-default" onclick="addCareer(this.form);" type="button"><span class="glyphicon glyphicon-plus"></span></button></div>
@@ -944,28 +936,28 @@ Los campos que poseen * son obligatorios.
 			</div>		
 
 			<div class="form-group"> <!-- Salario -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanksalary">Salario deseado: </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanksalary">Desired salary: </label> 
 				<div class="col-sm-10">
-					<input class="form-control" type="text" name="blanksalary" maxlength="7" placeholder="€ neto/año" onkeypress="return checkOnlyNumbers(event)">
+					<input class="form-control" type="text" name="blanksalary" maxlength="7" placeholder="€ net/year" onkeypress="return checkOnlyNumbers(event)">
 				</div>
 			</div>
 
 			<div class="form-group"> <!-- Otros datos de Interés -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankother">Otros datos de interés: </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankother">Other interesting information: </label> 
 				<div class="col-sm-10">
-					<textarea class="form-control" type="number" name="blankother" placeholder="Exponga aquí cualquier dato que estime oportuno y no aparezca en ningún otro campo..."></textarea>	
+					<textarea class="form-control" type="number" name="blankother" placeholder="Write here any other relevant information that does not appears in any other field in the form..."></textarea>	
 				</div>
 			</div>		
 
 			<div class="form-group"> <!-- 10 Tags -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankother">Los 10 puntos clave de mi experiencia profesional</label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankother">10 key points from my personal experience</label>
 				<div class="col-sm-10">
 					<?php
 					
-					$tipArray = array(1 => 'Estoy especializado en...', 
-									2 => 'En los últimos años he adquirido sólidos conocimientos y experiencia en el ámbito de...', 
-									3 => 'Tengo más de... años de experiencia en...',
-									4 => 'Durante los últimos... años he desarrollado mi actividad profesional en el sector...', 
+					$tipArray = array(1 => 'I am specialized in...', 
+									2 => 'In the last years I have acquired solid knowledgements and experience in...', 
+									3 => 'I have more than... years of experience in...',
+									4 => 'During the last... years I have developed my professional activity in the sector...', 
 									5 => '...', 
 									6 => '...', 
 									7 => '...', 
@@ -984,9 +976,9 @@ Los campos que poseen * son obligatorios.
 		</div> <!-- Panel Body -->
 
 		<div class="panel-footer">
-			<label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> He leído y acepto las <a href="javascript:alert('Recuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nPara cualquier consulta no dudes en ponerte en contacto con nosotros.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');">condiciones de uso</a> y política de privacidad</label>
+			<label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> I have read and accept the <a href="javascript:alert('Remember that at any time you can exercise your right to opposition, access, rectification and cancellation regarding to the processing of your personal data by PERSPECTIVA ALEMANIA, through a letter to the following address: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nFor any doubt please contact us.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');">terms of use</a> and privacy policy.</label>
 			<div class="btn-group pull-right">
-				<button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSendES(formu);">Enviar</button>
+				<button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSendES(formu);">Send</button>
 			</div>
 		</div> <!-- Panel Footer-->
 	</div> <!-- Panel -->

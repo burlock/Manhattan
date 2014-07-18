@@ -119,20 +119,53 @@ function checkYankieDate(yankieDate){
  * Called from onsubmit in "personalData.php"
  * If wished, it can be controlled here if form is also blanked, under limited characters or over-limited characters and more...
  */
-function equalPassword() {
+function equalPasswordDE() {
 	var formElements = document.getElementById("form");	
 	var passwd1 = formElements[0];
 	var passwd2 = formElements[1];
 
 	if (passwd1.value==passwd2.value) {
-		alert("Contraseña actualizada con éxito");
+		alert("Passwort erfolgreich aktualisiert.");
 		formElements.submit();
 		return true;
 	} else {
-		alert("Ambas contraseñas deben coincidir");
+		alert("Beide passwörter müssen übereinstimmen.");
 		return false;
 	}
 }
+
+
+function equalPasswordEN() {
+	var formElements = document.getElementById("form");	
+	var passwd1 = formElements[0];
+	var passwd2 = formElements[1];
+
+	if (passwd1.value==passwd2.value) {
+		alert("Password updated successfully.");
+		formElements.submit();
+		return true;
+	} else {
+		alert("Both passwords must match.");
+		return false;
+	}
+}
+
+
+function equalPasswordES() {
+	var formElements = document.getElementById("form");	
+	var passwd1 = formElements[0];
+	var passwd2 = formElements[1];
+
+	if (passwd1.value==passwd2.value) {
+		alert("Contraseña actualizada con éxito.");
+		formElements.submit();
+		return true;
+	} else {
+		alert("Ambas contraseñas deben coincidir.");
+		return false;
+	}
+}
+
 
 
 
@@ -371,32 +404,63 @@ function jsIsPreviousDate(prevDate){
 
 
 
-/* Double-checks deletion of an existing career
+/* Double-checks deletion of an existing career. There is one version for each available language
  * Called in "admGenOptions.php"
  */
+function confirmCareerDeletionDE(id) {
+	return confirm('Bist du sicher, dass sie diesen Beruf löschen möchten?');
+}
+
+
+function confirmCareerDeletionEN(id) {
+	return confirm('Are you sure you want to delete this Career?');
+}
+
+
 function confirmCareerDeletionES(id) {
 	return confirm('¿Confirma que desea borrar esta Profesión?');
 }
 
 
 
-/* Double-checks deletion of an existing PENDING CV
+
+/* Double-checks deletion of an existing PENDING CV. There is one version for each available language
  * Called in "pendingCVs.php"
  */
-function confirmPendingCVDeletion(id) {
-	//return confirm('Are you sure you want to delete this CV and its assigned user?');
+function confirmPendingCVDeletionDE(id) {
+	return confirm('Bist du sicher, dass sie diesen Lebenslauf und Benutzer löschen?');
+}
+
+
+function confirmPendingCVDeletionEN(id) {
+	return confirm('Are you sure you want to delete this CV and its user?');
+}
+
+
+function confirmPendingCVDeletionES(id) {
 	return confirm('¿Está seguro de borrar este CV y su usuario?');
 }
 
 
 
-/* Double-checks deletion of an existing CHECKED CV (Only available for SuperAdmin profile)
+
+/* Double-checks deletion of an existing CHECKED CV (Only available for SuperAdmin profile). There is one version for each available language
  * Called in "checkedCVs.php"
  */
-function confirmCheckedCVDeletion(id) {
-	//return confirm('Are you sure you want to delete this CV and its assigned user?');
+function confirmCheckedCVDeletionDE(id) {
+	return confirm('Bist du sicher, dass sie diesen Lebenslauf und Benutzer löschen?');
+}
+
+
+function confirmCheckedCVDeletionEN(id) {
+	return confirm('Are you sure you want to delete this CV and its user?');
+}
+
+
+function confirmCheckedCVDeletionES(id) {
 	return confirm('¿Está seguro de borrar este CV y su usuario?');
 }
+
 
 
 
@@ -421,9 +485,19 @@ function confirmFormSendES(form){
 
 
 
-/* Double-checks deletion of an existing language
+/* Double-checks deletion of an existing language. There is one version for each available language
  * Called in "admGenOptions.php"
  */
+function confirmLangDeletionDE(id) {
+	return confirm('Bist du sicher, dass Sie diese Sprache löschen möchten?');
+}
+
+
+function confirmLangDeletionEN(id) {
+	return confirm('Are you sure you want to delete this language?');
+}
+
+
 function confirmLangDeletionES(id) {
 	return confirm('¿Confirma que desea borrar este idioma?');
 }

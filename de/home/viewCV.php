@@ -18,7 +18,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="David Alfonso Ginés Prieto, Miguel Hita Vicente y Miguel Ángel Melón Pérez">
 	
-	<title>Visualización de CV</title>
+	<title>Visualisierung von CV</title>
 	
 	<!-- Custom styles for this template -->
 	<link href="../../common/css/design.css" rel="stylesheet">
@@ -89,10 +89,10 @@
 							<span class="icon-bar"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
+							<li class="dropdown-header">Angeschossen wie: <?php echo $_SESSION['loglogin']; ?></li>
 							<li class="divider"></li>
-							<li><a href="../home/personalData.php">Configuración personal</a></li>
-							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
+							<li><a href="../home/personalData.php">Persönliche Einstellungen</a></li>
+							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Aussteigen</a></li>
 						</ul>
 					</li>
 				</div><!--/.nav-collapse -->
@@ -106,14 +106,14 @@
 				<form class="modal-content" action="../endsession.php">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Cerrar sesión</h4>
+						<h4 class="modal-title" id="exitRequestLabel">Abmelden</h4>
 					</div>
 					<div class="modal-body">
-						¿Estás seguro de que quieres salir?
+						Haben Sie sich abmelden wollen?
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-						<button type="submit" class="btn btn-primary">Sí, cerrar sesión</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Stormieren</button>
+						<button type="submit" class="btn btn-primary">Wenn, melden</button>
 					</div>
 				</form>
 			</div>
@@ -565,24 +565,24 @@
 		}
 	}
 	?>
-
-
+	
+	
 	<div id="main-content" class="cvViewer bs-docs-container">
 		<div class="row container-fluid cvViewer">
 			<div class="panel panel-default cvViewer tooltip-demo col-md-8" role="main"> <!-- Panel -->
 				<div class="btn-group pull-right">
 					<?php
 					if(strlen($id_o[$ind_p])>0){
-						echo "<a href='viewCV.php?id_bb=$ind_p&reportType=".$report."' class='btn btn-default btn-sm' data-toggle='tooltip' data-original-title='Anterior'><span class='glyphicon glyphicon-chevron-left'></span></a>";
+						echo "<a href='viewCV.php?id_bb=$ind_p&reportType=".$report."' class='btn btn-default btn-sm' data-toggle='tooltip' data-original-title='Vorherige'><span class='glyphicon glyphicon-chevron-left'></span></a>";
 					}
 					else{
 						echo "<a class='btn btn-default btn-sm' disabled><span class='glyphicon glyphicon-chevron-left'></span></a>";
 					}
 					?>
-						<a href="<?php echo "../../cvs/".$pagetext.".pdf" ?>" target="_blank" class="btn btn-default btn-sm" data-toggle='tooltip' data-original-title='Descargar CV en PDF'><span class='glyphicon glyphicon-download-alt'></span></a>
+						<a href="<?php echo "../../cvs/".$pagetext.".pdf" ?>" target="_blank" class="btn btn-default btn-sm" data-toggle='tooltip' data-original-title='Laden CV in PDF'><span class='glyphicon glyphicon-download-alt'></span></a>
 					<?php
 					if(strlen($id_o[$ind_n])>0){
-						echo "<a href='viewCV.php?id_bb=$ind_n&reportType=".$report."' class='btn btn-default btn-sm' data-toggle='tooltip' data-original-title='Siguiente'><span class='glyphicon glyphicon-chevron-right'></span></a>";
+						echo "<a href='viewCV.php?id_bb=$ind_n&reportType=".$report."' class='btn btn-default btn-sm' data-toggle='tooltip' data-original-title='Folgende'><span class='glyphicon glyphicon-chevron-right'></span></a>";
 					}
 					else{
 						echo "<a class='btn btn-default btn-sm' disabled><span class='glyphicon glyphicon-chevron-right'></span></a>";
@@ -592,7 +592,7 @@
 					?>
 				</div>
 				<div class="panel-heading">
-					<h3 class="panel-title">CV de <?php echo $currentName;?></h3>
+					<h3 class="panel-title">Lebenslauf von <?php echo $currentName;?></h3>
 				</div>
 				<div class="panel-body scrollable" > <!-- panel-body -->
 					<?php echo ($texto); ?>
@@ -601,14 +601,14 @@
 			
 			<div class="panel panel-default col-md-3">
 				<div class="panel-heading">
-					<h3 class="panel-title">Añadir nota</h3>
+					<h3 class="panel-title">Notiz hinzufügen</h3>
 				</div>
 				<div class="panel-body" > <!-- panel-body -->
 					<?php
 					echo "<form name='formu' id='formu' class='form-horizontal' action='viewCV.php?id_b=".$ida."&reportType=".$report."' method='post' enctype='multipart/form-data'>";
 						echo "<textarea class='form-control' name='nota' rows='10' cols='40'></textarea>";
 						echo "<div id='form_submit' class='form-group pull-right' style='margin: 1px; margin-top: 10px;'>";
-							echo "<button type='submit' name='enviar' class='btn btn-primary' onclick='insert();'>Añadir  <span class='glyphicon glyphicon-pencil'> </span></button>";
+							echo "<button type='submit' name='enviar' class='btn btn-primary' onclick='insert();'>Hinzufügen <span class='glyphicon glyphicon-pencil'> </span></button>";
 						echo "</div>";
 					echo "</form>";
 					?>

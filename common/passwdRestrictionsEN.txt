@@ -1,0 +1,10 @@
+<div class="panel-heading">
+	Remember that the password must have the following characteristics
+</div>
+<ul>
+	<li>Have between 6 and 16 characters</li>
+	<li>Have at least one lowercase letter</li>
+	<li>Have at least one uppercase letter</li>
+	<li>Have at least one numeric character</li>
+	<li>Make it all easy to remember for you</li>
+</ul>

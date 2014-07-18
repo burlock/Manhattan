@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="David Alfonso Ginés Prieto, Miguel Hita Vicente y Miguel Ángel Melón Pérez">
 	
-	<title>Inicio</title>
+	<title>Home</title>
 
 	<!-- Custom styles for this template -->
 	<link href="../common/css/design.css" rel="stylesheet">
@@ -194,46 +194,46 @@
 						<?php 
 						//Conditional block for 'Administrador' or 'SuperAdmin' profiles
 						if(($userRow['profile'] == 'Administrador') || ($userRow['profile'] == 'SuperAdmin')){
-							echo "<h1 class='page-header'>Noticias <br></h1>";
+							echo "<h1 class='page-header'>News <br></h1>";
 							echo "<div class='clearfix'>";
 							if((getDBrowsnumber('cvitaes') == 0) || ($pendingCVs == 0)){
-								echo "<h1 class='page-header'><small>No existen CVs por validar</small></h1>";
+								echo "<h1 class='page-header'><small>There is no CV to check</small></h1>";
 							}
 							else{
-								echo "<h2><small>Existen <a href=./home/pendingCVs.php>" . $pendingCVs . " </a> CVs por validar </small></h2><br>";
+								echo "<h2><small>There is/are <a href=./home/pendingCVs.php>" . $pendingCVs . " </a> CVs to check </small></h2><br>";
 							}
 
 							if(suggestPassword(date('Y-m-d'), $userRow['passExpiration'], $days)){
-								echo "<h4 class='text-danger'>&nbsp;Su contraseña caduca en " . $days . " días. <a href=./home/personalData.php>Cambiar</a><span class='label label-danger notice-label pull-left'>Aviso</span></h4>";
+								echo "<h4 class='text-danger'>&nbsp;Your password expires in " . $days . " days. <a href=./home/personalData.php>Change</a><span class='label label-danger notice-label pull-left'>Attention</span></h4>";
 								echo "</div>";
 							}
 						}
 						//Conditional block for 'Lector' profile
 						elseif($userRow['profile'] == 'Lector'){
 							if(suggestPassword(date('Y-m-d'), $userRow['passExpiration'], $days)){
-								echo "<h1 class='page-header'>Noticias <br></h1>";
+								echo "<h1 class='page-header'>News <br></h1>";
 								echo "<div class='clearfix'>";
-								echo "<h4 class='text-danger'>&nbsp;Su contraseña caduca en " . $days . " días. <a href=./home/personalData.php>Cambiar</a><span class='label label-danger notice-label pull-left'>Aviso</span></h4>";
+								echo "<h4 class='text-danger'>&nbsp;Your password expires in " . $days . " days. <a href=./home/personalData.php>Change</a><span class='label label-danger notice-label pull-left'>Attention</span></h4>";
 								echo "</div>";
 							}
 							else{
-								echo "<h1 class='page-header'>Noticias <br></h1>";
+								echo "<h1 class='page-header'>News <br></h1>";
 								echo "<div class='clearfix'>";
 							}
 						}
 						//Conditional block for any other profile (which in fact is only 'Candidato')
 						else{
-							echo "<h1 class='page-header'>Introduce tu CV... <small>" . $userRow['login'] . "</small></h1>";
+							echo "<h1 class='page-header'>Introduce your CV... <small>" . $userRow['login'] . "</small></h1>";
 							include 'upload.php';
 						}
 						//This part of code lets the system show a previously written message (SAVED IN FILE "broadcasting.txt")
 						if(($userRow['employee'] == '1') && (file_exists($_SERVER['DOCUMENT_ROOT'].'/broadcasting.txt'))){
-							echo "<br><h4 class='text-danger'><span class='label label-warning notice-label pull-left'>Información importante</span></h4><br>";
+							echo "<br><h4 class='text-danger'><span class='label label-warning notice-label pull-left'>Important information</span></h4><br>";
 							echo "<h4 class='text-warning'>";
 							include '../broadcasting.txt';
 							echo "</h4>";
 						}
-						?>
+					?>
 					</div> <!-- bs-docs-section -->
 				</div> <!-- col-md-9 scrollable role=main -->
 			</div> <!-- row -->

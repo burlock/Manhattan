@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="David Alfonso Ginés Prieto, Miguel Hita Vicente y Miguel Ángel Melón Pérez">
 	
-	<title>Gestión de Contraseña</title>
+	<title>Password Management</title>
 
 	<!-- Custom styles for this template -->
 	<link href="../common/css/design.css" rel="stylesheet">
@@ -37,7 +37,7 @@
 		 * - When 'passExpiration' var is less than current date (when is a past date)
 		 */
 		//1st time user logs in or password reseted because user forgot its own password BUT not expirated password (In this case password length is 8 and not hashed)
-		if(($userRow['needPass']) && (!($userRow['passExpiration'] <= date('Y-m-d'))) && (!checkSimplePassChangeES($_POST['newPassword'], $_POST['confirmNewPassword'], $keyError))){
+		if(($userRow['needPass']) && (!($userRow['passExpiration'] <= date('Y-m-d'))) && (!checkSimplePassChangeEN($_POST['newPassword'], $_POST['confirmNewPassword'], $keyError))){
 			//echo 'error checkpasschange no pasado con needpass y sin passexpiration.';
 			?>
 			<div class="top-alert-container">
@@ -50,7 +50,7 @@
 			<?php $wannaGoTo ='index.html';
 		}
 		//Expirated password BUT not first time user logs in neither password reseted
-		elseif(!($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkHashedPassChangeES($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['pass'], $keyError))){
+		elseif(!($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkHashedPassChangeEN($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['pass'], $keyError))){
 			//echo 'error checkpasschange no pasado sin needpass y con passexpiration.';
 			?>
 			<div class="top-alert-container">
@@ -63,7 +63,7 @@
 			<?php $wannaGoTo ='index.html';
 		}
 		//Both 'needPass' == '1' and 'passExpiration' a past date. Password, in this case, is 8 characters length
-		elseif(($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkSimplePassChangeES($_POST['newPassword'], $_POST['confirmNewPassword'], $keyError))){
+		elseif(($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkSimplePassChangeEN($_POST['newPassword'], $_POST['confirmNewPassword'], $keyError))){
 			//echo 'error checkpasschange no pasado con needpass y passexpiration.';
 			?>
 			<div class="top-alert-container">
@@ -83,7 +83,7 @@
 			<div class="top-alert-container">
 				<div class="alert alert-danger alert-error top-alert fade in">
 					<a href="#" class="close" data-dismiss="alert">&times;</a>
-					<strong>Error!</strong> No fue posible actualizar su contraseña.
+					<strong>Error!</strong> It was not possible to update your password.
 					<!-- Could have also failed update of 'lastConnection' or 'passExpiration' fields -->
 				</div>
 			</div>
@@ -99,7 +99,7 @@
 			<div class="top-alert-container">
 				<div class="alert alert-success top-alert fade in">
 					<a href="#" class="close" data-dismiss="alert">&times;</a>
-					<strong>Éxito!</strong> Contraseña actualizada.
+					<strong>Éxito!</strong> Password updated.
 				</div>
 			</div>					
 
@@ -114,7 +114,6 @@
 		//Firstly checks if both text fields (login + password) were fulfilled or not
 		if (isset($_POST['loglogin']) && !empty($_POST['loglogin']) && isset($_POST['logpasswd']) && !empty($_POST['logpasswd'])){
 			$checkedUser = $_POST["loglogin"];
-			//$checkedPasswd = $_POST["logpasswd"];
 			$userRow = getDBrow('users', 'login', $checkedUser);
 			$profileRow = getDBrow('profiles', 'name', $userRow['profile']);
 			
@@ -124,7 +123,7 @@
 				<div class="top-alert-container">
 					<div class="alert alert-danger alert-error top-alert fade in">
 						<a href="#" class="close" data-dismiss="alert">&times;</a>
-						<strong>Error!</strong> Usuario no encontrado.
+						<strong>Error!</strong> User not found.
 					</div>
 				</div>
 
@@ -137,7 +136,7 @@
 				<div class="top-alert-container">
 					<div class="alert alert-danger alert-error top-alert fade in">
 						<a href="#" class="close" data-dismiss="alert">&times;</a>
-						<strong>Error!</strong> Contraseña incorrecta.
+						<strong>Error!</strong> Wrong password.
 					</div>
 				</div>						
 				<?php 	$wannaGoTo ='index.html'; $wannaExit = true;
@@ -149,7 +148,7 @@
 				<div class="top-alert-container">
 					<div class="alert alert-danger alert-error top-alert fade in">
 						<a href="#" class="close" data-dismiss="alert">&times;</a>
-						<strong>Error!</strong> Contraseña incorrecta.
+						<strong>Error!</strong> Wrong password.
 					</div>
 				</div>						
 				<?php 	$wannaGoTo ='index.html'; $wannaExit = true;
@@ -161,7 +160,7 @@
 				<div class="top-alert-container">
 					<div class="alert alert-warning alert-error top-alert fade in">
 						<a href="#" class="close" data-dismiss="alert">&times;</a>
-						<strong>Opppsss!</strong> Perfil no activo.
+						<strong>Opppsss!</strong> Profile inactive.
 					</div>
 				</div>						
 				<?php $wannaGoTo ='index.html';
@@ -173,7 +172,7 @@
 				<div class="top-alert-container">
 					<div class="alert alert-warning alert-error top-alert fade in">
 						<a href="#" class="close" data-dismiss="alert">&times;</a>
-						<strong>Opppsss!</strong> Cuenta de usuario no activa.
+						<strong>Opppsss!</strong> User account inactive.
 					</div>
 				</div>						
 				<?php $wannaGoTo ='index.html'; 
@@ -197,28 +196,28 @@
 								<div class='modal-content panel-warning'>
 									<div class='modal-header panel-heading'>
 										<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-										<h4 class='modal-title'>Debe cambiar la contraseña antes de continuar</h4>
+										<h4 class='modal-title'>You must change your password before continue</h4>
 									</div>
 									<div class='well encapsulated'>
 										<!-- If "passwdRestrictionsES.txt" is changed function "checkXXXXXXPassChangeXX" will be needed to be also changed -->
-										<?php include $_SERVER['DOCUMENT_ROOT'] . '/common/passwdRestrictionsES.txt' ?>
+										<?php include $_SERVER['DOCUMENT_ROOT'] . '/common/passwdRestrictionsEN.txt' ?>
 									</div>
 									<div class='modal-body encapsulated'>
 										<div class='form-group'>
-											<label for='newPassword' class='control-label'>Nueva contraseña</label>
+											<label for='newPassword' class='control-label'>New password</label>
 											<div class='center-block'>
 												<input type='password' class='form-control' name='newPassword' id='newPassword' placeholder='' required data-toggle='tooltip' title='Enter new password' autocapitalize='off'>
 											</div>
 										</div>
 										<div class='form-group'>
-											<label for='confirmNewPassword' class='control-label'>Repita contraseña</label>
+											<label for='confirmNewPassword' class='control-label'>Repeat password</label>
 											<div class='center-block'>
 												<input type='password' class='form-control' name='confirmNewPassword' id='confirmNewPassword' placeholder='' required data-toggle='tooltip' title='Confirm password' autocapitalize='off'>
 											</div>
 										</div>
 									</div>
 									<div class='modal-footer'>
-										<button type='submit' class='btn btn-primary'>Cambiar</button>
+										<button type='submit' class='btn btn-primary'>Change</button>
 									</div>
 								</div>
 							</form><!-- id='changePasswordForm'  -->
@@ -233,7 +232,7 @@
 							<div class="top-alert-container">
 								<div class="alert alert-danger alert-error top-alert fade in">
 									<a href="#" class="close" data-dismiss="alert">&times;</a>
-									<strong>Error!</strong> Hubo un problema al actualizar la fecha de última conexión.
+									<strong>Error!</strong> There was an problem updating last connection's date.
 								</div>
 							</div>								
 							<?php $wannaGoTo ='index.html'; 
@@ -259,7 +258,7 @@
 			<div class="top-alert-container">
 				<div class="alert alert-warning alert-error top-alert fade in">
 					<a href="#" class="close" data-dismiss="alert">&times;</a>
-					<strong>Opppsss!</strong> Ha olvidado rellenar alguno de los campos.
+					<strong>Opppsss!</strong> You forgot to fill any of the fields.
 				</div>
 			</div>				
 			<?php $wannaGoTo ='index.html'; 
@@ -267,7 +266,6 @@
 	}
 	/**********************************     End of code initially read everytime user logs in     **********************************/
 	?>
-
 
 
 <!-- Footer bar & info
@@ -314,7 +312,6 @@
 			});
 		});  
 	</script>
-
 
 </body>
 </html>

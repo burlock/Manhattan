@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic|Ubuntu+Condensed&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-	<title>Gestión de Perfiles</title>
+	<title>Profilverwaltung</title>
 	<link href="../../common/css/styles.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="../../common/js/functions.js"></script>
 	<script type="text/javascript" src="../../common/js/jquery-1.10.1.min.js"></script>
@@ -52,8 +52,8 @@
 		}
 		?>
 		<div id="topbar" class="azul">
-			<a style="float:left;" href="#">Opciones</a>
-			<a style="float:center">Conectado como: <?php echo $_SESSION['loglogin']; ?></a>
+			<a style="float:left;" href="#">Auswahlmöglichkeiten</a>
+			<a style="float:center">Angeschlossen wie: <?php echo $_SESSION['loglogin']; ?></a>
 			<a href="../endsession.php" style="float:right">Salir</a>
 		</div>
 		<?php 
@@ -66,7 +66,7 @@
 			$digitLang = getUserLangDigits($userRow['language']);
 			$LangDigitsName = $digitLang."Name";
 			$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');
-			$mainNamesRow = getDBcompletecolumnID($LangDigitsName, 'mainNames', 'id');
+			$mainNamesRow = getDBcompletecolumnID($langDigitsName, 'mainNames', 'id');
 			$j = 0;
 			foreach($mainKeysRow as $i){
 				if(getDBsinglefield('active', $i, 'profile', $userRow['profile'])){
@@ -94,9 +94,9 @@
 				$myFileProfileRow = getDBrow($myFile, 'profile', $userRow['profile']);
 				for($j=3;$j<$numCols;$j++){
 					$colNamej = getDBcolumnname($myFile, $j);
-					if(($myFileProfileRow[$j] == 1) && ($subLevelMenu = getDBsinglefield2($LangDigitsName, $namesTable, 'key', $colNamej, 'level', '2'))){
-						if(!getDBsinglefield2($LangDigitsName, $namesTable, 'fatherKey', $colNamej, 'level', '3')){
-							$level2File = getDBsinglefield('key', $namesTable, $LangDigitsName, $subLevelMenu);
+					if(($myFileProfileRow[$j] == 1) && ($subLevelMenu = getDBsinglefield2($langDigitsName, $namesTable, 'key', $colNamej, 'level', '2'))){
+						if(!getDBsinglefield2($langDigitsName, $namesTable, 'fatherKey', $colNamej, 'level', '3')){
+							$level2File = getDBsinglefield('key', $namesTable, $langDigitsName, $subLevelMenu);
 							echo "<li><a href=./$level2File.php>" . $subLevelMenu . "</a></li>";
 						}
 						else{
@@ -138,7 +138,7 @@
 					(!executeDBquery("INSERT INTO `administration` (`id`, `profile`, `active`, `admGenOptions`, `profiles`, `admCurProfiles`, `admNewProfile`, `users`, `admCurUsers`, `admNewUser`) VALUES (NULL, '".$newProfile."', '0', '0', '0', '0', '0', '0', '0', '0')"))){
 						?>
 						<script type="text/javascript">
-							alert('Error al crear el nuevo perfil');
+							alert('Fehler beim erstellen des neuen profils');
 							window.location.href='admCurProfiles.php';
 						</script>
 						<?php
@@ -146,7 +146,7 @@
 					else{
 						?>
 						<script type="text/javascript">
-							alert('Perfil creado con éxito');
+							alert('Profil wurde erfolgreich gegründet');
 							window.location.href='admCurProfiles.php';
 						</script>
 						<?php
@@ -154,17 +154,17 @@
 				}
 			}
 			?>
-			<p><span id="leftmsg">Perfiles Existentes</span></p><hr><br>
+			<p><span id="leftmsg">Existierende Profile</span></p><hr><br>
 			<table class="tabla1">
 				<tr>
 					<th>Id</th>
-					<th>Perfil</th>
-					<th>Activo</th>
-					<th>Creado</th>
-					<th>Usuarios</th>
+					<th>Profil</th>
+					<th>Gültig</th>
+					<th>Gegründet</th>
+					<th>Benutzer</th>
 					<?php 
 					if($_SESSION['logprofile'] == 'SuperAdmin'){
-						echo "<th>Acción</th>";
+						echo "<th>Handlung</th>";
 					}
 					?>
 				</tr>
@@ -176,15 +176,15 @@
 					echo "<td>" . $showedProfileRow['id'] . "</td>";
 					echo "<td><a href='editProfile.php?codvalue=" . $i . "'>" . $showedProfileRow['name'] . "</a></td>";
 					if($showedProfileRow['active']){
-						echo "<td>Si</td>";
+						echo "<td>Ja</td>";
 					}
 					else{
-						echo "<td>No</td>";
+						echo "<td>Nicht</td>";
 					}
 					echo "<td>" . $showedProfileRow['created'] . "</td>";
 					echo "<td>" . $showedProfileRow['numUsers'] . "</td>";
 					if($_SESSION['logprofile'] == 'SuperAdmin'){
-						echo '<td><a href="#" onclick="confirmProfileDeletion(' . $showedProfileRow['id'] . ')">Borrar</a></td>';
+						echo '<td><a href="#" onclick="confirmProfileDeletion(' . $showedProfileRow['id'] . ')">Löschen</a></td>';
 					}
 				}
 				?>
@@ -193,12 +193,12 @@
 			if($_SESSION['logprofile'] == 'SuperAdmin'){
 				?>
 				<fieldset id="auto1">
-					<legend>Nuevo Perfil</legend>
+					<legend>Neues Profil</legend>
 					<form name="newProfile" action="admCurProfiles.php" method="post" onsubmit="return confirmProfileCreation()">
-						<input type="text" id="newPName" name="newPName" size="25" placeholder="Nombre del perfil" />
+						<input type="text" id="newPName" name="newPName" size="25" placeholder="Profilname" />
 						<!-- Por defecto queda activado, por lo que no incluyo la posibilidad de crearlo desactivado. Así lo he decidido -->
 						<input type="hidden" value="hNewPsubmit" name="hiddenfield">
-						<input type="submit" value="Añadir" name="newPsubmit">
+						<input type="submit" value="Hinzufügen" name="newPsubmit">
 					</form>
 				</fieldset>
 				<?php

@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="David Alfonso Ginés Prieto, Miguel Hita Vicente y Miguel Ángel Melón Pérez">
 	
-	<title>CVs Revisados</title>
+	<title>Pending CVs</title>
 
 	<!-- Custom styles for this template -->
 	<link href="../../common/css/design.css" rel="stylesheet">
@@ -28,7 +28,7 @@
 		</script>
 		<?php
 	}
-	elseif($_SESSION['logprofile'] == 'SuperAdmin'){
+	else {
 		$lastUpdate = $_SESSION['lastupdate'];
 		$curUpdate = date('Y-m-d H:i:s');
 		$elapsedTime = (strtotime($curUpdate)-strtotime($lastUpdate));
@@ -80,10 +80,10 @@
 							<span class="icon-bar"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
+							<li class="dropdown-header">Logged in as: <?php echo $_SESSION['loglogin']; ?></li>
 							<li class="divider"></li>
-							<li><a href="../home/personalData.php">Configuración Personal</a></li>
-							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
+							<li><a href="../home/personalData.php">Personal Settings</a></li>
+							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Exit</a></li>
 						</ul>
 					</li>
 				</div>
@@ -98,14 +98,14 @@
 				<form class="modal-content" action="../endsession.php">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Cerrar sesión</h4>
+						<h4 class="modal-title" id="exitRequestLabel">Close Session</h4>
 					</div>
 					<div class="modal-body">
-						¿Estás seguro de que quieres salir?
+						Are you sure you want to close session?
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-						<button type="submit" class="btn btn-primary">Sí, cerrar sesión</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button type="submit" class="btn btn-primary">Yes, close session</button>
 					</div>
 				</form>
 			</div>
@@ -117,17 +117,20 @@
 		<?php
 		$myFile = 'home';
 		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-
+		
+		//Extracts the number of pending CVs
 		$pendingCVs = getPendingCVs();
-
+		
+		
 		if (isset($_POST['eCurCVsend'])) {
-
-			//Unmounting "Lang:LangLv" structure for insert in DB
+			
+			//Unmounting "Lang:LangLv" structure to insert it into DB (explode breaks a string into an array)
 			$wholeLangInfo = explode('|',$_POST['eCCVlanguagesMerged']);
-
+			
 			$finalLang = "";
 			$finalLangLv = "";
 			foreach($wholeLangInfo as $key => $value) {
+				//Separating each 'Language' and its 'Language Level' as an array
 				$array = explode(':',$value);					
 				$finalLang = $finalLang . $array[0] . '|';
 				$finalLangLv = $finalLangLv . $array[1] . '|';
@@ -135,30 +138,30 @@
 			
 			$finalLang = substr($finalLang, 0, -1);
 			$finalLangLv = substr($finalLangLv, 0, -1);
-
-			//Mounting experience information
+			
+			//Mounting Experience information
 			$string_experCompany = "";
 			$string_experStart = "";
 			$string_experEnd = "";
 			$string_experPos = "";
-			$string_experDesc = "";			
-
-			for ($i=0; $i < $_POST['eCCV_counterExperience'] ; $i++) { 
+			$string_experDesc = "";
+			
+			for ($i=0; $i < $_POST['eCCV_counterExperience']; $i++) { 
 				$string_experCompany = $string_experCompany . $_POST["eCCVexperCompany$i"] . '|';
 				$string_experStart = $string_experStart . $_POST["eCCVexperStart$i"] . '|';
 				$string_experEnd = $string_experEnd . $_POST["eCCVexperEnd$i"] . '|';
 				$string_experPos = $string_experPos . $_POST["eCCVexperPos$i"] . '|';
 				$string_experDesc = $string_experDesc . $_POST["eCCVexperDesc$i"] . '|';
-			}	
-
-			//Cleaning last '|'
+			}
+			
+			//Cleaning last '|' character from each string
 			$string_experCompany = substr($string_experCompany, 0, -1);
 			$string_experStart = substr($string_experStart, 0, -1);
 			$string_experEnd = substr($string_experEnd, 0, -1);
 			$string_experPos = substr($string_experPos, 0, -1);
 			$string_experDesc = substr($string_experDesc, 0, -1);
 			
-			//Minimum security checkings, to avoid malformation in DB
+			//Minimum security checkings, to avoid dangerous information in DB
 			if(eregMySQLCheckDate(htmlentities($_POST['eCCVbirthdate'], ENT_QUOTES, 'UTF-8'))){
 				$inDBBirthdate = trim(htmlentities($_POST['eCCVbirthdate'], ENT_QUOTES, 'UTF-8'));
 			}
@@ -176,15 +179,15 @@
 			
 			//Nationalities should be searched in its corresponding DBTable
 			//If any of the mandatory fields are bad formed DB won't be updated
-			if((!checkFullNameES($_POST['eCCVname'], $_POST['eCCVsurname'], $outName, $outSurname, $checkError)) || ($inDBBirthdate == '0000-00-00') || 
+			if((!checkFullName($_POST['eCCVname'], $_POST['eCCVsurname'], $outName, $outSurname, $checkError)) || ($inDBBirthdate == '0000-00-00') || 
 			(!checkDNI_NIE(htmlentities($_POST['eCCVnie'], ENT_QUOTES, 'UTF-8'))) || (!$inDBNationalities) || 
 			(!checkMobile(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'))) || (!filter_var(htmlentities($_POST['eCCVmail'], ENT_QUOTES, 'UTF-8'), FILTER_VALIDATE_EMAIL)) ||
 			(htmlentities($finalLang, ENT_QUOTES, 'UTF-8') == '' || htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8') == '' || htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8') == '%null%') ||
 			(htmlentities($_POST['eCCVcareer'], ENT_QUOTES, 'UTF-8') == '')){
 				?>
 				<script type="text/javascript">
-					alert('Al menos 1 de los campos obligatorios no es correcto.');
-					window.location.href='checkedCVs.php?codvalue=<?php echo $_POST['eCCVnie'];  ?>';
+					alert('At least 1 of the mandatory fields is not correct.');
+					window.location.href='pendingCVs.php?codvalue=<?php echo $_POST['eCCVnie'];  ?>';
 				</script>
 				<?php 
 			}
@@ -248,16 +251,16 @@
 				if((!executeDBquery($updateCVQuery))){
 					?>
 					<script type="text/javascript">
-						alert('Error revisando CV');
-						window.location.href='checkedCVs.php?codvalue=<?php echo $_POST['eCCVnie'];  ?>';
+						alert('Error checking CV.');
+						window.location.href='pendingCVs.php?codvalue=<?php echo $_POST['eCCVnie'];  ?>';
 					</script>
 					<?php 
 				}
 				else {
 					?>
 					<script type="text/javascript">
-						alert('CV validado satisfactoriamente.');
-						window.location.href='checkedCVs.php';
+						alert('CV checked successfully.');
+						window.location.href='pendingCVs.php';
 					</script>
 					<?php
 				}
@@ -265,25 +268,25 @@
 		}
 		elseif(isset($_GET['hiddenGET'])){
 			switch($_GET['hiddenGET']){
-				case 'hDelCheckedCV':
-					$checkedCVRow = getDBrow('cvitaes', 'id', $_GET['codvalue']);
-					if(!deleteDBrow('users', 'login', $checkedCVRow['userLogin'])){
+				case 'hDelPendingCV':
+					$pendingCVRow = getDBrow('cvitaes', 'id', $_GET['codvalue']);
+					if(!deleteDBrow('users', 'login', $pendingCVRow['userLogin'])){
 						unset ($_GET['codvalue']);
-						unset ($checkedCVRow);
+						unset ($pendingCVRow);
 						?>
 						<script type="text/javascript">
-							alert('Error borrando usuario del CV a borrar.');
-							window.location.href='checkedCVs.php';
+							alert('Error deleting user from pending CVs.');
+							window.location.href='pendingCVs.php';
 						</script>
 						<?php 
 					}
 					elseif(!deleteDBrow('cvitaes', 'id', $_GET['codvalue'])){
 						unset ($_GET['codvalue']);
-						unset ($checkedCVRow);
+						unset ($pendingCVRow);
 						?>
 						<script type="text/javascript">
-							alert('Error borrando CV revisado.');
-							window.location.href='checkedCVs.php';
+							alert('Error deleting pending CV.');
+							window.location.href='pendingCVs.php';
 						</script>
 						<?php 
 					}
@@ -291,7 +294,7 @@
 						$numCandidateUsers = getDBsinglefield('numUsers', 'profiles', 'name', 'Candidato');
 						$numCandidateUsers--;
 						executeDBquery("UPDATE `profiles` SET `numUsers`='".$numCandidateUsers."' WHERE `name`='Candidato'");
-						$userDir = $_SERVER['DOCUMENT_ROOT'] . "/cvs/".$checkedCVRow['userLogin']."/";
+						$userDir = $_SERVER['DOCUMENT_ROOT'] . "/cvs/".$pendingCVRow['userLogin']."/";
 						$files  = scandir($userDir);
 						foreach ($files as $value){
 							unlink($userDir.$value);
@@ -302,7 +305,7 @@
 			}
 			?>
 			<script type="text/javascript">
-				window.location.href='checkedCVs.php';
+				window.location.href='pendingCVs.php';
 			</script>
 			<?php 
 		}//end of GET
@@ -339,8 +342,8 @@
 												if(!getDBsinglefield2($LangDigitsName, $namesTable, 'fatherKey', $colNamej, 'level', '3')){
 													$level2File = getDBsinglefield('key', $namesTable, $LangDigitsName, $subLevelMenu);
 													// Because the file we are is a level 2 file, we do this comparision to make active element in list if it's this same file
-													if ($level2File == 'checkedCVs') 
-														$badge = "<span class='badge'>$checkedCVs</span>";
+													if ($level2File == 'pendingCVs') 
+														$badge = "<span class='badge'>$pendingCVs</span>";
 													else
 														$badge = "";
 													if ($level2File == basename(__FILE__, '.php')) 
@@ -381,15 +384,15 @@
 						</ul> <!-- class="nav bs-sidenav" -->
 					</div> <!-- id="sidebar-navigation-list"  -->
 				</div> <!-- col-md-3 -->
-				
-				
+
+
 				<!--  ****************************************   Start of displayed Modal HTML   ****************************************  -->
 				<div id="editCVModal" class="modal fade bs-example-modal-lg">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content panel-info">
 							<div class="modal-header panel-heading">
 								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-								<h4 class="modal-title">Modificando CV ya validado... <?php echo $_GET['codvalue'] ?></h4>
+								<h4 class="modal-title">Checking CV <?php echo $_GET['codvalue'] ?></h4>
 							</div>
 
 							<?php
@@ -399,62 +402,66 @@
 							if(!ifCreateDir($userFilesDir, 0777)){
 								?>
 								<script type="text/javascript">
-									alert('Error recuperando información del Directorio de Usuario. Por favor, contacte con el administrador.');
+									alert('Error retrieving User Directory Information. Please contact administrator.');
 									window.location.href='../home.php';
 								</script>
 								<?php 
 							}
 							?>
 							
-							<form id="editedCV" class="form-horizontal" role="form" name="editedCV" autocomplete="off" method="post" action="checkedCVs.php">
+							<form id="editedCV" class="form-horizontal" role="form" name="editedCV" autocomplete="off" method="post" action="pendingCVs.php">
 								<div class="modal-body">
+
 									<div class="form-group"> <!-- Nombre -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVname">Nombre: </label> 
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVname">Name: * </label> 
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVname' value="<?php echo ($editedCVRow['name']) ?>" autocomplete="off" />
 										</div>
 									</div>
 
 									<div class="form-group"> <!-- Apellidos -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsurname">Apellidos: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsurname">Surnames: * </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVsurname' value="<?php echo ($editedCVRow['surname']) ?>" autocomplete="off"/>
 										</div>
 									</div>
 
 									<div class="form-group"> <!-- Fecha de Nacimiento -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVbirthdate">Fecha de nacimiento: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVbirthdate">Birthdate: * </label>
 										<div class="col-sm-10">
-											<input class="form-control" type='date' name='eCCVbirthdate' value="<?php echo ($editedCVRow['birthdate']) ?>"  />
+											<input class="form-control" type='date' name='eCCVbirthdate' id='eCCVbirthdate' value="<?php echo ($editedCVRow['birthdate']) ?>" onChange="jsIsAdult(this.id, 18)" required>
 										</div>
 									</div>
 
 									<div class="form-group">  <!-- NIE -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnie">DNI/NIE: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnie">DNI/NIE: * </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVnie' value="<?php echo ($editedCVRow['nie']) ?>" onkeyup='this.value=this.value.toUpperCase();' readonly/>
 										</div>
 									</div>
-
-									<div class="form-group">  <!-- Nacionalidad -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities">Nacionalidad: </label>
+									
+									<div class="form-group tooltip-demo">  <!-- Nacionalidad -->
+										<?php $nationalityQueryResult = getDBDistCompleteColID("SPANISH", "countries", "SPANISH"); 
+											$nationalities_string = implode(', ', $nationalityQueryResult);
+										?>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="auto" title='<?php echo $nationalities_string; ?>'></span> Nationality: * </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVnationalities' value="<?php echo ($editedCVRow['nationalities']) ?>" data-role='tagsinput' />
 										</div>
 									</div>
 
 									<div class="form-group"> <!-- Sexo -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsex">Sexo: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsex">Gender: * </label>
 										<div class="col-sm-10">
 											<div class='radio-inline'>
 												<?php
 													if(($editedCVRow['sex']) == 0){
-														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='0' checked>Hombre</label>";
-														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='1'>Mujer</label>";
+														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='0' checked>Male</label>";
+														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='1'>Female</label>";
 													}
 													else {
-														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='0'>Hombre</label>";
-														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='1' checked>Mujer</label>";
+														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='0'>Male</label>";
+														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='1' checked>Female</label>";
 													}
 												?>
 											</div>
@@ -462,21 +469,21 @@
 									</div>
 															
 									<div class="form-group">  <!-- Tipo Dirección -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrtype">Tipo de dirección: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrtype">Address type: </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVaddrtype' value="<?php echo ($editedCVRow['addrType']) ?>">
 										</div>
 									</div>
 									
 									<div class="form-group">  <!-- Nombre Dirección -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrName">Nombre dirección: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrName">Address name: </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVaddrName' value="<?php echo ($editedCVRow['addrName']) ?>">
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Número -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrNum">Número: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrNum">Number: </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVaddrNum' maxlength='4' value="<?php echo ($editedCVRow['addrNum']) ?>" onkeyup='this.value=this.value.toUpperCase();'>
 										</div>
@@ -490,91 +497,91 @@
 									</div>
 
 									<div class="form-group" >  <!-- Escalera -->	
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrStair">Escalera: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrStair">Ladder: </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVaddrStair' maxlength='4' value="<?php echo ($editedCVRow['stair']) ?>" onkeyup='this.value=this.value.toUpperCase();'>
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Piso -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrFloor">Piso: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrFloor">Floor: </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVaddrFloor' maxlength='4' value="<?php echo ($editedCVRow['addrFloor']) ?>">
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Puerta -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrDoor">Puerta: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrDoor">Door: </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVaddrDoor' maxlength='4' value="<?php echo ($editedCVRow['addrDoor']) ?>" onkeyup='this.value=this.value.toUpperCase();'>
 										</div>
 									</div>		
 
 									<div class="form-group" >  <!-- Código Postal -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVpostal">Código postal: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVpostal">Postal code: </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVpostal' maxlength='5' value="<?php echo $editedCVRow['postalCode'] ?>" onkeypress="return checkOnlyNumbers(event)">
 										</div>
 									</div>		
 
 									<div class="form-group" >  <!-- Localidad -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcity">Localidad: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcity">City: </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVcity' value="<?php echo ($editedCVRow['city']) ?>">										
 										</div>
 									</div>	
 
 									<div class="form-group" >  <!-- Provincia -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVprovince">Provincia: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVprovince">Province: </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVprovince' value="<?php echo ($editedCVRow['province']) ?>">										
 										</div>
 									</div>	
 
 									<div class="form-group" >  <!-- País -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcountry">País: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcountry">Country: </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVcountry' value="<?php echo ($editedCVRow['country']) ?>">										
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Teléfono Móvil -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmobile">Teléfono móvil: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmobile">Mobile: * </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVmobile' maxlength='9' value="<?php echo $editedCVRow['mobile'] ?>" onkeypress="return checkOnlyNumbers(event)">										
 										</div>
 									</div>	
 
 									<div class="form-group" >  <!-- Otro Teléfono -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVphone">Otro teléfono: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVphone">Other phone: </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVphone' maxlength='18' placeholder='00[COD. PAIS]-NUMERO' value="<?php echo $editedCVRow['phone'] ?>" onkeypress="return checkDashedNumbers(event)">
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Correo Electrónico -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmail">Correo electrónico: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmail">E-mail: * </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='mail' name='eCCVmail' value="<?php echo ($editedCVRow['mail']) ?>">										
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Carnet de Conducir -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVdrivingType">Carnet de conducir: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVdrivingType">Driving license: </label>										
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVdrivingType' value="<?php echo ($editedCVRow['drivingType']) ?>">
-											<input class='form-control' type='date' name='eCCVdrivingDate' value="<?php echo ($editedCVRow['drivingDate']) ?>">
+											<input class='form-control' type='date' name='eCCVdrivingDate' placeholder='aaaa-mm-dd' onChange="jsIsPreviousDate(this.id)" value="<?php echo ($editedCVRow['drivingDate']) ?>">
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Estado Civil -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmarital">Estado civil: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmarital">Marital status: </label>
 										<div class="col-sm-10">
 											<select class="form-control" name="eCCVmarital" >
 												<?php 
 												$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
 												$maritalStatus = getDBcompletecolumnID($userLang, 'maritalStatus', $userLang);
-												echo "<option selected value=''>Estado civil</option>";
+												echo "<option selected value=''>Marital status</option>";
 												foreach($maritalStatus as $i){
 													$keyMarital = getDBsinglefield('key', 'maritalStatus', $userLang, $i);
 													if($keyMarital == $editedCVRow['marital']){
@@ -590,14 +597,14 @@
 									</div>
 
 									<div class="form-group" >  <!-- Hijos -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsons">Hijos: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsons">Sons: </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='number' name='eCCVsons' maxlength='2' min='0' value="<?php echo $editedCVRow['sons'] ?>">
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Idiomas -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVlanguagesMerged">Idiomas: </label>			
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVlanguagesMerged">Languages: * </label>
 										<?php 
 											$mergedLanguages = explode('|',$editedCVRow['language']);
 											$mergedLangLevels = explode('|',$editedCVRow['langLevel']);
@@ -609,14 +616,14 @@
 									</div>
 
 									<div class="form-group" >  <!-- Educación -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducation">Educación: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducation">Education: * </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVeducation' value="<?php echo ($editedCVRow['education']) ?>" data-role='tagsinput'>										
 										</div>
 									</div>
 
 									<div class="form-group" >  <!-- Profesión -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcareer">Profesiones desempeñadas: </label>	<!-- Se puede omitir -->									
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcareer">Performed careers: * </label>	<!-- Se puede omitir -->
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVcareer' value='<?php echo ($editedCVRow['career']) ?>' data-role='tagsinput'>										
 										</div>
@@ -630,41 +637,41 @@
 									$array_experDesc = explode('|',$editedCVRow['experDesc']);
 
 									echo "<div class='form-group' >  <!-- Experiencia -->";
-									echo "	<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperience'>Últimos años: </label>";
+									echo "	<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperience'>Last years: </label>";
 									echo "	<div class='col-sm-10'>";
 									
 									for ($counterExperience=0; $counterExperience < count($array_experCompany); $counterExperience++) { 
 										echo "		<div class='panel panel-default'>";
 										echo "			<div class='panel-heading'>";
-										echo "				<h3 class='panel-title'>Experiencia #".($counterExperience+1) . "</h3>";
+										echo "				<h3 class='panel-title'>Experience #".($counterExperience+1) . "</h3>";
 										echo "			</div>";
 										echo "			<div class='panel-body'>";
 										echo "				<div class='form-group'>";
-										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperCompany$counterExperience'>Compañía: </label>";
+										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperCompany$counterExperience'>Company: </label>";
 										echo " 					<div class='col-sm-10'>";
 										echo "						<input class='form-control' type='text' name='eCCVexperCompany$counterExperience' value='" . ($array_experCompany[$counterExperience]) . "' >";
 										echo " 					</div>";
 										echo "				</div>";
 										echo "				<div class='form-group'>";
-										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperStart$counterExperience'>Inicio: </label>";
+										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperStart$counterExperience'>Start: </label>";
 										echo " 					<div class='col-sm-10'>";
 										echo "						<input class='form-control' type='text' name='eCCVexperStart$counterExperience' value='" . ($array_experStart[$counterExperience]) . "' >";
 										echo " 					</div>";
 										echo "				</div>";											
 										echo "				<div class='form-group'>";
-										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperEnd$counterExperience'>Final: </label>";
+										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperEnd$counterExperience'>End: </label>";
 										echo " 					<div class='col-sm-10'>";
 										echo "						<input class='form-control' type='text' name='eCCVexperEnd$counterExperience' value='" . ($array_experEnd[$counterExperience]) . "' >";
 										echo " 					</div>";
 										echo "				</div>";
 										echo "				<div class='form-group'>";
-										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperPos$counterExperience'>Posición: </label>";
+										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperPos$counterExperience'>Position: </label>";
 										echo " 					<div class='col-sm-10'>";
 										echo "						<input class='form-control' type='text' name='eCCVexperPos$counterExperience' value='" . ($array_experPos[$counterExperience]) . "' >";
 										echo " 					</div>";
 										echo "				</div>";
 										echo "				<div class='form-group'>";
-										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperDesc$counterExperience'>Descripción: </label>";
+										echo "					<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperDesc$counterExperience'>Description: </label>";
 										echo " 					<div class='col-sm-10'>";
 										echo "						<input class='form-control' type='text' name='eCCVexperDesc$counterExperience' value='" . ($array_experDesc[$counterExperience]) . "' >";
 										echo " 					</div>";
@@ -679,23 +686,22 @@
 									?>
 
 									<div class="form-group" >  <!-- Salario Deseado -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsalary">Salario deseado: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsalary">Desired salary: </label>
 										<div class="col-sm-10 input-group">
-											<!-- <input class="form-control" type='text' name='eCCVsalary' maxlength='7' value="< ?php echo ($editedCVRow['salary']) ?>"> -->
 											<input class="form-control" type='text' name='eCCVsalary' maxlength='7' value="<?php echo ($editedCVRow['salary']) ?>" onkeypress="return checkOnlyNumbers(event)">
-											<span class="input-group-addon">€uros/año</span>
+											<span class="input-group-addon">€ net/year</span>
 										</div>
 									</div>										
 
 									<div class="form-group" >  <!-- Otros Detalles -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVotherDetails">Otros detalles: </label>										
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVotherDetails">Other details: </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVotherDetails' value="<?php echo ($editedCVRow['otherDetails']) ?>">
 										</div>
 									</div>		
 
 									<div class="form-group" >  <!-- Ficheros -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVfiles">Ficheros: </label>		
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVfiles">Files: </label>		
 										<div class="col-sm-10">
 											<?php
 											$userFilesArray  = scandir($userFilesDir);
@@ -710,7 +716,7 @@
 
 									<div class="panel panel-default">
 										<div class="panel-heading">
-											<h3 class="panel-title">Habilidades del candidato</h3>
+											<h3 class="panel-title">Candidate's skills</h3>
 										</div>
 										<div class="panel-body">
 											<?php
@@ -727,26 +733,26 @@
 									</div>
 
 									<div class="form-group" >  <!-- Comentarios -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcomments">Comentarios: </label>	
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcomments">Comments: </label>	
 										<div class="col-sm-10">
 											<textarea class="form-control" type='text' name='eCCVcomments' value="<?php echo ($editedCVRow['comments']) ?>"><?php echo ($editedCVRow['comments']) ?></textarea>
 										</div>
 									</div>	
 
 									<div class="form-group" >  <!-- Estado del Candidato -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcandidateStatus">Estado del candidato: </label>	
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcandidateStatus">Candidate's status: </label>	
 										<div class="col-sm-10">
 											<select class="form-control" name='eCCVcandidateStatus'>
-												<option value=''>Sin estado</option>
-												<option value='available'>Disponible</option>
-												<option value='working'>Colocado</option>
-												<option value='discarded'>Descartado</option>
+												<option value=''>No status</option>
+												<option value='available'>Available</option>
+												<option value='working'>Working</option>
+												<option value='discarded'>Discarded</option>
 											</select>
 										</div>
 									</div>	
 
 									<div class="form-group"> <!-- Fecha de CV -->
-										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcvDate">Fecha CV: </label>
+										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcvDate">CV Date: </label>
 										<div class="col-sm-10">
 											<input class="form-control" type='text' name='eCCVcvDate' value="<?php echo ($editedCVRow['cvDate']) ?>" readonly>
 										</div>
@@ -754,50 +760,52 @@
 
 								</div>
 								<div class="modal-footer">
-									<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-									<button type="submit" class="btn btn-primary" name="eCurCVsend">Modificar CV previamente revisado <span class="glyphicon glyphicon-ok"> </span></button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									<button type="submit" class="btn btn-primary" name="eCurCVsend">Check CV <span class="glyphicon glyphicon-ok"> </span></button>
 								</div>
 							</form>
 						</div>
 					</div>
 				</div>
 				<!--  ****************************************   End of displayed Modal HTML   ****************************************  -->
-				
+
 
 				<!--  ***********************************   Start of Web Page as initially showed   ***********************************  -->
 				<div class="col-md-9 scrollable" role="main"> 
 					<div class="bs-docs-section">
-						<h2 class="page-header">CVs Revisados</h2>
+						<h2 class="page-header">Pending Check CVs</h2>
 						<?php 
-						if((getDBrowsnumber('cvitaes') == 0) || (count($cvIDs = getDBcolumnvalue('id', 'cvitaes', 'cvStatus', 'checked')) == 0)){
-							echo 'No hay CVs revisados';
+							if((getDBrowsnumber('cvitaes') == 0) || (count($cvIDs = getDBcolumnvalue('id', 'cvitaes', 'cvStatus', 'pending')) == 0)){
+							echo 'There is no CVs to be checked';
 						}
 						else{
 							?>
-							<table class="table table-striped table-hover">
-								<thead>
-									<tr>
-										<th>NIE</th>
-										<th>Nombre</th>
-										<th>Apellidos</th>
-										<th>Acción</th>
-									</tr>
-								</thead>
+							<div class="table-responsive">
+								<table class="table table-striped table-hover">
+									<thead>
+										<tr>
+											<th>NIE</th>
+											<th>Name</th>
+											<th>Surname</th>
+											<th>Action</th>
+										</tr>
+									</thead>
 	
-								<tbody>
-								<?php 
-								foreach($cvIDs as $i){
-									$cvRow = getDBrow('cvitaes', 'id', $i);
-									echo "<tr>";
-									echo "<td><a href='checkedCVs.php?codvalue=" . ($cvRow['nie']) . "'>" . ($cvRow['nie']) . "</a></td>";
-									echo "<td>" . ($cvRow['name']) . "</td>";
-									echo "<td>" . ($cvRow['surname']) . "</td>";
-									echo "<td><a href='checkedCVs.php?codvalue=" . $cvRow['id'] . "&hiddenGET=hDelCheckedCV' onclick='return confirmCheckedCVDeletionES();'>Borrar</a></td>";
-									echo "</tr>";
-								}
-								?>
-								</tbody>
-							</table>
+									<tbody>
+									<?php 
+									foreach($cvIDs as $i){
+										$cvRow = getDBrow('cvitaes', 'id', $i);
+										echo "<tr>";
+										echo "<td><a href='pendingCVs.php?codvalue=" . ($cvRow['nie']) . "'>" . ($cvRow['nie']) . "</a></td>";
+										echo "<td>" . ($cvRow['name']) . "</td>";
+										echo "<td>" . ($cvRow['surname']) . "</td>";
+										echo "<td><a href='pendingCVs.php?codvalue=" . $cvRow['id'] . "&hiddenGET=hDelPendingCV' onclick='return confirmPendingCVDeletionEN();'>Delete</a></td>";
+										echo "</tr>";
+									}
+									?>
+									</tbody>
+								</table>
+							</div>
 							<?php 
 						}
 						?>
@@ -805,18 +813,10 @@
 				</div> <!-- col-md-9 scrollable role=main -->
 			</div> <!-- row -->
 		</div> <!-- class="container bs-docs-container" -->
+	
 		<?php
 
-	} //del "elseif" de $_SESSION.
-	
-	//Any other non-SuperAdmin profile will be redirected to home.php
-	else{
-		?>
-		<script type="text/javascript">
-			window.location.href='../home.php';
-		</script>
-		<?php
-	}
+	} //del "else" de $_SESSION.
 
 	?>
 
@@ -841,7 +841,7 @@
 	<script src="../../common/js/application.js"></script>
 	<script src="../../common/js/docs.min.js"></script>
 	<script src="../../common/js/bootstrap-tagsinput.js"></script>
-	
+
 	<!-- Own document functions -->
 	<!-- Show modal if password has to be changed -->
 	<?php 
@@ -851,7 +851,7 @@
 			echo "	$(document).ready(function(){";
 			echo "		$('#editCVModal').modal('show');";
 			echo "		$('#editCVModal').on('hidden.bs.modal', function () {";
- 			echo "			window.location.href='checkedCVs.php';";
+ 			echo "			window.location.href='pendingCVs.php';";
 			echo "		});";
 			echo "	});  ";
 			echo "</script> ";

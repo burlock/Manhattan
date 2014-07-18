@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic|Ubuntu+Condensed&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-	<title>Gestión de Perfiles</title>
+	<title>Profile Management</title>
 	<link href="../../common/css/styles.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="../../common/js/functions.js"></script>
 	<script type="text/javascript" src="../../common/js/jquery-1.10.1.min.js"></script>
@@ -52,8 +52,8 @@
 		}
 		?>
 		<div id="topbar" class="azul">
-			<a style="float:left;" href="#">Opciones</a>
-			<a style="float:center">Conectado como: <?php echo $_SESSION['loglogin']; ?></a>
+			<a style="float:left;" href="#">Options</a>
+			<a style="float:center">Logged in as: <?php echo $_SESSION['loglogin']; ?></a>
 			<a href="../endsession.php" style="float:right">Salir</a>
 		</div>
 		<?php 
@@ -138,7 +138,7 @@
 					(!executeDBquery("INSERT INTO `administration` (`id`, `profile`, `active`, `admGenOptions`, `profiles`, `admCurProfiles`, `admNewProfile`, `users`, `admCurUsers`, `admNewUser`) VALUES (NULL, '".$newProfile."', '0', '0', '0', '0', '0', '0', '0', '0')"))){
 						?>
 						<script type="text/javascript">
-							alert('Error al crear el nuevo perfil');
+							alert('Error creating new profile');
 							window.location.href='admCurProfiles.php';
 						</script>
 						<?php
@@ -146,7 +146,7 @@
 					else{
 						?>
 						<script type="text/javascript">
-							alert('Perfil creado con éxito');
+							alert('Perfil created successfully');
 							window.location.href='admCurProfiles.php';
 						</script>
 						<?php
@@ -154,17 +154,17 @@
 				}
 			}
 			?>
-			<p><span id="leftmsg">Perfiles Existentes</span></p><hr><br>
+			<p><span id="leftmsg">Existing Profiles</span></p><hr><br>
 			<table class="tabla1">
 				<tr>
 					<th>Id</th>
-					<th>Perfil</th>
-					<th>Activo</th>
-					<th>Creado</th>
-					<th>Usuarios</th>
+					<th>Profile</th>
+					<th>Active</th>
+					<th>Created</th>
+					<th>Users</th>
 					<?php 
 					if($_SESSION['logprofile'] == 'SuperAdmin'){
-						echo "<th>Acción</th>";
+						echo "<th>Action</th>";
 					}
 					?>
 				</tr>
@@ -176,7 +176,7 @@
 					echo "<td>" . $showedProfileRow['id'] . "</td>";
 					echo "<td><a href='editProfile.php?codvalue=" . $i . "'>" . $showedProfileRow['name'] . "</a></td>";
 					if($showedProfileRow['active']){
-						echo "<td>Si</td>";
+						echo "<td>Yes</td>";
 					}
 					else{
 						echo "<td>No</td>";
@@ -184,7 +184,7 @@
 					echo "<td>" . $showedProfileRow['created'] . "</td>";
 					echo "<td>" . $showedProfileRow['numUsers'] . "</td>";
 					if($_SESSION['logprofile'] == 'SuperAdmin'){
-						echo '<td><a href="#" onclick="confirmProfileDeletion(' . $showedProfileRow['id'] . ')">Borrar</a></td>';
+						echo '<td><a href="#" onclick="confirmProfileDeletion(' . $showedProfileRow['id'] . ')">Delete</a></td>';
 					}
 				}
 				?>
@@ -193,12 +193,12 @@
 			if($_SESSION['logprofile'] == 'SuperAdmin'){
 				?>
 				<fieldset id="auto1">
-					<legend>Nuevo Perfil</legend>
+					<legend>New Profile</legend>
 					<form name="newProfile" action="admCurProfiles.php" method="post" onsubmit="return confirmProfileCreation()">
-						<input type="text" id="newPName" name="newPName" size="25" placeholder="Nombre del perfil" />
+						<input type="text" id="newPName" name="newPName" size="25" placeholder="Profile name" />
 						<!-- Por defecto queda activado, por lo que no incluyo la posibilidad de crearlo desactivado. Así lo he decidido -->
 						<input type="hidden" value="hNewPsubmit" name="hiddenfield">
-						<input type="submit" value="Añadir" name="newPsubmit">
+						<input type="submit" value="Add" name="newPsubmit">
 					</form>
 				</fieldset>
 				<?php

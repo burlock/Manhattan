@@ -431,6 +431,118 @@ function massiveUpload($file, $delimiter, $dbTable){
 
 
 /**************************************************************************
+ * ********************  LANGUAGE RELATED FUNCTIONS  ******************** *
+ **************************************************************************/
+
+
+
+/* Gets the 2 digits that identify the root for a language ('de', 'en', 'es') for logged user.
+ * Entry (userLanguage): String where current user's language can be extracted. It is 'language' field in "users" table
+ * Exit (): String as follows: "de", "en" or "es"
+ */
+function getUserLangDigits($userLanguage){
+	if($userLanguage == "english"){
+		return "en";
+	}
+	if($userLanguage == "german"){
+		return "de";
+	}
+	if($userLanguage == "spanish"){
+		return "es";
+	}
+}
+
+
+
+/* Gets root characters ('de', 'en', 'es') for logged user's language in use. Better said, in what language is currently being displayed the page
+ * Entry (userLanguage): String where current user's language can be extracted. It is 'language' field in "users" table
+ * Exit (): String as follows: "/de/", "/en/" or "/es/"
+ */
+function getUserRoot($userLanguage){
+	if($userLanguage == "english"){
+		return "/en/";
+	}
+	if($userLanguage == "german"){
+		return "/de/";
+	}
+	if($userLanguage == "spanish"){
+		return "/es/";
+	}
+}
+
+
+
+/* Gets universal path for any file. Universal path is the relative path without language part (i.e. "home.php" for "/es/home.php" or "home/personalData.php" for "/es/home/personalData.php")
+ * Entry (filePath): String that contains full relative path (language included)
+ * Exit (): String without root or language part for that same string
+ */
+function getNoRootPath($filePath){
+	//This function returns the end of original string without the "n" first characters (4 in this case)
+	return substr($filePath, 4);
+}
+
+
+
+/* Gets the translation for language
+ * Entry (keyLanguage): Language key on DB
+ * Entry (languageToBeTranslated): Desired language to $keyLanguage be translated
+ * Exit (translation): Term into desired language
+ */
+function getLanguageTranslation($keyLanguage, $languageToBeTranslated){
+	$connection = connectDB();
+
+	$result = mysqli_query($connection, "SELECT `$languageToBeTranslated` FROM `siteLanguages` WHERE `key` = '$keyLanguage'") or die ("Error translating the language: ".mysqli_error($connection));
+	$translation = mysqli_fetch_array($result);
+	return $translation[0];
+}
+
+
+
+/* Gets key for a language
+ * Entry (languageToBeTranslated): Desired language to be translated
+ * Entry (languageWritten): In wich language are written $languageToBeTranslated
+ * Exit (translation): Term into desired language
+ */
+function getKeyLanguage($languageToBeTranslated, $languageWritten){
+	$connection = connectDB();
+
+	$result = mysqli_query($connection, "SELECT `key` FROM `siteLanguages` WHERE `$languageWritten` = '$languageToBeTranslated'") or die ("Error translating the language: ".mysqli_error($connection));
+	$translation = mysqli_fetch_array($result);
+	return $translation[0];
+}
+
+
+
+/* Gets current language for the php page displayed. Done comparing "de", "en" or "es" suffixes in file path
+ * Entry (filePath): String where read/search the language suffix
+ * Exit (keyLanguage): String with the language where php file is
+ */
+function getCurrentLanguage($filePath){
+	if(strpos($filePath, "/de/") === 0){
+		//echo $lang;
+		$lang = "german";
+		return $lang;
+	}
+	if(strpos($filePath, "/en/") === 0){
+		//echo $lang;
+		$lang = "english";
+		return $lang;
+	}
+	if(strpos($filePath, "/es/") === 0){
+		//echo $lang;
+		$lang = "spanish";
+		return $lang;
+	}
+	$lang = "spanish";
+	//echo "k";
+	return $lang;
+}
+
+
+
+
+
+/**************************************************************************
  * ********************  PASSWORD RELATED FUNCTIONS  ******************** *
  **************************************************************************/
 
@@ -456,6 +568,7 @@ function blowfishCrypt($password, $rounds = 7){
  * Entry (key2): String where passed 2nd password attempt
  * Exit (keyError): String with the error when needed (or void)
  */
+/*
 function checkPassChange($key1, $key2, &$keyError){
 	if($key1 != $key2){
 		//$keyError = "Ambas contraseñas deben ser iguales";
@@ -485,6 +598,209 @@ function checkPassChange($key1, $key2, &$keyError){
 	if (!preg_match('`[0-9]`',$key1)){
 		//$keyError = "La contraseña debe tener al menos un caracter numérico";
 		$keyError = "Error: Password must contain at least one numeric character.";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+*/
+/* Checks whether a given password matches every requirement when changed by a new one. And if it is different to previous password. Called from "personalData.php" and "validateFront.php"
+ * Entry (key1): String where passed 1st password attempt
+ * Entry (key2): String where passed 2nd password attempt
+ * Entry (hashedKey): String directly extracted from DB that contains old password
+ * Exit (keyError): String with the error when needed (or void)
+ */
+function checkHashedPassChangeDE($key1, $key2, $hashedKey, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Fehler: Beide passwörter müssen übereinstimmen.";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "Fehler: Das passwort muss mindestens 6 zeichen lang sein";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "Fehler: Das passwort darf nicht mehr als 16 zeichen sein.";
+		return false;
+	}
+	if(!preg_match('`[a-z]`',$key1)){
+		$keyError = "Fehler: Das passwort muss mindestens einen kleinbuchstaben enthalten.";
+		return false;
+	}
+	if(!preg_match('`[A-Z]`',$key1)){
+		$keyError = "Fehler: Das passwort muss mindestens einen großbuchstaben enthalten.";
+		return false;
+	}
+	if(!preg_match('`[0-9]`',$key1)){
+		$keyError = "Fehler: Das passwort muss mindestens ein numerisches zeichen enthalten.";
+		return false;
+	}
+	//elseif((!(crypt($_POST['logpasswd'], $userRow['pass']) == $userRow['pass'])) && (!$userRow['needPass'])){
+	if(!(crypt($hashedKey, $key1) == $key1)){
+		$keyError = "Fehler: Das passwort muss sich von der letzten unterscheiden.";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+
+
+function checkHashedPassChangeEN($key1, $key2, $hashedKey, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Error: Both passwords must be identical.";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "Error: Password must be at least 6 characters.";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "Error: Password must not be more than 16 characters.";
+		return false;
+	}
+	if(!preg_match('`[a-z]`',$key1)){
+		$keyError = "Error: Password must contain at least one lowercase letter.";
+		return false;
+	}
+	if(!preg_match('`[A-Z]`',$key1)){
+		$keyError = "Error: Password must contain at least one uppercase letter.";
+		return false;
+	}
+	if(!preg_match('`[0-9]`',$key1)){
+		$keyError = "Error: Password must contain at least one numeric character.";
+		return false;
+	}
+	//elseif((!(crypt($_POST['logpasswd'], $userRow['pass']) == $userRow['pass'])) && (!$userRow['needPass'])){
+	if(!(crypt($hashedKey, $key1) == $key1)){
+		$keyError = "La contraseña debe ser distinta a la última";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+
+
+function checkHashedPassChangeES($key1, $key2, $hashedKey, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Ambas contraseñas deben ser iguales";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "La contraseña debe tener al menos 6 caracteres";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "La contraseña no puede tener más de 16 caracteres";
+		return false;
+	}
+	if(!preg_match('`[a-z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra minúscula";
+		return false;
+	}
+	if(!preg_match('`[A-Z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra mayúscula";
+		return false;
+	}
+	if(!preg_match('`[0-9]`',$key1)){
+		$keyError = "La contraseña debe tener al menos un caracter numérico";
+		return false;
+	}
+	if(crypt($key1, $hashedKey) == $hashedKey){
+		$keyError = "La contraseña debe ser distinta a la última";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+
+
+
+/* Checks whether a given password is strong enough (and properly written) when changed for a new one. Called from "validateFront.php"
+ * Entry (key1): String where passed 1st password attempt
+ * Entry (key2): String where passed 2nd password attempt
+ * Exit (keyError): String with the error when needed (or void)
+ */
+function checkSimplePassChangeDE($key1, $key2, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Error: Beiden feldern stimmen nicht überein.";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "Error: Das passwort muss mindestens 6 zeichen lang sein.";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "Error: Das passwort darf nicht mehr als 16 zeichen sein.";
+		return false;
+	}
+	if (!preg_match('`[a-z]`',$key1)){
+		$keyError = "Error: Das passwort muss mindestens einen kleinbuchstaben.";
+		return false;
+	}
+	if (!preg_match('`[A-Z]`',$key1)){
+		$keyError = "Error: Das passwort muss mindestens einen großbuchstaben.";
+		return false;
+	}
+	if (!preg_match('`[0-9]`',$key1)){
+		$keyError = "Error: Das passwort muss mindestens ein numerisches Zeichen enthalten.";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+
+function checkSimplePassChangeEN($key1, $key2, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Error: Both password fields do not match.";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "Error: Password must be at least 6 characters.";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "Error: Password must not be more than 16 characters.";
+		return false;
+	}
+	if (!preg_match('`[a-z]`',$key1)){
+		$keyError = "Error: Password must contain at least one lowercase letter.";
+		return false;
+	}
+	if (!preg_match('`[A-Z]`',$key1)){
+		$keyError = "Error: Password must contain at least one uppercase letter.";
+		return false;
+	}
+	if (!preg_match('`[0-9]`',$key1)){
+		$keyError = "Error: Password must contain at least one numeric character.";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+
+function checkSimplePassChangeES($key1, $key2, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Ambos campos de contraseña no coinciden.";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "La contraseña debe tener al menos 6 caracteres.";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "La contraseña no puede tener más de 16 caracteres.";
+		return false;
+	}
+	if (!preg_match('`[a-z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra minúscula.";
+		return false;
+	}
+	if (!preg_match('`[A-Z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra mayúscula.";
+		return false;
+	}
+	if (!preg_match('`[0-9]`',$key1)){
+		$keyError = "La contraseña debe tener al menos un caracter numérico.";
 		return false;
 	}
 	$keyError = "";
@@ -549,6 +865,7 @@ function cleanFreeText($inText){
 
 
 
+
 /* Checks whether a DNI (native) or NIE (abroad people with national document) is well-formatted and written or not
  * Entry (nie): String
  * Exit: Boolean
@@ -591,31 +908,65 @@ function checkDNI_NIE($nie){
 
 
 
+
 /* Checks whether both Driving License fields are properly fullfilled
- * Entry (type): String
+ * Entry (type): String which indicates type of license (A, B...)
  * Entry (date): Date in format YYYY-MM-DD
  * Exit: Boolean
  */
-function checkDrivingLicense($type, $licDate, &$checkError){
+function checkDrivingLicenseDE($type, $licDate, &$checkError){
 	if((strlen($type) > 0) && (strlen($licDate) == 0)){
-		//$checkError = "Ha olvidado indicar la fecha en que obtuvo su permiso de conducir";
+		$checkError = "Error: führerschein nicht angegeben Datum.";
+		return false;
+	}
+	elseif((strlen($type) == 0) && (strlen($licDate) > 0)){
+		$checkError = "Error: Typ des führerschein nicht angegeben.";
+		return false;
+	}
+	elseif(!isPreviousDate($licDate)){
+		$checkError = "Error: Datum der führerschein kann nicht zukunft sein.";
+		return false;
+	}
+	$checkError = "";
+	return true;
+}
+
+
+function checkDrivingLicenseEN($type, $licDate, &$checkError){
+	if((strlen($type) > 0) && (strlen($licDate) == 0)){
 		$checkError = "Error: Driving License date is missing.";
 		return false;
 	}
 	elseif((strlen($type) == 0) && (strlen($licDate) > 0)){
-		//$checkError = "Ha olvidado indicar qué tipo de permiso de conducir posee";
 		$checkError = "Error: Driving License type is missing.";
 		return false;
 	}
 	elseif(!isPreviousDate($licDate)){
-		//$checkError = "La fecha de permiso de conducir no puede ser futura";
-		//$checkError = "Ha indicado una fecha de permiso de conducir futura";
 		$checkError = "Error: Driving License date cannot be a future date.";
 		return false;
 	}
 	$checkError = "";
 	return true;
 }
+
+
+function checkDrivingLicenseES($type, $licDate, &$checkError){
+	if((strlen($type) > 0) && (strlen($licDate) == 0)){
+		$checkError = "Fecha de obtención del permiso de conducir no indicada.";
+		return false;
+	}
+	elseif((strlen($type) == 0) && (strlen($licDate) > 0)){
+		$checkError = "Tipo de permiso de conducir no indicado.";
+		return false;
+	}
+	elseif(!isPreviousDate($licDate)){
+		$checkError = "La fecha de permiso de conducir no puede ser futura";
+		return false;
+	}
+	$checkError = "";
+	return true;
+}
+
 
 
 
@@ -625,41 +976,56 @@ function checkDrivingLicense($type, $licDate, &$checkError){
  * Exit (outAddrName): Returned string for Address Name
  * Exit (outAddrNumber): Returned string for Address Number
  * Exit (checkError): String with text that includes a description of the error */
-function checkFullAddressES($inName, $inNumber, &$outAddrName, &$outAddrNumber, &$checkError){
+function checkFullAddressDE($inName, $inNumber, &$outAddrName, &$outAddrNumber, &$checkError){
 	$connection = connectDB();
 	
-	//$outAddrName = trim(htmlentities(mysqli_real_escape_string($connection, $inName)));
-	//$outAddrNumber = trim(htmlentities(mysqli_real_escape_string($connection, $inNumber)));
 	$outAddrName = trim(htmlentities(mysqli_real_escape_string($connection, $inName), ENT_QUOTES, 'UTF-8'));
 	$outAddrNumber = trim(htmlentities(mysqli_real_escape_string($connection, $inNumber), ENT_QUOTES, 'UTF-8'));
-	
 	if(strlen($outAddrName) < 2){
-		$checkError = "Introduzca una dirección válida, por favor.";
+		$checkError = "Error: Ungültige adresse.";
 		return false;
 	}
 	elseif(strlen($outAddrNumber) < 1){
-		$checkError = "Introduzca el número de su dirección, por favor";
+		$checkError = "Error: Die in den gültigen angegebene anzahl.";
 		return false;
 	}
 		return true;
 }
 
-function checkFullAddress($inName, $inNumber, &$outAddrName, &$outAddrNumber, &$checkError){
+
+function checkFullAddressEN($inName, $inNumber, &$outAddrName, &$outAddrNumber, &$checkError){
 	$connection = connectDB();
 	
 	$outAddrName = trim(htmlentities(mysqli_real_escape_string($connection, $inName), ENT_QUOTES, 'UTF-8'));
 	$outAddrNumber = trim(htmlentities(mysqli_real_escape_string($connection, $inNumber), ENT_QUOTES, 'UTF-8'));
-	
 	if(strlen($outAddrName) < 2){
 		$checkError = "Error: Invalid address.";
 		return false;
 	}
 	elseif(strlen($outAddrNumber) < 1){
-		$checkError = "Error: Correct address number is not provided.";
+		$checkError = "Error: Address number not provided or not valid.";
 		return false;
 	}
 		return true;
 }
+
+
+function checkFullAddressES($inName, $inNumber, &$outAddrName, &$outAddrNumber, &$checkError){
+	$connection = connectDB();
+	
+	$outAddrName = trim(htmlentities(mysqli_real_escape_string($connection, $inName), ENT_QUOTES, 'UTF-8'));
+	$outAddrNumber = trim(htmlentities(mysqli_real_escape_string($connection, $inNumber), ENT_QUOTES, 'UTF-8'));
+	if(strlen($outAddrName) < 2){
+		$checkError = "Error: Dirección no válida.";
+		return false;
+	}
+	elseif(strlen($outAddrNumber) < 1){
+		$checkError = "Error: Número no indicado o no válido";
+		return false;
+	}
+		return true;
+}
+
 
 
 
@@ -670,28 +1036,38 @@ function checkFullAddress($inName, $inNumber, &$outAddrName, &$outAddrNumber, &$
  * Exit (outSurname): Returned string for Surname
  * Exit (checkError): String with text that includes a description of the error
  */
-/*
-function checkFullNameES($inName, $inSurname, &$outName, &$outSurname, &$checkError){
+function checkFullNameDE($inName, $inSurname, &$outName, &$outSurname, &$checkError){
 	$connection = connectDB();
 	
-	//$outName = trim(htmlentities(mysqli_real_escape_string($connection, $inName)));
-	//$outSurname = trim(htmlentities(mysqli_real_escape_string($connection, $inSurname)));
 	$outName = trim(htmlentities(mysqli_real_escape_string($connection, $inName), ENT_QUOTES, 'UTF-8'));
 	$outSurname = trim(htmlentities(mysqli_real_escape_string($connection, $inSurname), ENT_QUOTES, 'UTF-8'));
 	if((strlen($outName) < 3) || (strlen($outSurname) < 3)){
-		$checkError = "Nombre y Apellidos deben tener al menos 3 caracteres cada uno.";
+		$checkError = "Error: Namen und Nachname müssen mindestens 3 zeichen sein.";
 		return false;
 	}
 	return true;
 }
-*/
-function checkFullName($inName, $inSurname, &$outName, &$outSurname, &$checkError){
+
+
+function checkFullNameEN($inName, $inSurname, &$outName, &$outSurname, &$checkError){
 	$connection = connectDB();
 	
 	$outName = trim(htmlentities(mysqli_real_escape_string($connection, $inName), ENT_QUOTES, 'UTF-8'));
 	$outSurname = trim(htmlentities(mysqli_real_escape_string($connection, $inSurname), ENT_QUOTES, 'UTF-8'));
 	if((strlen($outName) < 3) || (strlen($outSurname) < 3)){
-		//$checkError = "Error: Name and Surname must be at least 3 characters each.";
+		$checkError = "Error: Name and Surname must be at least 3 characters each.";
+		return false;
+	}
+	return true;
+}
+
+
+function checkFullNameES($inName, $inSurname, &$outName, &$outSurname, &$checkError){
+	$connection = connectDB();
+	
+	$outName = trim(htmlentities(mysqli_real_escape_string($connection, $inName), ENT_QUOTES, 'UTF-8'));
+	$outSurname = trim(htmlentities(mysqli_real_escape_string($connection, $inSurname), ENT_QUOTES, 'UTF-8'));
+	if((strlen($outName) < 3) || (strlen($outSurname) < 3)){
 		$checkError = "Nombre y Apellidos deben tener al menos 3 caracteres cada uno.";
 		return false;
 	}
@@ -1055,36 +1431,6 @@ function getPendingCVs(){
 		mysqli_free_result($result);
 		mysqli_close($connection);
 	}
-}
-
-
-
-/* Gets the translation for language
- * Entry (keyLanguage): Language key on DB
- * Entry (languageToBeTranslated): Desired language to $keyLanguage be translated
- * Exit (translation): Term into desired language
- */
-function getLanguageTranslation($keyLanguage, $languageToBeTranslated){
-	$connection = connectDB();
-
-	$result = mysqli_query($connection, "SELECT `$languageToBeTranslated` FROM `siteLanguages` WHERE `key` = '$keyLanguage'") or die ("Error translating the language: ".mysqli_error($connection));
-	$translation = mysqli_fetch_array($result);
-	return $translation[0];
-}
-
-
-
-/* Gets key for a language
- * Entry (languageToBeTranslated): Desired language to be translated
- * Entry (languageWritten): In wich language are written $languageToBeTranslated
- * Exit (translation): Term into desired language
- */
-function getKeyLanguage($languageToBeTranslated, $languageWritten){
-	$connection = connectDB();
-
-	$result = mysqli_query($connection, "SELECT `key` FROM `siteLanguages` WHERE `$languageWritten` = '$languageToBeTranslated'") or die ("Error translating the language: ".mysqli_error($connection));
-	$translation = mysqli_fetch_array($result);
-	return $translation[0];
 }
 
 
