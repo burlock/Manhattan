@@ -130,7 +130,7 @@
 						<ul class="nav bs-sidenav">
 							<?php 
 							$digitLang = getUserLangDigits($userRow['language']);
-							$LangDigitsName = $digitLang."Name";
+							$langDigitsName = $digitLang."Name";
 							$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');
 							$mainNamesRow = getDBcompletecolumnID($langDigitsName, 'mainNames', 'id');
 							$j = 0;
