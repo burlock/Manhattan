@@ -353,23 +353,29 @@
 												<div class="col-xs-3" style="padding: 10px;">
 													<label><input type="radio" name="reportType" value="custom_report" onclick="test(1);"> Personalizado</label>
 												</div>										
-											</div> <!-- id="form_report" -->	
-
-											<hr>									
-
+											</div> <!-- id="form_report" -->
+											
+											<hr>
+											
 											<div id="form_custom_report" class="form-group">
-												<label><input type="checkbox" name="per[]" value="name" disabled> Nombre</label>
-												<label><input type="checkbox" name="per[]" value="surname" disabled> Apellidos</label>
-												<label><input type="checkbox" name="per[]" value="addrName" disabled> Direccion</label>
-												<label><input type="checkbox" name="per[]" value="mobile" disabled> Telefono Movil</label>
-												<label><input type="checkbox" name="per[]" value="phone" disabled> Telefono Fijo</label>
-												<label><input type="checkbox" name="per[]" value="mail" disabled> Email</label>
-												<label><input type="checkbox" name="per[]" value="drivingType" disabled> Carnet Conducir</label>
-												<label><input type="checkbox" name="per[]" value="marital" disabled> Estado Civil</label>
-												<label><input type="checkbox" name="per[]" value="sons" disabled> Hijos Civil</label>
-												<label><input type="checkbox" name="per[]" value="language" disabled> Idiomas</label>
-												<label><input type="checkbox" name="per[]" value="occupation" disabled> Profesion</label>
-												<label><input type="checkbox" name="per[]" value="experDesc" disabled> Experiencia Laboral</label>
+												<table>
+													<tr>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="name" disabled> Nombre</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="surname" disabled> Apellidos</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="addrName" disabled> Dirección</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="mobile" disabled> Telefono móvil</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="phone" disabled> Otro telefono</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="mail" disabled> Email</td>
+													</tr>
+													<tr>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="drivingType" disabled> Carnet conducir</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="marital" disabled> Estado civil</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="sons" disabled> Hijos</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="language" disabled> Idiomas</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="occupation" disabled> Profesión</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="experDesc" disabled> Experiencia laboral</td>
+													</tr>
+												</table>
 											</div>
 										</div>
 									</div>

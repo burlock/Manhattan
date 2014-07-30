@@ -353,21 +353,29 @@
 												<div class="col-xs-3" style="padding: 10px;">
 													<label><input type="radio" name="reportType" value="custom_report" onclick="test(1);"> Personalisiert</label>
 												</div>										
-											</div> <!-- id="form_report" -->	
-
+											</div> <!-- id="form_report" -->
+											
+											<hr>
+											
 											<div id="form_custom_report" class="form-group">
-												<label><input type="checkbox" name="per[]" value="name" disabled> Namen</label>
-												<label><input type="checkbox" name="per[]" value="surname" disabled> Nachnamen</label>
-												<label><input type="checkbox" name="per[]" value="addrName" disabled> Adresse</label>
-												<label><input type="checkbox" name="per[]" value="mobile" disabled> Handy</label>
-												<label><input type="checkbox" name="per[]" value="phone" disabled> Andere telefon</label>
-												<label><input type="checkbox" name="per[]" value="mail" disabled> E-mail</label>
-												<label><input type="checkbox" name="per[]" value="drivingType" disabled> Führerschein</label>
-												<label><input type="checkbox" name="per[]" value="marital" disabled> Familienstand</label>
-												<label><input type="checkbox" name="per[]" value="sons" disabled> Kinder</label>
-												<label><input type="checkbox" name="per[]" value="language" disabled> Sprache</label>
-												<label><input type="checkbox" name="per[]" value="occupation" disabled> Beruf</label>
-												<label><input type="checkbox" name="per[]" value="experDesc" disabled> Berufserfahrung</label>
+												<table>
+													<tr>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="name" disabled> Namen</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="surname" disabled> Nachnamen</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="addrName" disabled> Adresse</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="mobile" disabled> Handy</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="phone" disabled> Andere telefon</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="mail" disabled> E-mail</td>
+													</tr>
+													<tr>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="drivingType" disabled> Führerschein</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="marital" disabled> Familienstand</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="sons" disabled> Kinder</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="language" disabled> Sprache</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="occupation" disabled> Beruf</td>
+														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="experDesc" disabled> Berufserfahrung</td>
+													</tr>
+												</table>
 											</div>
 										</div>
 									</div>
