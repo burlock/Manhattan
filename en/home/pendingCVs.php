@@ -441,8 +441,9 @@
 									</div>
 									
 									<div class="form-group tooltip-demo">  <!-- Nacionalidad -->
-										<?php $nationalityQueryResult = getDBDistCompleteColID("SPANISH", "countries", "SPANISH"); 
-											$nationalities_string = implode(', ', $nationalityQueryResult);
+										<?php
+										$nationalityQueryResult = getDBDistCompleteColID("english", "countries", "english");
+										$nationalities_string = implode(', ', $nationalityQueryResult);
 										?>
 										<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="auto" title='<?php echo $nationalities_string; ?>'></span> Nationality: * </label>
 										<div class="col-sm-10">
