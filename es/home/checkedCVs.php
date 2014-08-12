@@ -317,6 +317,9 @@
 					<div id="sidebar-navigation-list" class="bs-sidebar hidden-print affix-top" role="complementary">
 						<ul class="nav bs-sidenav">
 							<?php 
+							//Obtains number of pending CVs to be showed in leftbox (just circled at the right side of 'Pending CVs' link)
+							$pendingCVs = getPendingCVs();
+							
 							$digitLang = getUserLangDigits($userRow['language']);
 							$LangDigitsName = $digitLang."Name";
 							$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');
@@ -339,8 +342,8 @@
 												if(!getDBsinglefield2($LangDigitsName, $namesTable, 'fatherKey', $colNamej, 'level', '3')){
 													$level2File = getDBsinglefield('key', $namesTable, $LangDigitsName, $subLevelMenu);
 													// Because the file we are is a level 2 file, we do this comparision to make active element in list if it's this same file
-													if ($level2File == 'checkedCVs') 
-														$badge = "<span class='badge'>$checkedCVs</span>";
+													if ($level2File == 'pendingCVs') 
+														$badge = "<span class='badge'>$pendingCVs</span>";
 													else
 														$badge = "";
 													if ($level2File == basename(__FILE__, '.php')) 
