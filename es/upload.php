@@ -279,7 +279,7 @@
 			</script>
 			<?php 
 		}
-		elseif(!checkFullNameES($_POST['blankname'], $_POST['blanksurname'], $outName, $outSurname, $checkError)){
+		elseif(!checkFullName($_POST['blankname'], $_POST['blanksurname'], $userRow['language'], $outName, $outSurname, $checkError)){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
@@ -342,7 +342,7 @@
 				</script>
 				<?php
 			}
-			elseif(!checkFullAddress($_POST['blankaddrname'], $_POST['blankaddrnum'], $outAddrName, $outAddrNumber, $checkError)){
+			elseif(!checkFullAddress($_POST['blankaddrname'], $_POST['blankaddrnum'], $userRow['language'], $outAddrName, $outAddrNumber, $checkError)){
 				unset($_POST['push_button']);
 				?>
 				<script type="text/javascript">
@@ -368,7 +368,7 @@
 		}
 		elseif(((strlen($_POST['blankaddrtype']) > 0) || (strlen($_POST['blankaddrname']) > 0) || (strlen($_POST['blankaddrnum']) > 0) || (strlen($_POST['blankaddrportal']) > 0) || 
 		(strlen($_POST['blankaddrstair']) > 0) || (strlen($_POST['blankaddrfloor']) > 0) || (strlen($_POST['blankaddrdoor']) > 0)) && 
-		(!checkFullAddressES($_POST['blankaddrname'], $_POST['blankaddrnum'], $outAddrName, $outAddrNumber, $checkError))){
+		(!checkFullAddress($_POST['blankaddrname'], $_POST['blankaddrnum'], $userRow['language'], $outAddrName, $outAddrNumber, $checkError))){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
@@ -421,7 +421,7 @@
 		*/
 		/*
 		elseif((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)){
-			if(!checkDrivingLicense($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $checkError)){
+			if(!checkDrivingLicense($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $userRow['language'], $checkError)){
 				unset($_POST['push_button']);
 				?>
 				<script type="text/javascript">
@@ -432,7 +432,7 @@
 			}
 		}
 		*/
-		elseif(((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)) && (!checkDrivingLicenseES($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $checkError))){
+		elseif(((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)) && (!checkDrivingLicense($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $userRow['language'], $checkError))){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">

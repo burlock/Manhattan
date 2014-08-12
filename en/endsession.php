@@ -35,7 +35,7 @@
 		?>
 		<div class="alert alert-success top-alert fade in">
 			<a href="#" class="close" data-dismiss="alert">&times;</a>
-			<strong>Éxito!</strong> Session closed successfully.
+			<strong>Success!</strong> Session closed successfully.
 		</div>
 		<?php
 	}
