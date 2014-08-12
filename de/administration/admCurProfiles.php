@@ -1,13 +1,22 @@
 <?php session_start(); ?>
-<html>
+<html lang="es">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic|Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic|Ubuntu+Condensed&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-	<title>Profilverwaltung</title>
-	<link href="../../common/css/styles.css" rel="stylesheet" type="text/css">
-	<script type="text/javascript" src="../../common/js/functions.js"></script>
-	<script type="text/javascript" src="../../common/js/jquery-1.10.1.min.js"></script>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="David Alfonso Ginés Prieto, Miguel Hita Vicente y Miguel Ángel Melón Pérez">
 	
+	<title>Profilverwaltung</title>
+
+	<!-- Custom styles for this template -->
+	<link href="../../common/css/design.css" rel="stylesheet">
+
+	<!-- Using the same favicon from perspectiva-alemania.com site -->
+	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
+	<!-- Using the favicon for touch-devices shortcut -->
+	<link rel="apple-touch-icon" href="../../common/img/apple-touch-icon.png">
+
 </head>
 
 <body>
@@ -20,10 +29,18 @@
 		<?php
 	}
 	else{
+		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
+		
+		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
+		
+		//Identifying the name of the folder this script is in it can be later shown the rest of level 1 menus as the user navigates through them, knowing what of them is active (id='onlink')
+		$myFile = 'administration';
+
 		$lastUpdate = $_SESSION['lastupdate'];
 		$curUpdate = date('Y-m-d H:i:s');
 		$elapsedTime = (strtotime($curUpdate)-strtotime($lastUpdate));
-		if($elapsedTime > $_SESSION['sessionexpiration']){
+		//URL direct navigation for loggedin users with no granted access is limited here, as session expiration
+		if(($elapsedTime > $_SESSION['sessionexpiration']) || (!accessGranted($_SERVER['SCRIPT_NAME'], $myFile, $userRow['profile']))){
 			?>
 			<script type="text/javascript">
 				window.location.href='../endsession.php';
@@ -36,11 +53,8 @@
 			unset($curUpdate);
 			unset($elapsedTime);
 		}
-		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
 			
 		//Checks whether loaded php page/file corresponds to logged user's language
-		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-		
 		if(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
 			$userRootLang = getUserRoot($userRow['language']);
 			$noRootPath = getNoRootPath($_SERVER['SCRIPT_NAME']);
@@ -51,165 +65,287 @@
 			<?php
 		}
 		?>
-		<div id="topbar" class="azul">
-			<a style="float:left;" href="#">Auswahlmöglichkeiten</a>
-			<a style="float:center">Angeschlossen wie: <?php echo $_SESSION['loglogin']; ?></a>
-			<a href="../endsession.php" style="float:right">Salir</a>
+		
+		
+		<!-- Static navbar -->
+		<div id="header" class="navbar navbar-default navbar-fixed-top" role="navigation" id="fixed-top-bar">
+			<div id="top_line" class="top-page-color"></div>
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a href="http://www.perspectiva-alemania.com/" title="Perspectiva Alemania">
+						<img src="../../common/img/logo.png" alt="Perspectiva Alemania">
+					</a>
+				</div>
+				<!-- <div class="navbar-collapse collapse"> -->
+				<div class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li class="dropdown-header">Angeschlossen wie: <?php echo $_SESSION['loglogin']; ?></li>
+							<li class="divider"></li>
+							<li><a href="../home/personalData.php">Persönliche Einstellungen</a></li>
+							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Aussteigen</a></li>
+						</ul>
+					</li>
+				</div>
+				<!-- </div><!--/.nav-collapse -->
+			</div><!--/.container-fluid -->
+		</div>	<!--/Static navbar -->
+		
+		
+		<!-- exitRequest Modal -->
+		<div id="exitRequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exitRequestLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<form class="modal-content" action="../endsession.php">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="exitRequestLabel">Abmelden</h4>
+					</div>
+					<div class="modal-body">
+						Haben Sie sich abmelden wollen?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Stornieren</button>
+						<button type="submit" class="btn btn-primary">Wenn, melden</button>
+					</div>
+				</form>
+			</div>
 		</div>
-		<?php 
-		$myFile = 'administration';
-		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-		?>
-		<div id="mainmenu">
-		<ul class="navbar1">
-			<?php 
-			$digitLang = getUserLangDigits($userRow['language']);
-			$LangDigitsName = $digitLang."Name";
-			$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');
-			$mainNamesRow = getDBcompletecolumnID($langDigitsName, 'mainNames', 'id');
-			$j = 0;
-			foreach($mainKeysRow as $i){
-				if(getDBsinglefield('active', $i, 'profile', $userRow['profile'])){
-					if($myFile == $i){
-						echo "<li><a href=../$i.php id='onlink'>" . utf8_encode($mainNamesRow[$j]) . "</a></li>";
-						$j++;
-					}
-					else{
-						echo "<li><a href=../$i.php>" . utf8_encode($mainNamesRow[$j]) . "</a></li>";
-						$j++;
-					}
-				}
-			}
-			?>
-		</ul>
-		</div>
-	
-		<div class="workspace">
-			<div class="leftbox">
-				<!-- Este 'class' sirve para mostrar los submenús alineados a la izquierda en el nivel 2 -->
-				<ul>
-				<?php
-				$namesTable = $myFile.'Names';
-				$numCols = getDBnumcolumns($myFile);
-				$myFileProfileRow = getDBrow($myFile, 'profile', $userRow['profile']);
-				for($j=3;$j<$numCols;$j++){
-					$colNamej = getDBcolumnname($myFile, $j);
-					if(($myFileProfileRow[$j] == 1) && ($subLevelMenu = getDBsinglefield2($langDigitsName, $namesTable, 'key', $colNamej, 'level', '2'))){
-						if(!getDBsinglefield2($langDigitsName, $namesTable, 'fatherKey', $colNamej, 'level', '3')){
-							$level2File = getDBsinglefield('key', $namesTable, $langDigitsName, $subLevelMenu);
-							echo "<li><a href=./$level2File.php>" . $subLevelMenu . "</a></li>";
-						}
-						else{
-							$arrayKeys = array();
-							$arrayKeys = getDBcolumnvalue('key', $namesTable, 'fatherKey', $colNamej);
-							$checkFinished = 0;
-							$l = 1;
-							foreach($arrayKeys as $k){
-								if($checkFinished == 0){
-									if(($myFileProfileRow[$j+$l] == 1) && (getDBsinglefield($k, $myFile, 'profile', $userRow['profile']))){
-										$level3File = $k;
-										$checkFinished = 1;
+		
+		
+		<div id="main-content" class="container bs-docs-container">
+			<div class="row">
+				<div class="col-md-3">
+					<div id="sidebar-navigation-list" class="bs-sidebar hidden-print affix-top" role="complementary">
+						<ul class="nav bs-sidenav">							
+							<?php 
+							$pendingCVs = getPendingCVs();
+							$digitLang = getUserLangDigits($userRow['language']);
+							$LangDigitsName = $digitLang."Name";
+							$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');
+							$mainNamesRow = getDBcompletecolumnID($LangDigitsName, 'mainNames', 'id');
+							$j = 0;
+							foreach($mainKeysRow as $i){
+								if(getDBsinglefield('active', $i, 'profile', $userRow['profile'])){
+									if($myFile == $i){
+										echo "<li class='active'><a href=../$i.php id='onlink'>" . $mainNamesRow[$j] . "</a>";
+										$j++;
+
+										echo "<ul class='nav'>";
+
+										$namesTable = $myFile.'Names';
+										$numCols = getDBnumcolumns($myFile);
+										$myFileProfileRow = getDBrow($myFile, 'profile', $userRow['profile']);
+										for($k=3;$k<$numCols;$k++) {
+											$colNamej = getDBcolumnname($myFile, $k);
+											if(($myFileProfileRow[$k] == 1) && ($subLevelMenu = getDBsinglefield2($LangDigitsName, $namesTable, 'key', $colNamej, 'level', '2'))) {
+												if(!getDBsinglefield2($LangDigitsName, $namesTable, 'fatherKey', $colNamej, 'level', '3')){
+													$level2File = getDBsinglefield('key', $namesTable, $LangDigitsName, $subLevelMenu);
+													// Because the file we are is a level 2 file, we do this comparision to make active element in list if it's this same file
+													if ($level2File == 'pendingCVs') 
+														$badge = "<span class='badge'>$pendingCVs</span>";
+													else
+														$badge = "";
+													if ($level2File == basename(__FILE__, '.php')) 
+														echo "<li class='active'>$badge<a href=$level2File.php>" . $subLevelMenu . "</a></li>";
+													else
+														echo "<li>$badge<a href=$level2File.php>" . $subLevelMenu . "</a></li>";
+												}
+												else{
+													$arrayKeys = array();
+													$arrayKeys = getDBcolumnvalue('key', $namesTable, 'fatherKey', $colNamej);
+													$checkFinished = 0;
+													$l = 1;
+													foreach($arrayKeys as $key){
+														if($checkFinished == 0){
+															if(($myFileProfileRow[$j+$l] == 1) && (getDBsinglefield($key, $myFile, 'profile', $userRow['profile']))){
+																$level3File = $key;
+																$checkFinished = 1;
+															}
+															else{
+																$l++;
+															}
+														}
+													}
+													if ($level3File == basename(__FILE__, '.php')) 
+														echo "<li class='active'><a href=$level3File.php>" . $subLevelMenu . "</a></li>";
+													else
+														echo "<li><a href=$level3File.php>" . $subLevelMenu . "</a></li>";
+												}
+											}
+										}
+										echo "</ul> <!-- class='nav' -->";
+										echo "</li> <!-- class='active' -->";
 									}
-									else{
-										$l++;
+									else{ 
+										if ($i == 'home')
+											echo "<li><span class='badge'>$pendingCVs</span><a href=../$i.php>" . $mainNamesRow[$j] . " </a></li>";
+										else 
+											echo "<li><a href=../$i.php>" . $mainNamesRow[$j] . " </a></li>";
+
+										$j++;
 									}
 								}
 							}
-							echo "<li><a href=./$level3File.php>" . $subLevelMenu . "</a></li>";
+							?>
+						</ul> <!-- class="nav bs-sidenav" -->
+					</div> <!-- id="sidebar-navigation-list"  -->
+				</div> <!-- col-md-3 -->
+				
+				
+				<div class="col-md-9 scrollable" role="main">
+					<div class="bs-docs-section">
+						<h2 class="page-header">Profilverwaltung</h2>
+						<?php
+						
+						/*****************************     Start of FORM validations     *****************************/
+						if(isset($_POST['newPsubmit'])){
+							if (isset($_POST['newPName']) && !empty($_POST['newPName'])){
+								$newProfile = $_POST['newPName'];
+								if(strpos(trim($newProfile), " ") > 0){
+									$newProfile = str_replace(' ', '', $newProfile);
+								}
+								//New profile is registrated in every table where necessary (profiles, administration and home)
+								$newProfile = dropAccents($newProfile);
+								if((!executeDBquery("INSERT INTO `profiles` (`id`, `name`, `active`, `created`) VALUES (NULL, '".$newProfile."', '1', CURRENT_TIMESTAMP)")) || 
+								(!executeDBquery("INSERT INTO `home` (`id`, `profile`, `active`, `pendingCVs`, `checkedCVs`, `searchCVs`, `personalData`) VALUES (NULL, '".$newProfile."', '1', '0', '0', '0', '0')")) ||
+								(!executeDBquery("INSERT INTO `administration` (`id`, `profile`, `active`, `admGenOptions`, `profiles`, `admCurProfiles`, `admNewProfile`, `users`, `admCurUsers`, `admNewUser`) VALUES (NULL, '".$newProfile."', '0', '0', '0', '0', '0', '0', '0', '0')"))){
+									?>
+									<script type="text/javascript">
+										alert('Fehler beim erstellen des neuen profils');
+										window.location.href='admCurProfiles.php';
+									</script>
+									<?php
+								}
+								else{
+									?>
+									<script type="text/javascript">
+										alert('Profil wurde erfolgreich gegründet');
+										window.location.href='admCurProfiles.php';
+									</script>
+									<?php
+								}
+							}
 						}
-					}
-				}
-				?>
-				</ul>
-			</div>
-	
-			<div class="rightbox">
-			<?php 
-			if(isset($_POST['newPsubmit'])){
-				if (isset($_POST['newPName']) && !empty($_POST['newPName'])){
-					$newProfile = $_POST['newPName'];
-					if(strpos(trim($newProfile), " ") > 0){
-						$newProfile = str_replace(' ', '', $newProfile);
-					}
-					//New profile is registrated in every table where necessary (profiles, administration and home)
-					$newProfile = dropAccents($newProfile);
-					if((!executeDBquery("INSERT INTO `profiles` (`id`, `name`, `active`, `created`) VALUES (NULL, '".$newProfile."', '1', CURRENT_TIMESTAMP)")) || 
-					(!executeDBquery("INSERT INTO `home` (`id`, `profile`, `active`, `pendingCVs`, `checkedCVs`, `searchCVs`, `personalData`) VALUES (NULL, '".$newProfile."', '1', '0', '0', '0', '0')")) ||
-					(!executeDBquery("INSERT INTO `administration` (`id`, `profile`, `active`, `admGenOptions`, `profiles`, `admCurProfiles`, `admNewProfile`, `users`, `admCurUsers`, `admNewUser`) VALUES (NULL, '".$newProfile."', '0', '0', '0', '0', '0', '0', '0', '0')"))){
+						/*****************************     End of FORM validations     *****************************/
+						
+						/*************************     Start of WebPage code as showed     *************************/
 						?>
-						<script type="text/javascript">
-							alert('Fehler beim erstellen des neuen profils');
-							window.location.href='admCurProfiles.php';
-						</script>
-						<?php
-					}
-					else{
-						?>
-						<script type="text/javascript">
-							alert('Profil wurde erfolgreich gegründet');
-							window.location.href='admCurProfiles.php';
-						</script>
-						<?php
-					}
-				}
-			}
-			?>
-			<p><span id="leftmsg">Existierende Profile</span></p><hr><br>
-			<table class="tabla1">
-				<tr>
-					<th>Id</th>
-					<th>Profil</th>
-					<th>Gültig</th>
-					<th>Gegründet</th>
-					<th>Benutzer</th>
-					<?php 
-					if($_SESSION['logprofile'] == 'SuperAdmin'){
-						echo "<th>Handlung</th>";
-					}
-					?>
-				</tr>
-				<?php
-				$profileNumRows = getDBrowsnumber('profiles');
-				for($i=1;$i<=$profileNumRows;$i++){
-					$showedProfileRow = getDBrow('profiles', 'id', $i);
-					echo "<tr>";
-					echo "<td>" . $showedProfileRow['id'] . "</td>";
-					echo "<td><a href='editProfile.php?codvalue=" . $i . "'>" . $showedProfileRow['name'] . "</a></td>";
-					if($showedProfileRow['active']){
-						echo "<td>Ja</td>";
-					}
-					else{
-						echo "<td>Nicht</td>";
-					}
-					echo "<td>" . $showedProfileRow['created'] . "</td>";
-					echo "<td>" . $showedProfileRow['numUsers'] . "</td>";
-					if($_SESSION['logprofile'] == 'SuperAdmin'){
-						echo '<td><a href="#" onclick="confirmProfileDeletion(' . $showedProfileRow['id'] . ')">Löschen</a></td>';
-					}
-				}
-				?>
-			</table>
-			<?php 
-			if($_SESSION['logprofile'] == 'SuperAdmin'){
-				?>
-				<fieldset id="auto1">
-					<legend>Neues Profil</legend>
-					<form name="newProfile" action="admCurProfiles.php" method="post" onsubmit="return confirmProfileCreation()">
-						<input type="text" id="newPName" name="newPName" size="25" placeholder="Profilname" />
-						<!-- Por defecto queda activado, por lo que no incluyo la posibilidad de crearlo desactivado. Así lo he decidido -->
-						<input type="hidden" value="hNewPsubmit" name="hiddenfield">
-						<input type="submit" value="Hinzufügen" name="newPsubmit">
-					</form>
-				</fieldset>
-				<?php
-			}
-			?>
-			</div><!-- Fin del "rightbox" -->
-		</div><!-- Fin del "workspace" -->
+						<div class="panel panel-default"> <!-- Panel de Perfiles Existentes -->
+							<div class="panel-heading">
+								<h3 class="panel-title">Existierende Profile</h3>
+							</div>
+							<div class="panel-body">
+								<div class="table-responsive">
+									<table id="profilesTable" class="table table-striped table-hover">
+										<thead>
+											<tr>
+												<th>Id</th>
+												<th>Profil</th>
+												<th>Gültig</th>
+												<th>Gegründet</th>
+												<th>Benutzer</th>
+												<?php 
+												if($_SESSION['logprofile'] == 'SuperAdmin'){
+													echo "<th>Handlung</th>";
+												}
+												?>
+											</tr>
+										</thead>
+										<tbody>
+											<?php
+											$profileNumRows = getDBrowsnumber('profiles');
+											for($i=1;$i<=$profileNumRows;$i++){
+												$showedProfileRow = getDBrow('profiles', 'id', $i);
+												echo "<tr>";
+													echo "<td>" . $showedProfileRow['id'] . "</td>";
+													echo "<td><a href='editProfile.php?codvalue=" . $i . "'>" . $showedProfileRow['name'] . "</a></td>";
+													if($showedProfileRow['active']){
+														echo "<td>Ja</td>";
+													}
+													else{
+														echo "<td>Nicht</td>";
+													}
+													echo "<td>" . $showedProfileRow['created'] . "</td>";
+													echo "<td>" . $showedProfileRow['numUsers'] . "</td>";
+													if($_SESSION['logprofile'] == 'SuperAdmin'){
+														echo '<td><a href="#" onclick="confirmProfileDeletion(' . $showedProfileRow['id'] . ')">Löschen</a></td>';
+													}
+												echo "</tr>";
+											}
+											?>
+										</tbody>
+									</table>
+								</div>
+								
+								<?php 
+								if($_SESSION['logprofile'] == 'SuperAdmin'){
+									?>
+									<div class="container-fluid center-block">
+										<h4>Neues Profil</h4>
+										<form class="form-inline" role="form" name="newProfile" action="admCurProfiles.php" method="post" onsubmit="return confirmProfileCreation()">
+											<div class="form-group">
+												<label class="sr-only" for="newPName">Profil</label>
+												<input type="text" class="form-control" size="6" name="newPName" placeholder="Profil" />
+												<!-- Por defecto queda activado, por lo que no incluyo la posibilidad de crearlo desactivado. Así lo he decidido -->
+												<button type="submit" class="btn btn-primary" name="newPsubmit" value="Hinzufügen">Hinzufügen</button>
+												<input type="hidden" value="hNewPsubmit" name="hiddenfield">
+											</div>
+										</form>
+									</div>
+									<?php
+								}
+								?>
+							</div>
+						</div> <!-- Panel de Perfiles existentes -->
+					</div> <!-- bs-docs-section -->
+				</div> <!-- col-md-9 scrollable role=main -->
+			</div> <!-- row -->
+		</div> <!-- class="container bs-docs-container" -->
 		<?php
-	}//del "else" de $_SESSION.
+	} //del "else" de $_SESSION.
 
-?>
+	?>
+
+<!-- Footer bar & info
+	================================================== -->
+	<div id="footer" class="hidden-xs hidden-sm" >
+		<div class="container">
+			<p class="text-muted">&copy; Perspectiva Alemania, S.L.</p>
+		</div>
+	</div>
+
+
+<!-- Scripts. Placed at the end of the document so the pages load faster.
+	================================================== -->
+	<!-- Bootstrap core JavaScript -->
+	<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+	<!-- Site own functions -->
+	<script src="../../common/js/functions.js"></script>
+	<script src="../../common/js/application.js"></script>
+	<script src="../../common/js/docs.min.js"></script>
+
+	<!-- Own document functions -->
+	<!-- Show modal if password has to be changed -->
+	<?php 
+
+		if (isset($_GET['codvalue'])) {
+			echo "<script type='text/javascript'>";
+			echo "	$(document).ready(function(){";
+			echo "		$('#editUserModal').modal('show');";
+			echo "		$('#editUserModal').on('hidden.bs.modal', function () {";
+ 			echo "			window.location.href='admCurProfiles.php';";
+			echo "		});";
+			echo "	});  ";
+			echo "</script> ";
+		}
+	?>
 
 </body>
 </html>

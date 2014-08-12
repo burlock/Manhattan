@@ -32,10 +32,18 @@
 		<?php
 	}
 	else {
+		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
+		
+		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
+		
+		//Identifying the name of the folder this script is in it can be later shown the rest of level 1 menus as the user navigates through them, knowing what of them is active (id='onlink')
+		$myFile = 'administration';
+
 		$lastUpdate = $_SESSION['lastupdate'];
 		$curUpdate = date('Y-m-d H:i:s');
 		$elapsedTime = (strtotime($curUpdate)-strtotime($lastUpdate));
-		if($elapsedTime > $_SESSION['sessionexpiration']){
+		//URL direct navigation for loggedin users with no granted access is limited here, as session expiration
+		if(($elapsedTime > $_SESSION['sessionexpiration']) || (!accessGranted($_SERVER['SCRIPT_NAME'], $myFile, $userRow['profile']))){
 			?>
 			<script type="text/javascript">
 				window.location.href='../endsession.php';
@@ -48,11 +56,8 @@
 			unset($curUpdate);
 			unset($elapsedTime);
 		}
-		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
 		
 		//Checks whether loaded php page/file corresponds to logged user's language
-		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-		
 		if(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
 			$userRootLang = getUserRoot($userRow['language']);
 			$noRootPath = getNoRootPath($_SERVER['SCRIPT_NAME']);
@@ -63,8 +68,8 @@
 			<?php
 		}
 		?>
-
-
+		
+		
 		<!-- Static navbar -->
 		<div id="header" class="navbar navbar-default navbar-fixed-top" role="navigation" id="fixed-top-bar">
 			<div id="top_line" class="top-page-color"></div>
@@ -93,8 +98,8 @@
 				<!-- </div><!--/.nav-collapse -->
 			</div><!--/.container-fluid -->
 		</div>	<!--/Static navbar -->
-
-
+		
+		
 		<!-- exitRequest Modal -->
 		<div id="exitRequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exitRequestLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -113,25 +118,15 @@
 				</form>
 			</div>
 		</div>
-
-
-		<!-- /* En $myFile guardo el nombre del fichero php que WC está tratando en ese instante. Necesario para mostrar
-		* el resto de menús de nivel 1 cuando navegue por ellos, y saber cuál es el activo (id='onlink')
-		*/ -->
-		<?php
-			$myFile = 'administration';
-			$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-
-			$pendingCVs = getPendingCVs();
-		?>
-
-
+		
+		
 		<div id="main-content" class="container bs-docs-container">
 			<div class="row">
 				<div class="col-md-3">
 					<div id="sidebar-navigation-list" class="bs-sidebar hidden-print affix-top" role="complementary">
 						<ul class="nav bs-sidenav">							
 							<?php 
+							$pendingCVs = getPendingCVs();
 							$digitLang = getUserLangDigits($userRow['language']);
 							$LangDigitsName = $digitLang."Name";
 							$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');
@@ -204,10 +199,13 @@
 					</div> <!-- id="sidebar-navigation-list"  -->
 				</div> <!-- col-md-3 -->
 				
+				
 				<div class="col-md-9 scrollable" role="main">
 					<div class="bs-docs-section">
 						<h2 class="page-header">Benutzerverwaltung</h2>
-						<?php 
+						<?php
+						
+						/*****************************     Start of FORM validations     *****************************/
 						if(isset($_POST['newUsubmit'])){
 							if (isset($_POST['newUName']) && !empty($_POST['newUName'])){
 								$newUser = $_POST['newUName'];
@@ -253,15 +251,11 @@
 						}
 						
 						if(isset($_POST['newUsubmitC'])){
-							$userNumber = getDBsinglefield('value', 'otherOptions', 'key', 'lastCandidate');
-							$userNumber=$userNumber+1;
-							executeDBquery("UPDATE `otherOptions` SET `value`='".$userNumber."' WHERE `key`='lastCandidate'");
-							$userNumber=sprintf("%06d",$userNumber);
-							$newUser="pa_".$userNumber;
+							$newUser = getNextCandidateName();
 							if(getDBsinglefield('login', 'users', 'login', $newUser)){
 								?>
 								<script type="text/javascript">
-									alert('Der ausgewählte Benutzer existiert bereits');
+									alert('Der ausgewählte Benutzer existiert bereits.');
 									window.location.href='admCurUsers.php';
 								</script>
 								<?php
@@ -269,26 +263,21 @@
 							else{
 								$initialPass = getRandomPass();
 								$expirationDate = addMonthsToDate(getDBsinglefield('value', 'otherOptions', 'key', 'expirationMonths'));
-								if(!executeDBquery("INSERT INTO `users` (`id`, `login`, `pass`, `profile`, `active`, `language`, `needPass`, `created`, `passExpiration`) VALUES 
-								(NULL, '".utf8_decode($newUser)."', '".$initialPass."', 'Candidato', '1', 'spanish', '1', CURRENT_TIMESTAMP, '".$expirationDate."')")){
-									?>
+								if(!executeDBquery("INSERT INTO `users` (`id`, `login`, `pass`, `profile`, `active`, `needPass`, `created`, `passExpiration`) VALUES 
+								(NULL, '".utf8_decode($newUser)."', '".$initialPass."', 'Candidato', '1', '1', CURRENT_TIMESTAMP, '".$expirationDate."')")){
+								?>
 									<script type="text/javascript">
-										alert('Fehler beim Ausfüllen des neuen Benutzers');
+										alert('Fehler beim Ausfüllen des neuen Kandidaten.');
 										window.location.href='admCurUsers.php';
 									</script>
 									<?php
 								}
 								else{
-									//Adding 1 user to newUser's profile
-									$profileUsers = getDBsinglefield('numUsers', 'profiles', 'name', 'Candidato');
-									$profileUsers += 1;
-									executeDBquery("UPDATE `profiles` SET `numUsers`='".$profileUsers."' WHERE `name`='Candidato'");
-									//Creating newUser's folder to store his/her data when updating his/her CV
-									$userDir = $_SERVER['DOCUMENT_ROOT'] . "/cvs/".$newUser."/";
-									if(!ifCreateDir($userDir, 0777)){
+									//+1 to otherOptions' "lastCandidate" parameter. +1 to profiles' "Candidato" parameter. Creation of user's directory
+									if(!addCandidate($newUser, $userRow['language'], $addError)){
 										?>
 										<script type="text/javascript">
-											alert('Fehler beim Benutzer Verzeichnissystem erstellen');
+											alert('<?php echo $addError; ?>');
 											window.location.href='admCurUsers.php';
 										</script>
 										<?php
@@ -296,7 +285,7 @@
 									else{
 										?>
 										<script type="text/javascript">
-											alert('Dies ist die datenquelle für den benutzer erstellt:\n Login: <?php echo $newUser; ?> \n Password: <?php echo $initialPass; ?> \n URL: http://areaprivada.perspectivaalemania.com ');
+											alert('Zugangsinformationen für den Kandidat:\n Login: <?php echo $newUser; ?> \n Password: <?php echo $initialPass; ?> \n URL: http://areaprivada.perspectivaalemania.com ');
 											window.location.href='admCurUsers.php';
 										</script>
 										<?php
@@ -312,7 +301,7 @@
 									if(!deleteDBrow('cvitaes', 'userLogin', getDBsinglefield('login', 'users', 'id', $_GET['codvalue']))){
 										?>
 										<script type="text/javascript">
-											alert('Fehler beim benutzer lebenslauf löschen');
+											alert('Fehler beim Kandidat lebenslauf löschen.');
 											window.location.href='admCurUsers.php';
 										</script>
 										<?php 
@@ -321,7 +310,7 @@
 										if(!deleteDBrow('users', 'id', $_GET['codvalue'])){
 											?>
 											<script type="text/javascript">
-												alert('Konnte den benutzer zu löschen');
+												alert('Konnte den Kandidat zu löschen.');
 												window.location.href='admCurUsers.php';
 											</script>
 											<?php 
@@ -348,7 +337,7 @@
 									if(!executeDBquery("UPDATE `users` SET `pass`='".$initialPass."', `needPass`='1', `passExpiration`='".$expirationDate."' WHERE `id`='".$userRow['id']."'")){
 										?>
 										<script type="text/javascript">
-											alert('Fehler beim benutzer attribut ändern');
+											alert('Fehler beim benutzer attribut ändern.');
 											window.location.href='admCurUsers.php';
 										</script>
 										<?php
@@ -356,7 +345,7 @@
 									else{
 										?>
 										<script type="text/javascript">
-											alert('Passwort korrekt geändert');
+											alert('Benutzer-Passwort erfolgreich zurückgesetzt.\nNeues passwort: <?php echo $initialPass; ?>');
 											window.location.href='admCurUsers.php';
 										</script>
 										<?php
@@ -403,26 +392,26 @@
 												foreach($userKeyRow as $i){
 													$showedUserRow = getDBrow('users', 'login', $i);
 													echo "<tr>";
-													echo "<td>" . $k . "</td>";
-													echo "<td><a class='launchModal' href='admCurUsers.php?codvalue=" . $showedUserRow['id'] . "'>" . $showedUserRow['login'] . "</a></td>";
-													echo "<td>" . $showedUserRow['profile'] . "</td>";
-													if($showedUserRow['employee'] == 1){
-														echo "<td>Ja</td>";
-													}
-													else{
-														echo "<td>Nicht</td>";
-													}
-													if($showedUserRow['active']){
-														echo "<td>Ja</td>";
-													}
-													else{
-														echo "<td>Nicht</td>";
-													}
-													echo "<td>" . getDBsinglefield($userRow['language'], 'siteLanguages', 'key', $showedUserRow['language']) . "</td>";
-													echo "<td>" . $showedUserRow['created'] . "</td>";
-													echo "<td>" . $showedUserRow['lastConnection'] . "</td>";
-													echo "<td>" . $showedUserRow['passExpiration'] . "</td>";
-													echo "<td><a href='admCurUsers.php?codvalue=" . $showedUserRow['id'] . "&hiddenGET=hDelUser' onclick='return confirmUserDeletionES();'>Borrar</a></td>";
+														echo "<td>" . $k . "</td>";
+														echo "<td><a class='launchModal' href='admCurUsers.php?codvalue=" . $showedUserRow['id'] . "'>" . $showedUserRow['login'] . "</a></td>";
+														echo "<td>" . $showedUserRow['profile'] . "</td>";
+														if($showedUserRow['employee'] == 1){
+															echo "<td>Ja</td>";
+														}
+														else{
+															echo "<td>Nicht</td>";
+														}
+														if($showedUserRow['active']){
+															echo "<td>Ja</td>";
+														}
+														else{
+															echo "<td>Nicht</td>";
+														}
+														echo "<td>" . getDBsinglefield($userRow['language'], 'siteLanguages', 'key', $showedUserRow['language']) . "</td>";
+														echo "<td>" . $showedUserRow['created'] . "</td>";
+														echo "<td>" . $showedUserRow['lastConnection'] . "</td>";
+														echo "<td>" . $showedUserRow['passExpiration'] . "</td>";
+														echo "<td><a href='admCurUsers.php?codvalue=" . $showedUserRow['id'] . "&hiddenGET=hDelUser' onclick='return confirmUserDeletionES();'>Borrar</a></td>";
 													echo "</tr>";
 													$k++;
 												}

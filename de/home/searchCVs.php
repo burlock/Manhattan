@@ -28,10 +28,18 @@
 		<?php
 	}
 	else {
+		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
+
+		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
+		
+		//Identifying the name of the folder this script is in it can be later shown the rest of level 1 menus as the user navigates through them, knowing what of them is active (id='onlink')
+		$myFile = 'home';
+		
 		$lastUpdate = $_SESSION['lastupdate'];
 		$curUpdate = date('Y-m-d H:i:s');
 		$elapsedTime = (strtotime($curUpdate)-strtotime($lastUpdate));
-		if($elapsedTime > $_SESSION['sessionexpiration']){
+		//URL direct navigation for loggedin users with no granted access is limited here, as session expiration
+		if(($elapsedTime > $_SESSION['sessionexpiration']) || (!accessGranted($_SERVER['SCRIPT_NAME'], $myFile, $userRow['profile']))){
 			?>
 			<script type="text/javascript">
 				window.location.href='../endsession.php';
@@ -44,11 +52,8 @@
 			unset($curUpdate);
 			unset($elapsedTime);
 		}
-		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
 		
 		//Checks whether loaded php page/file corresponds to logged user's language
-		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-		
 		if(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
 			$userRootLang = getUserRoot($userRow['language']);
 			$noRootPath = getNoRootPath($_SERVER['SCRIPT_NAME']);
@@ -59,8 +64,8 @@
 			<?php
 		}
 		?>
-
-
+		
+		
 		<!-- Static navbar -->
 		<div id="header" class="navbar navbar-default navbar-fixed-top" role="navigation" id="fixed-top-bar">
 			<div id="top_line" class="top-page-color"></div>
@@ -89,8 +94,8 @@
 				<!-- </div><!--/.nav-collapse -->
 			</div><!--/.container-fluid -->
 		</div>	<!--/Static navbar -->
-
-
+		
+		
 		<!-- exitRequest Modal -->
 		<div id="exitRequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exitRequestLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -109,19 +114,13 @@
 				</form>
 			</div>
 		</div> <!-- exitRequest Modal -->
-
-
-		<!-- /* En $myFile guardo el nombre del fichero php que WC está tratando en ese instante. Necesario para mostrar
-		* el resto de menús de nivel 1 cuando navegue por ellos, y saber cuál es el activo (id='onlink')
-		*/ -->
+		
+		
 		<?php
-			$myFile = 'home';
-			$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-
 			$pendingCVs = getPendingCVs();
 		?>
-
-
+		
+		
 		<div id="main-content" class="container bs-docs-container">
 			<div class="row">
 				<div class="col-md-3">
@@ -194,7 +193,7 @@
 				</div> <!-- col-md-3 -->
 				
 				
-				<!--  ****************************************   Start of displayed Modal HTML   ****************************************  -->
+				<!--  ***********************************   Start of Web Page as initially showed   ***********************************  -->
 				<div class="col-md-9" role="main"> 
 					<div class="bs-docs-section">
 						<h2 class="page-header">Suche CVs</h2>

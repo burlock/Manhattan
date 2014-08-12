@@ -46,10 +46,28 @@
 		}
 		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
 		
-		//Checks whether loaded php page/file corresponds to logged user's language
 		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
 		
-		if(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
+		//Checks whether logged user has selected language or not, redirecting him to its proper language page/file if needed
+		if((strlen($userRow['language']) < 1)){
+			$userLang = getCurrentLanguage($_SERVER['SCRIPT_NAME']);
+			if(!executeDBquery("UPDATE `users` SET `language`='".$userLang."' WHERE `login`='".$_SESSION['loglogin']."'")){
+				?>
+				<script type="text/javascript">
+					alert('Error actualizando idioma neutro.');
+					window.location.href='endsession.php';
+				</script>
+				<?php
+			}
+			else{
+				?>
+				<script type="text/javascript">
+					window.location.href='home.php';
+				</script>
+				<?php
+			}
+		}
+		elseif(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
 			$userRootLang = getUserRoot($userRow['language']);
 			$noRootPath = getNoRootPath($_SERVER['SCRIPT_NAME']);
 			?>
@@ -59,7 +77,7 @@
 			<?php
 		}
 		?>
-
+		
 
 		<!-- Static navbar -->
 		<div id="header" class="navbar navbar-default navbar-fixed-top" role="navigation" id="fixed-top-bar">
@@ -82,7 +100,7 @@
 								<li class="dropdown-header">Angeschossen wie: <?php echo $_SESSION['loglogin']; ?></li>
 								<li class="divider"></li>
 								<li><a href="home/personalData.php">Persönliche Einstellungen</a></li>
-								<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
+								<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Aussteigen</a></li>
 							</ul>
 						</li>
 					</div>

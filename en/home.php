@@ -46,10 +46,28 @@
 		}
 		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
 		
-		//Checks whether loaded php page/file corresponds to logged user's language
 		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
 		
-		if(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
+		//Checks whether logged user has selected language or not, redirecting him to its proper language page/file if needed
+		if((strlen($userRow['language']) < 1)){
+			$userLang = getCurrentLanguage($_SERVER['SCRIPT_NAME']);
+			if(!executeDBquery("UPDATE `users` SET `language`='".$userLang."' WHERE `login`='".$_SESSION['loglogin']."'")){
+				?>
+				<script type="text/javascript">
+					alert('Error actualizando idioma neutro.');
+					window.location.href='endsession.php';
+				</script>
+				<?php
+			}
+			else{
+				?>
+				<script type="text/javascript">
+					window.location.href='home.php';
+				</script>
+				<?php
+			}
+		}
+		elseif(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
 			$userRootLang = getUserRoot($userRow['language']);
 			$noRootPath = getNoRootPath($_SERVER['SCRIPT_NAME']);
 			?>
@@ -59,7 +77,7 @@
 			<?php
 		}
 		?>
-
+		
 
 		<!-- Static navbar -->
 		<div id="header" class="navbar navbar-default navbar-fixed-top" role="navigation" id="fixed-top-bar">
@@ -82,7 +100,7 @@
 								<li class="dropdown-header">Logged in as: <?php echo $_SESSION['loglogin']; ?></li>
 								<li class="divider"></li>
 								<li><a href="home/personalData.php">Personal Settings</a></li>
-								<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
+								<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Exit</a></li>
 							</ul>
 						</li>
 					</div>
@@ -97,14 +115,14 @@
 				<form class="modal-content" action="endsession.php">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Cerrar sesión</h4>
+						<h4 class="modal-title" id="exitRequestLabel">Close session</h4>
 					</div>
 					<div class="modal-body">
-						¿Estás seguro de que quieres salir?
+						Are you sure you want to exit?
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-						<button type="submit" class="btn btn-primary">Sí, cerrar sesión</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button type="submit" class="btn btn-primary">Yes, close session</button>
 					</div>
 				</form>
 			</div>

@@ -28,11 +28,19 @@
 		</script>
 		<?php
 	}
-	elseif($_SESSION['logprofile'] == 'SuperAdmin'){
+	else {
+		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
+
+		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
+		
+		//Identifying the name of the folder this script is in it can be later shown the rest of level 1 menus as the user navigates through them, knowing what of them is active (id='onlink')
+		$myFile = 'home';
+		
 		$lastUpdate = $_SESSION['lastupdate'];
 		$curUpdate = date('Y-m-d H:i:s');
 		$elapsedTime = (strtotime($curUpdate)-strtotime($lastUpdate));
-		if($elapsedTime > $_SESSION['sessionexpiration']){
+		//URL direct navigation for loggedin users with no granted access is limited here, as session expiration
+		if(($elapsedTime > $_SESSION['sessionexpiration']) || (!accessGranted($_SERVER['SCRIPT_NAME'], $myFile, $userRow['profile']))){
 			?>
 			<script type="text/javascript">
 				window.location.href='../endsession.php';
@@ -45,11 +53,8 @@
 			unset($curUpdate);
 			unset($elapsedTime);
 		}
-		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
 			
 		//Checks whether loaded php page/file corresponds to logged user's language
-		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-		
 		if(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
 			$userRootLang = getUserRoot($userRow['language']);
 			$noRootPath = getNoRootPath($_SERVER['SCRIPT_NAME']);
@@ -60,8 +65,8 @@
 			<?php
 		}
 		?>
-
-
+		
+		
 		<!-- Static navbar -->
 		<div id="header" class="navbar navbar-default navbar-fixed-top" role="navigation" id="fixed-top-bar">
 			<div id="top_line" class="top-page-color"></div>
@@ -90,8 +95,8 @@
 				<!-- </div><!--/.nav-collapse -->
 			</div><!--/.container-fluid -->
 		</div>	<!--/Static navbar -->
-
-
+		
+		
 		<!-- exitRequest Modal -->
 		<div id="exitRequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exitRequestLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -110,18 +115,13 @@
 				</form>
 			</div>
 		</div>
-
-
-		<!-- En $myFile guardo el nombre del fichero php que la APP está tratando en ese instante. Necesario para mostrar
-		el resto de menús de nivel 1 cuando navegue por ellos, y saber cuál es el activo (id='onlink') -->
+		
+		
 		<?php
-		$myFile = 'home';
-		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-
-		$pendingCVs = getPendingCVs();
-
+		
+		/**********************************     Start of FORM validations     **********************************/
 		if (isset($_POST['eCurCVsend'])) {
-
+			
 			//Unmounting "Lang:LangLv" structure for insert in DB
 			$wholeLangInfo = explode('|',$_POST['eCCVlanguagesMerged']);
 
@@ -176,7 +176,7 @@
 			
 			//Nationalities should be searched in its corresponding DBTable
 			//If any of the mandatory fields are bad formed DB won't be updated
-			if((!checkFullNameES($_POST['eCCVname'], $_POST['eCCVsurname'], $outName, $outSurname, $checkError)) || ($inDBBirthdate == '0000-00-00') || 
+			if((!checkFullName($_POST['eCCVname'], $_POST['eCCVsurname'], $userRow['language'], $outName, $outSurname, $checkError)) || ($inDBBirthdate == '0000-00-00') || 
 			(!checkDNI_NIE(htmlentities($_POST['eCCVnie'], ENT_QUOTES, 'UTF-8'))) || (!$inDBNationalities) || 
 			(!checkMobile(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'))) || (!filter_var(htmlentities($_POST['eCCVmail'], ENT_QUOTES, 'UTF-8'), FILTER_VALIDATE_EMAIL)) ||
 			(htmlentities($finalLang, ENT_QUOTES, 'UTF-8') == '' || htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8') == '' || htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8') == '%null%') ||
@@ -754,7 +754,7 @@
 
 								</div>
 								<div class="modal-footer">
-									<button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">Stornieren</button>
 									<button type="submit" class="btn btn-primary" name="eCurCVsend">Zuvor validierte CV ändern <span class="glyphicon glyphicon-ok"> </span></button>
 								</div>
 							</form>
@@ -809,15 +809,6 @@
 
 	} //del "elseif" de $_SESSION.
 	
-	//Any other non-SuperAdmin profile will be redirected to home.php
-	else{
-		?>
-		<script type="text/javascript">
-			window.location.href='../home.php';
-		</script>
-		<?php
-	}
-
 	?>
 
 

@@ -37,7 +37,7 @@
 		 * - When 'passExpiration' var is less than current date (when is a past date)
 		 */
 		//1st time user logs in or password reseted because user forgot its own password BUT not expirated password (In this case password length is 8 and not hashed)
-		if(($userRow['needPass']) && (!($userRow['passExpiration'] <= date('Y-m-d'))) && (!checkSimplePassChangeEN($_POST['newPassword'], $_POST['confirmNewPassword'], $keyError))){
+		if(($userRow['needPass']) && (!($userRow['passExpiration'] <= date('Y-m-d'))) && (!checkSimplePassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['language'], $keyError))){
 			//echo 'error checkpasschange no pasado con needpass y sin passexpiration.';
 			?>
 			<div class="top-alert-container">
@@ -50,7 +50,7 @@
 			<?php $wannaGoTo ='index.html';
 		}
 		//Expirated password BUT not first time user logs in neither password reseted
-		elseif(!($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkHashedPassChangeEN($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['pass'], $keyError))){
+		elseif(!($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkHashedPassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['pass'], $userRow['language'], $keyError))){
 			//echo 'error checkpasschange no pasado sin needpass y con passexpiration.';
 			?>
 			<div class="top-alert-container">
@@ -63,7 +63,7 @@
 			<?php $wannaGoTo ='index.html';
 		}
 		//Both 'needPass' == '1' and 'passExpiration' a past date. Password, in this case, is 8 characters length
-		elseif(($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkSimplePassChangeEN($_POST['newPassword'], $_POST['confirmNewPassword'], $keyError))){
+		elseif(($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkSimplePassChangeEN($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['language'], $keyError))){
 			//echo 'error checkpasschange no pasado con needpass y passexpiration.';
 			?>
 			<div class="top-alert-container">
@@ -99,7 +99,7 @@
 			<div class="top-alert-container">
 				<div class="alert alert-success top-alert fade in">
 					<a href="#" class="close" data-dismiss="alert">&times;</a>
-					<strong>Éxito!</strong> Password updated.
+					<strong>Success!</strong> Password updated.
 				</div>
 			</div>					
 

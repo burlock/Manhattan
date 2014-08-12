@@ -29,10 +29,18 @@
 		<?php
 	}
 	else {
+		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
+
+		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
+		
+		//Identifying the name of the folder this script is in it can be later shown the rest of level 1 menus as the user navigates through them, knowing what of them is active (id='onlink')
+		$myFile = 'home';
+		
 		$lastUpdate = $_SESSION['lastupdate'];
 		$curUpdate = date('Y-m-d H:i:s');
 		$elapsedTime = (strtotime($curUpdate)-strtotime($lastUpdate));
-		if($elapsedTime > $_SESSION['sessionexpiration']){
+		//URL direct navigation for loggedin users with no granted access is limited here, as session expiration
+		if(($elapsedTime > $_SESSION['sessionexpiration']) || (!accessGranted($_SERVER['SCRIPT_NAME'], $myFile, $userRow['profile']))){
 			?>
 			<script type="text/javascript">
 				window.location.href='../endsession.php';
@@ -45,11 +53,9 @@
 			unset($curUpdate);
 			unset($elapsedTime);
 		}
-		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
 			
-		//Checks whether loaded php page/file corresponds to logged user's language
-		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
 		
+		//Checks whether loaded php page/file corresponds to logged user's language
 		if(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
 			$userRootLang = getUserRoot($userRow['language']);
 			$noRootPath = getNoRootPath($_SERVER['SCRIPT_NAME']);
@@ -112,12 +118,7 @@
 		</div>
 
 
-		<!-- En $myFile guardo el nombre del fichero php que la APP está tratando en ese instante. Necesario para mostrar
-		el resto de menús de nivel 1 cuando navegue por ellos, y saber cuál es el activo (id='onlink') -->
 		<?php
-		$myFile = 'home';
-		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-		
 		//Extracts the number of pending CVs
 		$pendingCVs = getPendingCVs();
 		
