@@ -19,7 +19,6 @@
 	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
 	<!-- Using the favicon for touch-devices shortcut -->
 	<link rel="apple-touch-icon" href="../../common/img/apple-touch-icon.png">
-
 </head>
 
 <body>
@@ -79,7 +78,6 @@
 						<img src="../../common/img/logo.png" alt="Perspectiva Alemania">
 					</a>
 				</div>
-				<!-- <div class="navbar-collapse collapse"> -->
 				<div class="nav navbar-nav navbar-right">
 					<li class="dropdown">
 						<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
@@ -95,7 +93,9 @@
 						</ul>
 					</li>
 				</div>
-				<!-- </div><!--/.nav-collapse -->
+				<?php if($userRow['employee'] == '1'){ ?>
+					<a href="/common/files/CV Managing Tool - User Guide.pdf" style="float: right; margin-right: 60px; margin-top: 15px">User's Guide</a>
+				<?php }?>
 			</div><!--/.container-fluid -->
 		</div>	<!--/Static navbar -->
 		
@@ -411,7 +411,7 @@
 														echo "<td>" . $showedUserRow['created'] . "</td>";
 														echo "<td>" . $showedUserRow['lastConnection'] . "</td>";
 														echo "<td>" . $showedUserRow['passExpiration'] . "</td>";
-														echo "<td><a href='admCurUsers.php?codvalue=" . $showedUserRow['id'] . "&hiddenGET=hDelUser' onclick='return confirmUserDeletionES();'>Delete</a></td>";
+														echo "<td><a href='admCurUsers.php?codvalue=" . $showedUserRow['id'] . "&hiddenGET=hDelUser' onclick=\"return confirmUserDeletion('".getCurrentLanguage($_SERVER['SCRIPT_NAME'])."')\">Delete</a></td>";
 													echo "</tr>";
 													$k++;
 												}
@@ -770,11 +770,11 @@
 							//If a non 'SuperAdmin' user edits any 'test' user it won't be able to reset its password
 							if($_SESSION['logprofile'] != 'SuperAdmin'){
 								if(strpos($editedUserRow['login'], 'test') === false){
-									echo "<td><a href='admCurUsers.php?codvalue=" . $editedUserRow['id'] . "&hiddenGET=hResPwd' onclick='return confirmPwdResetES();'>Reset Password</a></td>";
+									echo "<td><a href='admCurUsers.php?codvalue=" . $editedUserRow['id'] . "&hiddenGET=hResPwd' onclick=\"return confirmPwdReset('".getCurrentLanguage($_SERVER['SCRIPT_NAME'])."');\">Reset password</a></td>";
 								}
 							}
 							else{
-								echo "<td><a href='admCurUsers.php?codvalue=" . $editedUserRow['id'] . "&hiddenGET=hResPwd' onclick='return confirmPwdResetES();'>Reset Password</a></td>";
+								echo "<td><a href='admCurUsers.php?codvalue=" . $editedUserRow['id'] . "&hiddenGET=hResPwd' onclick=\"return confirmPwdReset('".getCurrentLanguage($_SERVER['SCRIPT_NAME'])."');\">Reset password</a></td>";
 							}
 							?>
 							<input type="hidden" value="<?php echo $editedUserRow['id']; ?>" name="hiddenCurUser">

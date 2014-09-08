@@ -1308,10 +1308,29 @@ function dateToSpanishFormat($oldDate){
  * Entry (myFile): String that indicates the name of the folder the script is in
  * Entry (userProfile): String with user's profile
  */
+/*
 function accessGranted($filePath, $myFile, $userProfile){
 	$fileName = getPhpFileName($filePath);
 	return getDBsinglefield($fileName, $myFile, 'profile', $userProfile);
 }
+*/
+function accessGranted($filePath, $myFile, $userProfile){
+	$fileName = getPhpFileName($filePath);
+	//Si se trata de un fichero excepción, devuelvo 'true', sin comprobar
+	//if($fileName == 'searchResult'){
+	if(($fileName == 'searchResult') || ($fileName == 'viewCV')){
+		if(($userProfile == 'SuperAdmin') || ($userProfile == 'Administrador') || ($userProfile == 'Lector')){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	else{
+		return getDBsinglefield($fileName, $myFile, 'profile', $userProfile);
+	}
+}
+
 
 
 /* Function in charge of calling internally to any other function and DDBB query involved in creating a new Candidate

@@ -986,7 +986,8 @@ Los campos que poseen * son obligatorios.
 		<div class="panel-footer">
 			<label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> He leído y acepto las <a href="javascript:alert('Recuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nPara cualquier consulta no dudes en ponerte en contacto con nosotros.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');">condiciones de uso</a> y política de privacidad</label>
 			<div class="btn-group pull-right">
-				<button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSendES(formu);">Enviar</button>
+				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSendES(formu);">Enviar</button> -->
+				<button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSend(formu, '<?php echo getCurrentLanguage($_SERVER['SCRIPT_NAME']); ?>');">Enviar</button>
 			</div>
 		</div> <!-- Panel Footer-->
 	</div> <!-- Panel -->

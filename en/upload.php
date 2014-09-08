@@ -978,7 +978,8 @@ Fields with * are mandatory.
 		<div class="panel-footer">
 			<label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> I have read and accept the <a href="javascript:alert('Remember that at any time you can exercise your right to opposition, access, rectification and cancellation regarding to the processing of your personal data by PERSPECTIVA ALEMANIA, through a letter to the following address: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nFor any doubt please contact us.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');">terms of use</a> and privacy policy.</label>
 			<div class="btn-group pull-right">
-				<button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSendES(formu);">Send</button>
+				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSendES(formu);">Send</button> -->
+				<button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSend(formu, '<?php echo getCurrentLanguage($_SERVER['SCRIPT_NAME']); ?>');">Send</button>
 			</div>
 		</div> <!-- Panel Footer-->
 	</div> <!-- Panel -->

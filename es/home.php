@@ -88,23 +88,24 @@
 						<img src="../common/img/logo.png" alt="Perspectiva Alemania">
 					</a>
 				</div>
-				<!-- <div class="navbar-collapse collapse"> -->
-					<div class="nav navbar-nav navbar-right">
-						<li class="dropdown">
-							<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-							<ul class="dropdown-menu">
-								<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
-								<li class="divider"></li>
-								<li><a href="home/personalData.php">Configuración personal</a></li>
-								<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
-							</ul>
-						</li>
-					</div>
-				<!-- </div><!--/.nav-collapse -->
+				<div class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
+							<li class="divider"></li>
+							<li><a href="home/personalData.php">Configuración personal</a></li>
+							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
+						</ul>
+					</li>
+				</div>
+				<?php if($userRow['employee'] == '1'){ ?>
+					<a href="/common/files/CV Managing Tool - User Guide.pdf" style="float: right; margin-right: 60px; margin-top: 15px">Guía de Usuario</a>
+				<?php }?>
 			</div><!--/.container-fluid -->
 		</div>	<!--/Static navbar -->
 		

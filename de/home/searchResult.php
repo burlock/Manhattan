@@ -1,9 +1,9 @@
 <?php 
-session_start();
-error_reporting (E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);
-set_time_limit(1800);
-set_include_path('../../common/0.12-rc12/src/' . PATH_SEPARATOR . get_include_path());
-set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
+	session_start();
+	error_reporting (E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);
+	set_time_limit(1800);
+	set_include_path('../../common/0.12-rc12/src/' . PATH_SEPARATOR . get_include_path());
+	set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 ?>
 <html lang="es">
 <head>
@@ -82,7 +82,6 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 						<img src="../../common/img/logo.png" alt="Perspectiva Alemania">
 					</a>
 				</div>
-				<!-- <div class="navbar-collapse collapse"> -->
 				<div class="nav navbar-nav navbar-right">
 					<li class="dropdown">
 						<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
@@ -98,7 +97,9 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 						</ul>
 					</li>
 				</div>
-				<!-- </div><!--/.nav-collapse -->
+				<?php if($userRow['employee'] == '1'){ ?>
+					<a href="/common/files/CV Managing Tool - User Guide.pdf" style="float: right; margin-right: 60px; margin-top: 15px">Benutzerhandbuch</a>
+				<?php }?>
 			</div><!--/.container-fluid -->
 		</div>	<!--/Static navbar -->
 		
