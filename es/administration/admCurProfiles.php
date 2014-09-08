@@ -16,7 +16,6 @@
 	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
 	<!-- Using the favicon for touch-devices shortcut -->
 	<link rel="apple-touch-icon" href="../../common/img/apple-touch-icon.png">
-
 </head>
 
 <body>
@@ -76,7 +75,6 @@
 						<img src="../../common/img/logo.png" alt="Perspectiva Alemania">
 					</a>
 				</div>
-				<!-- <div class="navbar-collapse collapse"> -->
 				<div class="nav navbar-nav navbar-right">
 					<li class="dropdown">
 						<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
@@ -92,7 +90,9 @@
 						</ul>
 					</li>
 				</div>
-				<!-- </div><!--/.nav-collapse -->
+				<?php if($userRow['employee'] == '1'){ ?>
+					<a href="/common/files/CV Managing Tool - User Guide.pdf" style="float: right; margin-right: 60px; margin-top: 15px">Guía de Usuario</a>
+				<?php }?>
 			</div><!--/.container-fluid -->
 		</div>	<!--/Static navbar -->
 		
@@ -103,7 +103,7 @@
 				<form class="modal-content" action="../endsession.php">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Cerrar sesión</h4>
+						<h4 class="modal-title" id="exitRequestLabel">Cerrar Sesión</h4>
 					</div>
 					<div class="modal-body">
 						¿Estás seguro de que quieres salir?
@@ -216,7 +216,7 @@
 								(!executeDBquery("INSERT INTO `administration` (`id`, `profile`, `active`, `admGenOptions`, `profiles`, `admCurProfiles`, `admNewProfile`, `users`, `admCurUsers`, `admNewUser`) VALUES (NULL, '".$newProfile."', '0', '0', '0', '0', '0', '0', '0', '0')"))){
 									?>
 									<script type="text/javascript">
-										alert('Error al crear el nuevo perfil');
+										alert('Error creando nuevo perfil.');
 										window.location.href='admCurProfiles.php';
 									</script>
 									<?php
@@ -224,13 +224,53 @@
 								else{
 									?>
 									<script type="text/javascript">
-										alert('Perfil creado con éxito');
+										alert('Perfil creado con éxito.');
 										window.location.href='admCurProfiles.php';
 									</script>
 									<?php
 								}
 							}
 						}
+						
+						elseif(isset($_POST['eProfilesend'])){
+							$profileRow = getDBrow('profiles', 'id', $_POST['hiddenCurProfID']);
+							if($profileRow['active'] == '1'){
+								$tablesKeyNames = getDBcompletecolumnID('key', 'mainNames', 'id');
+								foreach($tablesKeyNames as $i){
+									executeDBquery("UPDATE `.$i.` SET `active`='".$_POST['ePactive']."' WHERE `id`='".$_POST['hiddenCurProfID']."'");
+								}
+							}
+							executeDBquery("UPDATE `profiles` SET `active`='".$_POST['ePactive']."' WHERE `id`='".$profileRow['id']."'");
+						}
+						
+						elseif(isset($_GET['hiddenGET'])){
+							/*
+							switch($_GET['hiddenGET']){
+								case 'hDelProfile':
+									$profileRow = getDBrow('profiles', 'id', $_GET['codvalue']);
+									if(!deleteDBrow('profiles', 'id', $_GET['codvalue'])){
+										?>
+										<script type="text/javascript">
+											alert('Error deleting Profile.');
+											window.location.href='admCurProfiles.php';
+										</script>
+										<?php 
+									}
+									else{
+										//AUN TENDRIA QUE BORRAR TODOS LOS USUARIOS DE ESE PERFIL Y BORRAR SU CVs SI FUERAN CANDIDATOS
+										//TAMBIÉN HABRÍA QUE BORRAR LOS REGISTROS EN 'home' y 'administrtion'
+									}
+								break;
+								
+							}
+							*/
+							?>
+							<script type="text/javascript">
+								alert('Para evitar inconsistencias la función de borrado de Perfiles está desactivada');
+								window.location.href='admCurProfiles.php';
+							</script>
+							<?php 
+						}//end of GET
 						/*****************************     End of FORM validations     *****************************/
 						
 						/*************************     Start of WebPage code as showed     *************************/
@@ -249,33 +289,29 @@
 												<th>Activo</th>
 												<th>Creado</th>
 												<th>Usuarios</th>
-												<?php 
-												if($_SESSION['logprofile'] == 'SuperAdmin'){
-													echo "<th>Acción</th>";
-												}
-												?>
+												<th>Acción</th>
 											</tr>
 										</thead>
 										<tbody>
 											<?php
-											$profileNumRows = getDBrowsnumber('profiles');
-											for($i=1;$i<=$profileNumRows;$i++){
-												$showedProfileRow = getDBrow('profiles', 'id', $i);
+											$profileKeyRow = getDBcompletecolumnID('name', 'profiles', 'id');
+											$k = 1;
+											foreach($profileKeyRow as $i){
+												$showedProfileRow = getDBrow('profiles', 'name', $i);
 												echo "<tr>";
-													echo "<td>" . $showedProfileRow['id'] . "</td>";
-													echo "<td><a href='editProfile.php?codvalue=" . $i . "'>" . $showedProfileRow['name'] . "</a></td>";
+													echo "<td>" . $k . "</td>";
+													echo "<td><a class='launchModal' href='admCurProfiles.php?codvalue=" . $showedProfileRow['id'] . "'>" . $showedProfileRow['name'] . "</a></td>";
 													if($showedProfileRow['active']){
-														echo "<td>Si</td>";
+														echo "<td>Sí</td>";
 													}
 													else{
 														echo "<td>No</td>";
 													}
 													echo "<td>" . $showedProfileRow['created'] . "</td>";
 													echo "<td>" . $showedProfileRow['numUsers'] . "</td>";
-													if($_SESSION['logprofile'] == 'SuperAdmin'){
-														echo '<td><a href="#" onclick="confirmProfileDeletion(' . $showedProfileRow['id'] . ')">Borrar</a></td>';
-													}
-												echo "</tr>";
+													echo "<td><a href='admCurProfiles.php?codvalue=" . $showedProfileRow['id'] . "&hiddenGET=hDelProfile' onclick=\"return confirmProfileDeletion('".getCurrentLanguage($_SERVER['SCRIPT_NAME'])."');\">Borrar</a></td>";
+													echo "</tr>";
+												$k++;
 											}
 											?>
 										</tbody>
@@ -290,7 +326,7 @@
 										<form class="form-inline" role="form" name="newProfile" action="admCurProfiles.php" method="post" onsubmit="return confirmProfileCreation()">
 											<div class="form-group">
 												<label class="sr-only" for="newPName">Perfil</label>
-												<input type="text" class="form-control" size="6" name="newPName" placeholder="Perfil" />
+												<input type="text" class="form-control" size="20" name="newPName" placeholder="Perfil" />
 												<!-- Por defecto queda activado, por lo que no incluyo la posibilidad de crearlo desactivado. Así lo he decidido -->
 												<button type="submit" class="btn btn-primary" name="newPsubmit" value="Añadir">Añadir</button>
 												<input type="hidden" value="hNewPsubmit" name="hiddenfield">
@@ -299,6 +335,7 @@
 									</div>
 									<?php
 								}
+								/*************************     End of WebPage code as showed     *************************/
 								?>
 							</div>
 						</div> <!-- Panel de Perfiles existentes -->
@@ -306,7 +343,87 @@
 				</div> <!-- col-md-9 scrollable role=main -->
 			</div> <!-- row -->
 		</div> <!-- class="container bs-docs-container" -->
+		
+		
 		<?php
+		/****************************************     Start of Functional code for Modal HTML     ****************************************/
+		
+		$editedProfileRow = getDBrow('profiles', 'id', $_GET['codvalue']);
+		?>
+		<div id="editUserModal" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content panel-info">
+					<div class="modal-header panel-heading">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Perfil: <?php echo $editedProfileRow['name'] ?></h4>
+					</div>
+					<form id="editedProfile" class="form-horizontal" role="form" name="editedProfile" autocomplete="off" method="post" action="admCurProfiles.php">
+						<div class="modal-body">
+							<div class="form-group">
+								<label id="editedProfileLabel" class="control-label col-sm-2" for="ePid">Identificador: </label> 
+								<div class="col-sm-10">
+									<input class="form-control" type='text' name='ePid' value="<?php echo $editedProfileRow['id'] ?>" autocomplete="off" disabled />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label id="editedProfileLabel" class="control-label col-sm-2" for="ePname">Nombre: </label> 
+								<div class="col-sm-10">
+									<input class="form-control" type='text' name='ePname' value="<?php echo $editedProfileRow['name'] ?>" autocomplete="off" disabled />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label id="editedProfileLabel" class="control-label col-sm-2" for="ePactive">Activo: </label>
+								<div class="col-sm-10">
+									<div class="radio-inline">
+										<?php
+										if($editedProfileRow['active'] == 0){
+										?>
+											<label id="noPadding" class="radio-inline"><input class="radio-inline" type="radio" name="ePactive" value="0" checked>No</label>
+											<label id="noPadding" class="radio-inline"><input class="radio-inline" type="radio" name="ePactive" value="1">Sí</label>
+										<?php
+										}
+										else{
+										?>
+											<label id="noPadding" class="radio-inline"><input class="radio-inline" type="radio" name="ePactive" value="0">No</label>
+											<label id="noPadding" class="radio-inline"><input class="radio-inline" type="radio" name="ePactive" value="1" checked>Sí</label>
+										<?php
+										}
+										?>
+									</div>
+								</div> 
+							</div>
+							
+							<div class="form-group">
+								<label id="editedProfileLabel" class="control-label col-sm-2" for="ePcreated">Creado: </label> 
+								<div class="col-sm-10">
+									<input class="form-control" type='text' name='ePcreated' value="<?php echo $editedProfileRow['created'] ?>" autocomplete="off" disabled />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label id="editedProfileLabel" class="control-label col-sm-2" for="ePusers">Nº. Usuarios: </label> 
+								<div class="col-sm-10">
+									<input class="form-control" type='text' name='ePusers' value="<?php echo $editedProfileRow['numUsers'] ?>" autocomplete="off" disabled />
+								</div>
+							</div>
+						</div>
+						
+						<div class="modal-footer">
+							<input type="hidden" value="<?php echo $editedProfileRow['id']; ?>" name="hiddenCurProfID">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+							<button type="submit" class="btn btn-primary" name="eProfilesend">Salvar <span class="glyphicon glyphicon-floppy-save"></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<?php 
+		/*****************************************     End of Functional code for Modal HTML     *****************************************/
+		
+		
 	}//del "else" de $_SESSION.
 
 	?>

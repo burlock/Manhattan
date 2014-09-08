@@ -17,7 +17,6 @@
 	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
 	<!-- Using the favicon for touch-devices shortcut -->
 	<link rel="apple-touch-icon" href="../common/img/apple-touch-icon.png">
-
 </head>
 
 <body>

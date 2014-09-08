@@ -16,7 +16,6 @@
 	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
 	<!-- Using the favicon for touch-devices shortcut -->
 	<link rel="apple-touch-icon" href="../../common/img/apple-touch-icon.png">
-
 </head>
 
 <body>
@@ -76,7 +75,6 @@
 						<img src="../../common/img/logo.png" alt="Perspectiva Alemania">
 					</a>
 				</div>
-				<!-- <div class="navbar-collapse collapse"> -->
 				<div class="nav navbar-nav navbar-right">
 					<li class="dropdown">
 						<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
@@ -92,7 +90,9 @@
 						</ul>
 					</li>
 				</div>
-				<!-- </div><!--/.nav-collapse -->
+				<?php if($userRow['employee'] == '1'){ ?>
+					<a href="/common/files/CV Managing Tool - User Guide.pdf" style="float: right; margin-right: 60px; margin-top: 15px">Guía de Usuario</a>
+				<?php }?>
 			</div><!--/.container-fluid -->
 		</div>	<!--/Static navbar -->
 		
@@ -117,17 +117,13 @@
 		</div> <!-- exitRequest Modal -->
 		
 		
-		<?php
-			$pendingCVs = getPendingCVs();
-		?>
-		
-		
 		<div id="main-content" class="container bs-docs-container">
 			<div class="row">
 				<div class="col-md-3">
 					<div id="sidebar-navigation-list" class="bs-sidebar hidden-print affix-top" role="complementary">
 						<ul class="nav bs-sidenav">
 							<?php 
+							$pendingCVs = getPendingCVs();
 							$digitLang = getUserLangDigits($userRow['language']);
 							$LangDigitsName = $digitLang."Name";
 							$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');
@@ -273,7 +269,7 @@
 								<?php include $_SERVER['DOCUMENT_ROOT'] . '/common/passwdRestrictionsES.txt'; ?>
 							</div>
 							<div class="panel-body encapsulated center-block">
-								<form id="changePasswordForm" name="changePasswordForm" class="form-horizontal" action="personalData.php" method="post" onsubmit="return equalPassword(newPassword, confirmNewPassword)">
+								<form id="changePasswordForm" name="changePasswordForm" class="form-horizontal" action="personalData.php" method="post" onsubmit="return equalPassword(newPassword, confirmNewPassword, '<?php echo getCurrentLanguage($_SERVER['SCRIPT_NAME']); ?>')">
 									<div class="form-group">
 										<label for="newPassword" class="control-label col-xs-3">Nueva contraseña</label>
 										<div class="col-xs-8">

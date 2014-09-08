@@ -16,7 +16,6 @@
 	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
 	<!-- Using the favicon for touch-devices shortcut -->
 	<link rel="apple-touch-icon" href="../../common/img/apple-touch-icon.png">
-
 </head>
 
 <body>
@@ -76,7 +75,6 @@
 						<img src="../../common/img/logo.png" alt="Perspectiva Alemania">
 					</a>
 				</div>
-				<!-- <div class="navbar-collapse collapse"> -->
 				<div class="nav navbar-nav navbar-right">
 					<li class="dropdown">
 						<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
@@ -92,7 +90,9 @@
 						</ul>
 					</li>
 				</div>
-				<!-- </div><!--/.nav-collapse -->
+				<?php if($userRow['employee'] == '1'){ ?>
+					<a href="" style="float: right; margin-right: 60px; margin-top: 15px">User's Guide</a>
+				<?php }?>
 			</div><!--/.container-fluid -->
 		</div>	<!--/Static navbar -->
 		
@@ -191,10 +191,11 @@
 						</ul> <!-- class="nav bs-sidenav" -->
 					</div> <!-- id="sidebar-navigation-list"  -->
 				</div> <!-- col-md-3 -->
-
-
+				
+				
 				<div class="col-md-9 scrollable" role="main"> 
 					<?php
+					/*****************************     Start of FORM validations     *****************************/
 					if(isset($_POST['hiddenPOST'])){
 						switch ($_POST['hiddenPOST']){
 							case 'hNewLangSubmit':
@@ -406,7 +407,7 @@
 												echo "<td>" . $langRow['english'] . "</td>";
 												echo "<td>" . $langRow['spanish'] . "</td>";
 												echo "<td>" . $langRow['german'] . "</td>";
-												echo "<td><a href='admGenOptions.php?codvalue=" . $langRow['id'] . "&hiddenGET=hDelLang' onclick='return confirmLangDeletionEN();'>Delete</a></td>";
+												echo "<td><a href='admGenOptions.php?codvalue=" . $langRow['id'] . "&hiddenGET=hDelLang' onclick=\"return confirmLangDeletion('".getCurrentLanguage($_SERVER['SCRIPT_NAME'])."');\">Delete</a></td>";
 												$k++;
 											}
 											?>
@@ -471,7 +472,7 @@
 												echo "<td>" . $careerRow['english'] . "</td>";
 												echo "<td>" . $careerRow['spanish'] . "</td>";
 												echo "<td>" . $careerRow['german'] . "</td>";
-												echo "<td><a href='admGenOptions.php?codvalue=" . $careerRow['id'] . "&hiddenGET=hDelCareer' onclick='return confirmCareerDeletionEN();'>Delete</a></td>";
+												echo "<td><a href='admGenOptions.php?codvalue=" . $careerRow['id'] . "&hiddenGET=hDelCareer' onclick=\"return confirmCareerDeletion('".getCurrentLanguage($_SERVER['SCRIPT_NAME'])."');\">Delete</a></td>";
 												$k++;
 											}
 											?>
@@ -629,7 +630,7 @@
 												echo "<td>" . $langRow['english'] . "</td>";
 												echo "<td>" . $langRow['spanish'] . "</td>";
 												echo "<td>" . $langRow['german'] . "</td>";
-												echo "<td><a href='admGenOptions.php?codvalue=" . $langRow['id'] . "&hiddenGET=hDelLang' onclick='return confirmLangDeletionEN();'>Delete</a></td>";
+												echo "<td><a href='admGenOptions.php?codvalue=" . $langRow['id'] . "&hiddenGET=hDelLang' onclick=\"return confirmLangDeletion('".getCurrentLanguage($_SERVER['SCRIPT_NAME'])."');\">Delete</a></td>";
 												$k++;
 											}
 											?>
@@ -690,7 +691,7 @@
 												echo "<td>" . $careerRow['english'] . "</td>";
 												echo "<td>" . $careerRow['spanish'] . "</td>";
 												echo "<td>" . $careerRow['german'] . "</td>";
-												echo "<td><a href='admGenOptions.php?codvalue=" . $careerRow['id'] . "&hiddenGET=hDelCareer' onclick='return confirmCareerDeletionEN();'>Delete</a></td>";
+												echo "<td><a href='admGenOptions.php?codvalue=" . $careerRow['id'] . "&hiddenGET=hDelCareer' onclick=\"return confirmCareerDeletion('".getCurrentLanguage($_SERVER['SCRIPT_NAME'])."');\">Delete</a></td>";
 												$k++;
 											}
 											?>

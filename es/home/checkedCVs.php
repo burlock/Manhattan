@@ -16,7 +16,6 @@
 	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
 	<!-- Using the favicon for touch-devices shortcut -->
 	<link rel="apple-touch-icon" href="../../common/img/apple-touch-icon.png">
-
 </head>
 
 <body>
@@ -76,7 +75,6 @@
 						<img src="../../common/img/logo.png" alt="Perspectiva Alemania">
 					</a>
 				</div>
-				<!-- <div class="navbar-collapse collapse"> -->
 				<div class="nav navbar-nav navbar-right">
 					<li class="dropdown">
 						<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
@@ -92,7 +90,9 @@
 						</ul>
 					</li>
 				</div>
-				<!-- </div><!--/.nav-collapse -->
+				<?php if($userRow['employee'] == '1'){ ?>
+					<a href="/common/files/CV Managing Tool - User Guide.pdf" style="float: right; margin-right: 60px; margin-top: 15px">Guía de Usuario</a>
+				<?php }?>
 			</div><!--/.container-fluid -->
 		</div>	<!--/Static navbar -->
 		
@@ -317,6 +317,9 @@
 					<div id="sidebar-navigation-list" class="bs-sidebar hidden-print affix-top" role="complementary">
 						<ul class="nav bs-sidenav">
 							<?php 
+							//Obtains number of pending CVs to be showed in leftbox (just circled at the right side of 'Pending CVs' link)
+							$pendingCVs = getPendingCVs();
+							
 							$digitLang = getUserLangDigits($userRow['language']);
 							$LangDigitsName = $digitLang."Name";
 							$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');
@@ -339,8 +342,8 @@
 												if(!getDBsinglefield2($LangDigitsName, $namesTable, 'fatherKey', $colNamej, 'level', '3')){
 													$level2File = getDBsinglefield('key', $namesTable, $LangDigitsName, $subLevelMenu);
 													// Because the file we are is a level 2 file, we do this comparision to make active element in list if it's this same file
-													if ($level2File == 'checkedCVs') 
-														$badge = "<span class='badge'>$checkedCVs</span>";
+													if ($level2File == 'pendingCVs') 
+														$badge = "<span class='badge'>$pendingCVs</span>";
 													else
 														$badge = "";
 													if ($level2File == basename(__FILE__, '.php')) 

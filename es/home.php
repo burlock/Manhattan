@@ -77,8 +77,8 @@
 			<?php
 		}
 		?>
-
-
+		
+		
 		<!-- Static navbar -->
 		<div id="header" class="navbar navbar-default navbar-fixed-top" role="navigation" id="fixed-top-bar">
 			<div id="top_line" class="top-page-color"></div>
@@ -88,27 +88,28 @@
 						<img src="../common/img/logo.png" alt="Perspectiva Alemania">
 					</a>
 				</div>
-				<!-- <div class="navbar-collapse collapse"> -->
-					<div class="nav navbar-nav navbar-right">
-						<li class="dropdown">
-							<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-							<ul class="dropdown-menu">
-								<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
-								<li class="divider"></li>
-								<li><a href="home/personalData.php">Configuración personal</a></li>
-								<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
-							</ul>
-						</li>
-					</div>
-				<!-- </div><!--/.nav-collapse -->
+				<div class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
+							<li class="divider"></li>
+							<li><a href="home/personalData.php">Configuración personal</a></li>
+							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
+						</ul>
+					</li>
+				</div>
+				<?php if($userRow['employee'] == '1'){ ?>
+					<a href="/common/files/CV Managing Tool - User Guide.pdf" style="float: right; margin-right: 60px; margin-top: 15px">Guía de Usuario</a>
+				<?php }?>
 			</div><!--/.container-fluid -->
 		</div>	<!--/Static navbar -->
-
-
+		
+		
 		<!-- exitRequest Modal -->
 		<div id="exitRequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exitRequestLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -127,25 +128,20 @@
 				</form>
 			</div>
 		</div>
-
-		 
-		<!-- /* En $myFile guardo el nombre del fichero php que WC está tratando en ese instante. Necesario para mostrar
-		* el resto de menús de nivel 1 cuando navegue por ellos, y saber cuál es el activo (id='onlink')
-		*/ -->
-		<?php
-			$myFile = 'home';
-			//$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-
-			$pendingCVs = getPendingCVs();
-		?>
-
-
+		
+		
 		<div id="main-content" class="container bs-docs-container">
 			<div class="row">
 				<div class="col-md-3">
 					<div id="sidebar-navigation-list" class="bs-sidebar hidden-print affix-top" role="complementary">
 						<ul class="nav bs-sidenav">
 							<?php 
+							//Identifying the name of the folder this script is in it can be later shown the rest of level 1 menus as the user navigates through them, knowing what of them is active (id='onlink')
+							$myFile = 'home';
+							
+							//Obtains number of pending CVs to be showed in leftbox (just circled at the right side of 'Pending CVs' link)
+							$pendingCVs = getPendingCVs();
+							
 							$digitLang = getUserLangDigits($userRow['language']);
 							$LangDigitsName = $digitLang."Name";
 							$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');

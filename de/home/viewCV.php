@@ -6,6 +6,7 @@
 	set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
 
 	error_reporting (E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+	
 	require_once "dompdf_config.inc.php";
 	require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
 
@@ -101,6 +102,9 @@
 						</ul>
 					</li>
 				</div><!--/.nav-collapse -->
+				<?php if($userRow['employee'] == '1'){ ?>
+					<a href="/common/files/CV Managing Tool - User Guide.pdf" style="float: right; margin-right: 60px; margin-top: 15px">Benutzerhandbuch</a>
+				<?php }?>
 			</div><!--/.container-fluid -->
 		</div><!--/Static navbar -->
 		
