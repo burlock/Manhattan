@@ -770,8 +770,6 @@
 							//If a non 'SuperAdmin' user edits any 'test' user it won't be able to reset its password
 							if($_SESSION['logprofile'] != 'SuperAdmin'){
 								if(strpos($editedUserRow['login'], 'test') === false){
-							if($_SESSION['logprofile'] != 'SuperAdmin'){
-								if(strpos($editedUserRow['login'], 'test') === false){
 									echo "<td><a href='admCurUsers.php?codvalue=" . $editedUserRow['id'] . "&hiddenGET=hResPwd' onclick=\"return confirmPwdReset('".getCurrentLanguage($_SERVER['SCRIPT_NAME'])."');\">Resetear contraseña</a></td>";
 								}
 							}

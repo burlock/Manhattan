@@ -968,7 +968,7 @@ function checkFullAddress($inName, $inNumber, $loggedUserLang, &$outAddrName, &$
 
 
 
-/* Checks whether a Name & Surname are both correct to be saved in a DB. Called from 'upload.php' and 'checkedCVs.php'
+/* Checks whether a Name & Surname are both correct to be saved in a DB. Called from 'upload.php', 'pendingCVs.php' and 'checkedCVs.php'
  * Entry (inName): Input string for Name
  * Entry (inSurname): Input string for Surname
  * Entry (loggedUserLang): String that indicates the language of the user whose name must be checked
