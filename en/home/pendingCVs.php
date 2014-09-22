@@ -53,7 +53,6 @@
 			unset($elapsedTime);
 		}
 			
-		
 		//Checks whether loaded php page/file corresponds to logged user's language
 		if(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
 			$userRootLang = getUserRoot($userRow['language']);
@@ -180,7 +179,7 @@
 			
 			//Nationalities should be searched in its corresponding DBTable
 			//If any of the mandatory fields are bad formed DB won't be updated
-			if((!checkFullNameEN($_POST['eCCVname'], $_POST['eCCVsurname'], $outName, $outSurname, $checkError)) || ($inDBBirthdate == '0000-00-00') || 
+			if((!checkFullName($_POST['eCCVname'], $_POST['eCCVsurname'], $userRow['language'], $outName, $outSurname, $checkError)) || ($inDBBirthdate == '0000-00-00') || 
 			(!checkDNI_NIE(htmlentities($_POST['eCCVnie'], ENT_QUOTES, 'UTF-8'))) || (!$inDBNationalities) || 
 			(!checkMobile(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'))) || (!filter_var(htmlentities($_POST['eCCVmail'], ENT_QUOTES, 'UTF-8'), FILTER_VALIDATE_EMAIL)) ||
 			(htmlentities($finalLang, ENT_QUOTES, 'UTF-8') == '' || htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8') == '' || htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8') == '%null%') ||
