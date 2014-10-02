@@ -192,6 +192,7 @@
 						</script>
 						<?php 
 					}
+					
 					elseif(!checkBirthdate($_POST['eCCVbirthdate'], $userRow['language'], $outDate, $checkError)){
 						?>
 						<script type="text/javascript">
@@ -200,6 +201,7 @@
 						</script>
 						<?php 
 					}
+					
 					elseif((htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8') == '') || !isImplodedArrayInDBExcept(htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8'), 'countries', 'german', '|', 'Spanien')){
 						?>
 						<script type="text/javascript">
@@ -208,6 +210,7 @@
 						</script>
 						<?php 
 					}
+					
 					elseif(!checkMobile(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'))){
 						?>
 						<script type="text/javascript">
@@ -216,6 +219,7 @@
 						</script>
 						<?php 
 					}
+					
 					elseif(!filter_var(htmlentities($_POST['eCCVmail'], ENT_QUOTES, 'UTF-8'), FILTER_VALIDATE_EMAIL)){
 						?>
 						<script type="text/javascript">
@@ -224,6 +228,7 @@
 						</script>
 						<?php 
 					}
+					
 					//Checks if every language is OK or not
 					elseif(htmlentities($finalLang, ENT_QUOTES, 'UTF-8') == '' || htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8') == '' || !(isAllArrayInColumn($languageArray, 'languages', 'key'))){
 						?>
@@ -828,7 +833,8 @@
 										</div>
 									</div>
 
-								</div>
+								</div> <!-- class="modal-body" -->
+								
 								<div class="modal-footer">
 									<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
 									<button type="submit" class="btn btn-primary" name="eCurCVsend">Validar CV <span class="glyphicon glyphicon-ok"> </span></button>

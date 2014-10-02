@@ -161,7 +161,6 @@
 					$stringExpCity = substr($stringExpCity, 0, -1);
 					$stringExpCountry = substr($stringExpCountry, 0, -1);
 					$string_experDesc = substr($string_experDesc, 0, -1);
-					
 					/*  ----------  End of Experience's Treatment  ----------  */
 					
 					/*****  Education's Treatment previous to be saved in DDBB  *****/
@@ -193,6 +192,7 @@
 						</script>
 						<?php 
 					}
+					
 					elseif(!checkBirthdate($_POST['eCCVbirthdate'], $userRow['language'], $outDate, $checkError)){
 						?>
 						<script type="text/javascript">
@@ -201,6 +201,7 @@
 						</script>
 						<?php 
 					}
+					
 					elseif((htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8') == '') || !isImplodedArrayInDBExcept(htmlentities($_POST['eCCVnationalities'], ENT_QUOTES, 'UTF-8'), 'countries', 'german', '|', 'Spanien')){
 						?>
 						<script type="text/javascript">
@@ -209,6 +210,7 @@
 						</script>
 						<?php 
 					}
+					
 					elseif(!checkMobile(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'))){
 						?>
 						<script type="text/javascript">
@@ -217,6 +219,7 @@
 						</script>
 						<?php 
 					}
+					
 					elseif(!filter_var(htmlentities($_POST['eCCVmail'], ENT_QUOTES, 'UTF-8'), FILTER_VALIDATE_EMAIL)){
 						?>
 						<script type="text/javascript">
@@ -225,6 +228,7 @@
 						</script>
 						<?php 
 					}
+					
 					//Checks if every language is OK or not
 					elseif(htmlentities($finalLang, ENT_QUOTES, 'UTF-8') == '' || htmlentities($finalLangLv, ENT_QUOTES, 'UTF-8') == '' || !(isAllArrayInColumn($languageArray, 'languages', 'key'))){
 						?>
@@ -234,6 +238,7 @@
 						</script>
 						<?php 
 					}
+					
 					elseif(!checkEducation($stringEducTittle, $stringEducCenter, $stringEducStart, $stringEducEnd, $userRow['language'], $checkError)){
 						?>
 						<script type="text/javascript">
@@ -242,6 +247,7 @@
 						</script>
 						<?php 
 					}
+					
 					elseif(!strlen($_POST['eCCVcandidateStatus']) > 0){
 						?>
 						<script type="text/javascript">
@@ -250,6 +256,7 @@
 						</script>
 						<?php 
 					}
+					
 					else{
 						$inDBOtherPhone = trim(htmlentities($_POST['eCCVphone'], ENT_QUOTES, 'UTF-8'));
 						if(!checkPhone($inDBOtherPhone)){
@@ -449,11 +456,11 @@
 												<?php
 													if(($editedCVRow['sex']) == 0){
 														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='0' checked>Mann</label>";
-														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='1'>Weib</label>";
+														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='1'>Frau</label>";
 													}
 													else {
 														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='0'>Mann</label>";
-														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='1' checked>Weib</label>";
+														echo "<label id='noPadding' class='radio-inline'><input class='radio-inline' type='radio' name='eCCVsex' value='1' checked>Frau</label>";
 													}
 												?>
 											</div>
