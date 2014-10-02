@@ -22,7 +22,8 @@
 @import url(https://fonts.googleapis.com/css?family=Ubuntu|Roboto|Source+Sans+Pro);
 /* Monospaced fonts */
 @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono|Roboto+Slab);
-
+/* Handwriting fonts */
+@import url(https://fonts.googleapis.com/css?family=Indie+Flower);
 
 
 
@@ -45,6 +46,12 @@ body {
 }
 
 
+/* Maintenance window design
+-------------------------------------------------- */
+.maintenance {
+	font-family: 'Indie Flower', sans-serif;
+	font-weight: bolder;
+}
 
 
 

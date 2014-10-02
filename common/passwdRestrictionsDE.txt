@@ -1,10 +1,10 @@
 <div class="panel-heading">
-	Denken sie daran dass das passwort folgende merkmale muss
+	Das Passwort muss folgende Merkmale haben:
 </div>
 <ul>
-	<li>Zwischen 6 und 16 zeichen</li>
-	<li>Haben sie mindestens einen kleinbuchstaben</li>
-	<li>Haben sie mindestens einen großbuchstaben</li>
-	<li>Haben sie mindestens ein numerisches zeichen</li>
-	<li>Machen sie es einfach für sie erinnern</li>
+	<li>Zwischen 6 und 16 Zeichen</li>
+	<li>Mindestens einen Kleinbuchstaben</li>
+	<li>Mindestens einen Grossbuchstaben</li>
+	<li>Mindestens ein numerisches Zeichen</li>
+	<li>Einfach, um es nicht zu vergessen</li>
 </ul>
