@@ -10,12 +10,12 @@
 	<title>Search CVs</title>
 	
 	<!-- Custom styles for this template -->
-	<link href="../../common/css/design.css" rel="stylesheet">
+	<link href="/common/css/design.css" rel="stylesheet">
 
 	<!-- Using the same favicon from perspectiva-alemania.com site -->
 	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
 	<!-- Using the favicon for touch-devices shortcut -->
-	<link rel="apple-touch-icon" href="../../common/img/apple-touch-icon.png">
+	<link rel="apple-touch-icon" href="/common/img/apple-touch-icon.png">
 </head>
 
 <body>
@@ -23,104 +23,13 @@
 	if (!$_SESSION['loglogin']){
 		?>
 		<script type="text/javascript">
-			window.location.href='../index.html';
+			window.location.href='/en/index.html';
 		</script>
 		<?php
 	}
 	else {
-		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
-
-		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-		
-		//Identifying the name of the folder this script is in it can be later shown the rest of level 1 menus as the user navigates through them, knowing what of them is active (id='onlink')
-		$myFile = 'home';
-		
-		$lastUpdate = $_SESSION['lastupdate'];
-		$curUpdate = date('Y-m-d H:i:s');
-		$elapsedTime = (strtotime($curUpdate)-strtotime($lastUpdate));
-		//URL direct navigation for loggedin users with no granted access is limited here, as session expiration
-		if(($elapsedTime > $_SESSION['sessionexpiration']) || (!accessGranted($_SERVER['SCRIPT_NAME'], $myFile, $userRow['profile']))){
-			?>
-			<script type="text/javascript">
-				window.location.href='../endsession.php';
-			</script>
-			<?php
-		}
-		else{
-			$_SESSION['lastupdate'] = $curUpdate;
-			unset($lastUpdate);
-			unset($curUpdate);
-			unset($elapsedTime);
-		}
-		
-		//Checks whether loaded php page/file corresponds to logged user's language
-		if(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
-			$userRootLang = getUserRoot($userRow['language']);
-			$noRootPath = getNoRootPath($_SERVER['SCRIPT_NAME']);
-			?>
-			<script type="text/javascript">
-				window.location.href='<?php echo $userRootLang.$noRootPath ?>';
-			</script>
-			<?php
-		}
+		include $_SERVER['DOCUMENT_ROOT'] . '/common/code/en/staticHeader.php';
 		?>
-		
-		
-		<!-- Static navbar -->
-		<div id="header" class="navbar navbar-default navbar-fixed-top" role="navigation" id="fixed-top-bar">
-			<div id="top_line" class="top-page-color"></div>
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<a href="http://www.perspectiva-alemania.com/" title="Perspectiva Alemania">
-						<img src="../../common/img/logo.png" alt="Perspectiva Alemania">
-					</a>
-				</div>
-				<div class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
-						<ul class="dropdown-menu">
-							<li class="dropdown-header">Logged in as: <?php echo $_SESSION['loglogin']; ?></li>
-							<li class="divider"></li>
-							<li><a href="../home/personalData.php">Personal Settings</a></li>
-							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Exit</a></li>
-						</ul>
-					</li>
-				</div>
-				<?php if($userRow['employee'] == '1'){ ?>
-					<a href="/common/files/CV Managing Tool - User Guide.pdf" style="float: right; margin-right: 60px; margin-top: 15px">User's Guide</a>
-				<?php }?>
-			</div><!--/.container-fluid -->
-		</div>	<!--/Static navbar -->
-		
-		
-		<!-- exitRequest Modal -->
-		<div id="exitRequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exitRequestLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<form class="modal-content" action="../endsession.php">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Close Session</h4>
-					</div>
-					<div class="modal-body">
-						Are you sure you want to close session?
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-						<button type="submit" class="btn btn-primary">Yes, close session</button>
-					</div>
-				</form>
-			</div>
-		</div> <!-- exitRequest Modal -->
-		
-		
-		<?php
-			$pendingCVs = getPendingCVs();
-		?>
-		
 		
 		<div id="main-content" class="container bs-docs-container">
 			<div class="row">
@@ -128,6 +37,7 @@
 					<div id="sidebar-navigation-list" class="bs-sidebar hidden-print affix-top" role="complementary">
 						<ul class="nav bs-sidenav">
 							<?php 
+							$pendingCVs = getPendingCVs();
 							$digitLang = getUserLangDigits($userRow['language']);
 							$LangDigitsName = $digitLang."Name";
 							$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');
@@ -206,94 +116,143 @@
 								
 								<form id="searchForm" name="searchForm" class="form-horizontal" method="post" action="searchResult.php" autocomplete="off" autocapitalize="off" enctype="multipart/form-data" onsubmit="return comprobar()";>
 									<div id="form_WordKey" class="form-group">
-										<label for="blankWordKey" class="control-label col-xs-3">Key word</label>
+										<label for="blankWordKey" class="control-label col-xs-3">Keyword</label>
 										<div class="col-xs-9">
-											<input type="text" class="form-control" name="blankWordKey" id="blankWordKey" maxlength="12" placeholder="Max. 12 characters" autofocus>
+											<input type="text" class="form-control" name="blankWordKey" id="blankWordKey" placeholder="Search on any field (one word)" autofocus>
 										</div>
 									</div> <!-- id="form_WordKey" -->
 									
-									<div id="form_NIE" class="form-group">
+									<div id="form_NIE" class="form-group"> <!-- NIE -->
 										<label for="blankNIE" class="control-label col-xs-3">NIE</label>
 										<div class="col-xs-9">
-											<input type="text" class="form-control" name="blankNIE" id="blankNIE" maxlength="12" placeholder="Max. 12 characters" autofocus>
+											<input type="text" class="form-control" name="blankNIE" id="blankNIE" maxlength="9" placeholder="12345678L (8 Nums.) / X1234567T (7 Nums.)" onkeyup="this.value=this.value.toUpperCase();">
 										</div>
 									</div> <!-- id="form_NIE" -->
-
-									<div id="form_Driving" class="form-group">
-										<label for="drivingType" class="control-label col-xs-3">Driving license</label>
-										<div class="col-xs-2">
-											<select name="drivingType" class="form-control">
-													<option selected disabled value=''>Type</option>
-													<option value="1">AM</option>
-													<option value="2">A</option>
-													<option value="3">A1</option>
-													<option value="4">A2</option>
-													<option value="5">B</option>
-													<option value="6">C</option>
-													<option value="7">C1</option>
-													<option value="8">D</option>
-													<option value="9">D1</option>
-													<option value="10">E</option>
-													<option value="11">BTP</option>
-												</select>
-										</div>
-										<div class="col-xs-7">
-											<input type="date" class="form-control" name="drivingDate" name="drivingDate" />
-										</div>
-									</div> <!-- id="form_Driving" -->
 									
-									<div id="form_Nationality" class="form-group">
+									<div id="form_Nationality" class="form-group"> <!-- Nacionalidad -->
 										<label for="blankNationality" class="control-label col-xs-3">Nationality</label> 
 										<div class="col-xs-9">
 											<select name="blankNationality" class="form-control">
-												<option value="Spain"> Spain </option>
+												<option value=""> -- Choose -- </option>
+												<!-- Value for all countries must be in German because that language is used to save countries in DDBB -->
+												<option value="Spanien"> Spain </option>
 												<?php
 												$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
 												$countryName = getDBcompletecolumnID($userLang, 'countries', $userLang);
 												foreach($countryName as $i){
-													echo '<option value="' . getDBsinglefield('key', 'countries', $userLang, $i) . '">' . $i . '</option>';
+													echo '<option value="' . getDBsinglefield('german', 'countries', $userLang, $i) . '">' . $i . '</option>';
 												}
 												?>
 											</select>
 										</div>
 									</div> <!-- id="form_Nationality" -->
 									
-									<div id="form_Status" class="form-group">
-										<label for="civilStatus" class="control-label col-xs-3">Marital status</label>
-										<div class="col-xs-9">
-											<select name="civilStatus" class="form-control">
-												<option selected disabled value="">-- Status --</option>
-												<option value="1">Single</option>
-												<option value="2">Married</option>
-												<option value="3">Divorced</option>
-												<option value="4">Widowed</option>
-												<option value="5">Separated</option>
-											</select>
-										</div>
-									</div> <!-- id="form_Status" -->			
-
-									<div id="form_genre" class="form-group">
+									<div id="form_genre" class="form-group"> <!-- Sexo -->
 										<label for="blankSex" class="control-label col-xs-3">Gender</label>
-										<div class="col-xs-3" style="padding: 10px;">
+										<div class="col-xs-2" style="padding: 10px;">
 											<label><input type="radio" name="blankSex" value="0"> Male</label>
 										</div>
-										<div class="col-xs-3" style="padding: 10px;">
+										<div class="col-xs-2" style="padding: 10px;">
 											<label><input type="radio" name="blankSex" value="1"> Female</label>
 										</div>
-									</div> <!-- id="form_genre" -->		
-
-									<div id="form_childrens" class="form-group">
+									</div> <!-- id="form_genre" -->
+									
+									<div id="formResidence" class="form-group"> <!-- Vivienda actual -->
+										<label for="blankResidence" class="control-label col-xs-3">Current house</label>
+										<div class="col-xs-5">
+										<input type="text" class="form-control" name="blankCity" placeholder="City" />
+										</div>
+										<div class="col-xs-4">
+											<input type="text" class="form-control" name="blankProvince" placeholder="Province" />
+										</div>
+									</div> <!-- id="formResidence" -->
+									
+									<!-- 
+									<div id="form_Driving" class="form-group"> <!-- Permiso de conducir --
+										<label for="blankDrivingType" class="control-label col-xs-3">Driving license</label>
+										<div class="col-xs-2">
+											<select name="blankDrivingType" class="form-control">
+													<option selected value=''>-- Choose --</option>
+													<option value="AM">AM</option>
+													<option value="A">A</option>
+													<option value="A1">A1</option>
+													<option value="A2">A2</option>
+													<option value="B">B</option>
+													<option value="C">C</option>
+													<option value="C1">C1</option>
+													<option value="D">D</option>
+													<option value="D1">D1</option>
+													<option value="E">E</option>
+													<option value="BTP">BTP</option>
+												</select>
+										</div>
+										<div class="col-xs-7">
+											<input type="date" class="form-control" name="drivingDate" name="drivingDate" />
+										</div>
+									</div> <!-- id="form_Driving" --
+									-->
+									<div id="form_Driving" class="form-group"> <!-- Permiso de conducir -->
+										<label for="blankDrivingType" class="control-label col-xs-3">Driving license</label>
+										<div class="col-xs-3">
+											<select name="blankDrivingType" class="form-control">
+												<option selected value=''>-- Choose --</option>
+												<?php
+												$keyDrivingTypes = getDBcompletecolumnID('key', 'drivingTypes', 'id');
+												foreach($keyDrivingTypes as $i){
+													echo '<option value=' . $i . '>' . $i . '</option>';
+												}
+												?>
+											</select>
+										</div>
+										<!-- NO SE PODRÁN HACER BUSQUEDAS POR FECHA... DE MOMENTO
+										<div class="col-xs-6">
+											<input type="date" class="form-control" name="drivingDate" name="drivingDate" />
+										</div>
+										-->
+									</div> <!-- id="form_Driving" -->
+									
+									<!-- 
+									<div id="form_Status" class="form-group"> <!-- Estado civil --
+										<label for="blankCivilStatus" class="control-label col-xs-3">Marital status</label>
+										<div class="col-xs-9">
+											<select name="blankCivilStatus" class="form-control">
+												<option value="">-- Choose --</option>
+												<option value="single">Single</option>
+												<option value="married">Married</option>
+												<option value="divorced">Divorced</option>
+												<option value="widowed">Widowed</option>
+												<option value="separated">Separated</option>
+											</select>
+										</div>
+									</div> <!-- id="form_Status" --
+									-->
+									<div id="form_Status" class="form-group"> <!-- Estado civil -->
+										<label for="blankCivilStatus" class="control-label col-xs-3">Marital status</label>
+										<div class="col-xs-9">
+											<select name="blankCivilStatus" class="form-control">
+												<option value="">-- Choose --</option>
+												<?php
+												$keyMarital = getDBcompletecolumnID('key', 'maritalStatus', 'id');
+												foreach($keyMarital as $i){
+													echo '<option value=' . $i . '>' . getDBsinglefield($userRow['language'], 'maritalStatus', 'key', $i) . '</option>';
+												}
+												?>
+											</select>
+										</div>
+									</div> <!-- id="form_Status" -->
+									
+									<div id="form_childrens" class="form-group"> <!-- Hijos -->
 										<label for="blankSons" class="control-label col-xs-3">Sons</label>
 										<div class="col-xs-9">
-											<input type="number" class="form-control" name="blankSons" id="blankSons" maxlength="2">
+											<input type="number" class="form-control" name="blankSons" id="blankSons" maxlength="2" onkeypress="return checkOnlyNumbers(event)">
 										</div>
 									</div> <!-- id="form_NIE" -->
-
-									<div id="form_Languages" class="form-group">
+									
+									<div id="form_Languages" class="form-group"> <!-- Idiomas -->
 										<label for="blankLanguages" class="control-label col-xs-3">Language level</label>
-										<div class="col-xs-4">
+										<div class="col-xs-5">
 											<select name="blankLanguages" class="form-control">
-												<option selected disabled value=''>Choose language</option>
+												<option selected disabled value=''>-- Choose Language --</option>
 												<?php
 												$langNames = getDBcompletecolumnID($userRow['language'], 'languages', $userRow['language']);
 												foreach ($langNames as $i){
@@ -302,9 +261,9 @@
 												?>
 											</select>
 										</div>
-										<div class="col-xs-5">
-											<select name="languagelevel" class="form-control">
-												<option selected value="null">Choose level</option>
+										<div class="col-xs-4">
+											<select name="blankLangLevels" class="form-control">
+												<option selected value="">-- Choose Level --</option>
 												<option value="A1">A1</option>
 												<option value="A2">A2</option>
 												<option value="B1">B1</option>
@@ -315,14 +274,8 @@
 											</select>
 										</div>
 									</div> <!-- id="form_languages" -->		
-
-									<div id="form_Profession" class="form-group">
-										<label for="blankJob" class="control-label col-xs-3">Career</label>
-										<div class="col-xs-9">
-											<input type="text" class="form-control" name="blankJob" id="blankJob" maxlength="12" placeholder="Current Profession">
-										</div>
-									</div> <!-- id="form_Profession" -->
-
+									
+									<!-- 
 									<div id="form_Title" class="form-group">
 										<label for="titleType" class="control-label col-xs-3">Education</label>
 										<div class="col-xs-3">
@@ -338,8 +291,37 @@
 										<div class="col-xs-6">
 											<input type="text" class="form-control" name="tittles" placeholder="Studies" />
 										</div>
+									</div> <!-- id="form_Title" --
+									-->
+									<div id="form_Title" class="form-group"> <!-- Educación -->
+										<label for="titleType" class="control-label col-xs-3">Education</label>
+										<div class="col-xs-5">
+										<input type="text" class="form-control" name="blankEducTittle" placeholder="Education Tittle" />
+										</div>
+										<div class="col-xs-4">
+											<input type="text" class="form-control" name="blankEducCenter" placeholder="Education Center" />
+										</div>
 									</div> <!-- id="form_Title" -->
-
+									
+									<div id="form_Profession" class="form-group"> <!-- Profesión -->
+										<label for="blankCareer" class="control-label col-xs-3">Career</label>
+										<div class="col-xs-9">
+											<input type="text" class="form-control" name="blankCareer" id="blankCareer" placeholder="Current Profession">
+										</div>
+									</div> <!-- id="form_Profession" -->
+									
+									<div id="formCandidateStatus" class="form-group"> <!-- Estado del Candidato -->
+										<label for="blankCandidateStatus" class="control-label col-xs-3">Candidate status</label>
+										<div class="col-xs-9">
+											<select name="blankCandidateStatus" class="form-control">
+												<option value="">-- Choose --</option>
+												<option value="available">Available</option>
+												<option value="working">Working</option>
+												<option value="discarded">Discarded</option>
+											</select>
+										</div>
+									</div> <!-- id="formCandidateStatus" -->
+									
 									<div id="report_set" class="panel panel-default">
   										<div class="panel-body">
 											<div id="form_report" class="form-group">
@@ -351,7 +333,7 @@
 													<label><input type="radio" name="reportType" value="blind_report" onclick="test(2);"> Blind</label>
 												</div>
 												<div class="col-xs-3" style="padding: 10px;">
-													<label><input type="radio" name="reportType" value="custom_report" onclick="test(1);"> Personalized</label>
+													<label><input type="radio" name="reportType" value="custom_report" onclick="test(1);"> Custom</label>
 												</div>										
 											</div> <!-- id="form_report" -->
 											
@@ -360,20 +342,18 @@
 											<div id="form_custom_report" class="form-group">
 												<table>
 													<tr>
-														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="name" disabled> Name</td>
-														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="surname" disabled> Surnames</td>
-														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="addrName" disabled> Address</td>
-														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="mobile" disabled> Mobile</td>
-														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="phone" disabled> Other phone</td>
-														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="mail" disabled> E-mail</td>
+														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="name" disabled> Name</td>
+														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="birthdate" disabled> Birthdate</td>
+														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="nationalities" disabled> Nationalities</td>
+														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="nie" disabled> NIE</td>
+														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="addrName" disabled> Address</td>
 													</tr>
 													<tr>
-														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="drivingType" disabled> Driving license</td>
-														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="marital" disabled> Marital status</td>
-														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="sons" disabled> Sons</td>
-														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="language" disabled> Languages</td>
-														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="occupation" disabled> Career</td>
-														<td style="padding: 10px; font-size: 14px;"><input type="checkbox" name="per[]" value="experDesc" disabled> Work experience</td>
+														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="city" disabled> City</td>
+														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="province" disabled> Province</td>
+														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="phone" disabled> Other phone</td>
+														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="mobile" disabled> Mobile</td>
+														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="mail" disabled> Email</td>
 													</tr>
 												</table>
 											</div>

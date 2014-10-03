@@ -2,8 +2,8 @@
 	session_start();
 	error_reporting (E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);
 	set_time_limit(1800);
-	set_include_path('../../common/0.12-rc12/src/' . PATH_SEPARATOR . get_include_path());
-	set_include_path(get_include_path() . PATH_SEPARATOR . "../../common/cppdf");
+	set_include_path('/common/0.12-rc12/src/' . PATH_SEPARATOR . get_include_path());
+	set_include_path(get_include_path() . PATH_SEPARATOR . "/common/cppdf");
 ?>
 <html lang="es">
 <head>
@@ -16,12 +16,12 @@
 	<title>CVs Gefunden</title>
 	
 	<!-- Custom styles for this template -->
-	<link href="../../common/css/design.css" rel="stylesheet">
+	<link href="/common/css/design.css" rel="stylesheet">
 
 	<!-- Using the same favicon from perspectiva-alemania.com site -->
 	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
 	<!-- Using the favicon for touch-devices shortcut -->
-	<link rel="apple-touch-icon" href="../../common/img/apple-touch-icon.png">
+	<link rel="apple-touch-icon" href="/common/img/apple-touch-icon.png">
 </head>
 
 <body>
@@ -29,105 +29,14 @@
 	if (!$_SESSION['loglogin']){
 		?>
 		<script type="text/javascript">
-			window.location.href='../index.html';
+			window.location.href='/de/index.html';
 		</script>
 		<?php
 	}
 	else {
-		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
 		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/SimpleImage.php');
-
-		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-		
-		//Identifying the name of the folder this script is in it can be later shown the rest of level 1 menus as the user navigates through them, knowing what of them is active (id='onlink')
-		$myFile = 'home';
-		
-		$lastUpdate = $_SESSION['lastupdate'];
-		$curUpdate = date('Y-m-d H:i:s');
-		$elapsedTime = (strtotime($curUpdate)-strtotime($lastUpdate));
-		//URL direct navigation for loggedin users with no granted access is limited here, as session expiration
-		if(($elapsedTime > $_SESSION['sessionexpiration']) || (!accessGranted($_SERVER['SCRIPT_NAME'], $myFile, $userRow['profile']))){
-			?>
-			<script type="text/javascript">
-				window.location.href='../endsession.php';
-			</script>
-			<?php
-		}
-		else{
-			$_SESSION['lastupdate'] = $curUpdate;
-			unset($lastUpdate);
-			unset($curUpdate);
-			unset($elapsedTime);
-		}
-		
-		//Checks whether loaded php page/file corresponds to logged user's language
-		if(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
-			$userRootLang = getUserRoot($userRow['language']);
-			$noRootPath = getNoRootPath($_SERVER['SCRIPT_NAME']);
-			?>
-			<script type="text/javascript">
-				window.location.href='<?php echo $userRootLang.$noRootPath ?>';
-			</script>
-			<?php
-		}
+		include $_SERVER['DOCUMENT_ROOT'] . '/common/code/de/staticHeader.php';
 		?>
-		
-		
-		<!-- Static navbar -->
-		<div id="header" class="navbar navbar-default navbar-fixed-top" role="navigation" id="fixed-top-bar">
-			<div id="top_line" class="top-page-color"></div>
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<a href="http://www.perspectiva-alemania.com/" title="Perspectiva Alemania">
-						<img src="../../common/img/logo.png" alt="Perspectiva Alemania">
-					</a>
-				</div>
-				<div class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
-						<ul class="dropdown-menu">
-							<li class="dropdown-header">Angeschossen wie: <?php echo $_SESSION['loglogin']; ?></li>
-							<li class="divider"></li>
-							<li><a href="../home/personalData.php">Persönliche Einstellungen</a></li>
-							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Aussteigen</a></li>
-						</ul>
-					</li>
-				</div>
-				<?php if($userRow['employee'] == '1'){ ?>
-					<a href="/common/files/CV Managing Tool - User Guide.pdf" style="float: right; margin-right: 60px; margin-top: 15px">Benutzerhandbuch</a>
-				<?php }?>
-			</div><!--/.container-fluid -->
-		</div>	<!--/Static navbar -->
-		
-		
-		<!-- exitRequest Modal -->
-		<div id="exitRequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exitRequestLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<form class="modal-content" action="../endsession.php">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Abmelden</h4>
-					</div>
-					<div class="modal-body">
-						Haben Sie sich abmelden wollen?
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Stormieren</button>
-						<button type="submit" class="btn btn-primary">Wenn, melden</button>
-					</div>
-				</form>
-			</div>
-		</div> <!-- exitRequest Modal -->
-		
-		
-		<?php
-			$pendingCVs = getPendingCVs();
-		?>
-		
 		
 		<div id="main-content" class="container bs-docs-container">
 			<div class="row">
@@ -135,6 +44,7 @@
 					<div id="sidebar-navigation-list" class="bs-sidebar hidden-print affix-top" role="complementary">
 						<ul class="nav bs-sidenav">
 							<?php 
+							$pendingCVs = getPendingCVs();
 							$digitLang = getUserLangDigits($userRow['language']);
 							$LangDigitsName = $digitLang."Name";
 							$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');
@@ -213,14 +123,165 @@
 								$this->__construct($p, $o,'none',array());
 							}
 						}
-						$numero = date("YmdHis");
 						$enlace = connectDB();
 						
 						if(strlen($_POST[blankWordKey])>0){
-							$criteria="where `nie` like '%$_POST[blankWordKey]%' or `nationalities` like '%$_POST[blankWordKey]%' or `province` like '%$_POST[blankWordKey]%' or `city` like '%$_POST[blankWordKey]%' or `marital` like '%$_POST[blankWordKey]%' or `language` like '%$_POST[blankWordKey]%' or `education` like '%$_POST[blankWordKey]%' or `career` like '%$_POST[blankWordKey]%' or `experPos` like '%$_POST[blankWordKey]%' or `experDesc` like '%$_POST[blankWordKey]%' or `otherDetails` like '%$_POST[blankWordKey]%' and cvStatus = 'checked';";
+							$criteria = "WHERE (`nie` LIKE '%$_POST[blankWordKey]%' OR `name` LIKE '%$_POST[blankWordKey]%' OR `surname` LIKE '%$_POST[blankWordKey]%' OR `nationalities` LIKE '%$_POST[blankWordKey]%' OR `country` LIKE '%$_POST[blankWordKey]%' OR `province` LIKE '%$_POST[blankWordKey]%' OR `city` LIKE '%$_POST[blankWordKey]%' OR `mail` LIKE '%$_POST[blankWordKey]%' OR `marital` LIKE '%$_POST[blankWordKey]%' OR `language` LIKE '%$_POST[blankWordKey]%' OR `educTittle` LIKE '%$_POST[blankWordKey]%' OR `educCenter` LIKE '%$_POST[blankWordKey]%' OR `career` LIKE '%$_POST[blankWordKey]%' OR `experCity` LIKE '%$_POST[blankWordKey]%' OR `experCountry` LIKE '%$_POST[blankWordKey]%' OR `experPos` LIKE '%$_POST[blankWordKey]%' OR `experDesc` LIKE '%$_POST[blankWordKey]%' OR `otherDetails` LIKE '%$_POST[blankWordKey]%' OR `skill1` LIKE '%$_POST[blankWordKey]%' OR `skill2` LIKE '%$_POST[blankWordKey]%' OR `skill3` LIKE '%$_POST[blankWordKey]%' OR `skill4` LIKE '%$_POST[blankWordKey]%' OR `skill5` LIKE '%$_POST[blankWordKey]%' OR `skill6` LIKE '%$_POST[blankWordKey]%' OR `skill7` LIKE '%$_POST[blankWordKey]%' OR `skill8` LIKE '%$_POST[blankWordKey]%' OR `skill9` LIKE '%$_POST[blankWordKey]%' OR `skill10` LIKE '%$_POST[blankWordKey]%') AND `cvStatus` = 'checked'";
 						}
 						else{
-							$criteria="where `nie` like '%$_POST[blankNIE]%' and `nationalities` like '%$_POST[blankNationality]%' and `sex` like '%$_POST[blankSex]%' and `drivingType` like '%$_POST[drivingtype]%' and `marital` like '%$_POST[civilStatus]%' and `sons` like '%$_POST[blankSons]%' and `language` like '%$_POST[blankLanguages]%' and `career` like '%$_POST[blankJob]%' and cvStatus = 'checked';";
+							$moreThanOne = false; //If there is more than one fields to look for.
+							$criteria ="WHERE `cvStatus` = 'checked'";
+							$otherFields = "";
+							if(strlen($_POST['blankNIE']) > 0){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `nie` LIKE '%$_POST[blankNIE]%'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`nie` LIKE '%$_POST[blankNIE]%'";
+								}
+							}
+							
+							if(strlen($_POST['blankNationality']) > 0){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `nationalities` LIKE '%$_POST[blankNationality]%'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`nationalities` LIKE '%$_POST[blankNationality]%'";
+								}
+							}
+							
+							if(isset($_POST['blankSex'])){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `sex` LIKE '%$_POST[blankSex]%'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`sex` LIKE '%$_POST[blankSex]%'";
+								}
+							}
+							
+							if(strlen($_POST['blankCity']) > 0){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `city` LIKE '%$_POST[blankCity]%'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`city` LIKE '%$_POST[blankCity]%'";
+								}
+							}
+							
+							if(strlen($_POST['blankProvince']) > 0){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `province` LIKE '%$_POST[blankProvince]%'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`province` LIKE '%$_POST[blankProvince]%'";
+								}
+							}
+							
+							if(strlen($_POST['blankDrivingType']) > 0){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `drivingType` = '$_POST[blankDrivingType]'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`drivingType` = '$_POST[blankDrivingType]'";
+								}
+							}
+							
+							if(strlen($_POST['blankCivilStatus']) > 0){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `marital` LIKE '%$_POST[blankCivilStatus]%'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`marital` LIKE '%$_POST[blankCivilStatus]%'";
+								}
+							}
+							
+							if($_POST['blankSons'] != NULL){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `sons` = '$_POST[blankSons]'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`sons` = '$_POST[blankSons]'";
+								}
+							}
+							
+							if(strlen($_POST['blankLanguages']) > 0){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `language` LIKE '%$_POST[blankLanguages]%'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`language` LIKE '%$_POST[blankLanguages]%'";
+								}
+							}
+							
+							if(strlen($_POST['blankLangLevels']) > 0){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `langLevel` LIKE '%$_POST[blankLangLevels]%'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`langLevel` LIKE '%$_POST[blankLangLevels]%'";
+								}
+							}
+							
+							if(strlen($_POST['blankEducTittle']) > 0){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `educTittle` LIKE '%$_POST[blankEducTittle]%'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`educTittle` LIKE '%$_POST[blankEducTittle]%'";
+								}
+							}
+							
+							if(strlen($_POST['blankEducCenter']) > 0){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `educCenter` LIKE '%$_POST[blankEducCenter]%'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`educCenter` LIKE '%$_POST[blankEducCenter]%'";
+								}
+							}
+							
+							if(strlen($_POST['blankCareer']) > 0){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `career` LIKE '%$_POST[blankCareer]%'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`career` LIKE '%$_POST[blankCareer]%'";
+								}
+							}
+							
+							if(strlen($_POST['blankCandidateStatus']) > 0){
+								if($moreThanOne){
+									$otherFields = $otherFields." AND `candidateStatus` = '$_POST[blankCandidateStatus]'";
+								}
+								else{
+									$moreThanOne = true;
+									$otherFields = $otherFields."`candidateStatus` = '$_POST[blankCandidateStatus]'";
+								}
+							}
+							
+							$and = " AND ";
+							$open = "(";
+							$close = ")";
+							if($moreThanOne){
+								$criteria = $criteria.$and.$open.$otherFields.$close;
+							}
+							else{
+								//aqui no vendría nada si se hace una búsqueda vacía, solo los CVs 'checked' se buscarían.
+								//Entrar en este 'else' implica estar haciendo una búsqueda vacía, sin filtros. Eso mostraría todos los CVs en estado 'checked'.
+							}
 						}						
 						
 						$consulta = "SELECT * FROM `cvitaes`".$criteria;
@@ -245,7 +306,7 @@
 									while ($fila = $resultado->fetch_assoc()) {
 										$pdf_file_name = "";
 										$pdf_file_name = $fila['userLogin'];
-										$imagen_o=$output_dir.$fila['userLogin']."/fotor.jpg";
+										$imagen_o=$output_dir.$fila['userLogin']."/photo.jpg";
 										$logo=$output_dir."/logo.png";
 										$id[$fila['id']] = $fila['nie'];
 										if ($fila['sex']==0){
@@ -287,9 +348,10 @@
 								echo "<button type='submit' name='downloadSearchReportButton' class='btn btn-primary' >Bericht Herunterladen   <span class='glyphicon glyphicon-download-alt'> </span></button>";
 							echo "</div>";
 						echo "</form>";
-						$_SESSION["custom"]= serialize($_POST[per]);
+						//$_SESSION["custom"]= serialize($_POST[per]);
 						$_SESSION["id_o"] = serialize($id_o);
 						$_SESSION["id"] = serialize($id);
+						$_SESSION['customReportChecks'] = $_POST['per'];
 						?>
 					</div> <!-- bs-docs-section -->
 				</div> <!-- col-md-9 scrollable role=main -->

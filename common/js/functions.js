@@ -97,7 +97,7 @@ function equalPassword(){
 				return true;
 			}
 			else {
-				alert("Beide passwörter müssen übereinstimmen.");
+				alert("Die Passwörter müssen übereinstimmen.");
 				return false;
 			}
 		break;
@@ -109,7 +109,7 @@ function equalPassword(){
 				return true;
 			}
 			else {
-				alert("Both passwords must match.");
+				alert("Both passwords must be identical.");
 				return false;
 			}
 		break;
@@ -121,7 +121,7 @@ function equalPassword(){
 				return true;
 			}
 			else {
-				alert("Ambas contraseñas deben coincidir.");
+				alert("Ambas contraseñas deben ser iguales.");
 				return false;
 			}
 		break;
@@ -749,7 +749,7 @@ function confirmFormSend(form, userLang){
 	switch (userLang){
 		case "german":
 			if(jsCheckFormDE(form, legalAge)){
-				if(confirm('Sind sie sicher, dass sie alle ihre daten überprüft haben, und sie, das formular zu senden?')){
+				if(confirm('Sind Sie sicher, dass Sie alle Ihre Daten überpüft haben und das Formular senden wollen?')){
 					return document.formu.submit();
 				}
 				else{

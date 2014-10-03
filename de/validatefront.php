@@ -83,7 +83,7 @@
 			<div class="top-alert-container">
 				<div class="alert alert-danger alert-error top-alert fade in">
 					<a href="#" class="close" data-dismiss="alert">&times;</a>
-					<strong>Error!</strong> Es war nicht möglich ihr passwort zu aktualisieren.
+					<strong>Error!</strong> Ihr Passwort konnte nicht aktualisiert werden.
 					<!-- Could have also failed update of 'lastConnection' or 'passExpiration' fields -->
 				</div>
 			</div>
@@ -136,7 +136,7 @@
 				<div class="top-alert-container">
 					<div class="alert alert-danger alert-error top-alert fade in">
 						<a href="#" class="close" data-dismiss="alert">&times;</a>
-						<strong>Error!</strong> Falsches passwort.
+						<strong>Error!</strong> Passwort ungültig.
 					</div>
 				</div>						
 				<?php 	$wannaGoTo ='index.html'; $wannaExit = true;
@@ -148,7 +148,7 @@
 				<div class="top-alert-container">
 					<div class="alert alert-danger alert-error top-alert fade in">
 						<a href="#" class="close" data-dismiss="alert">&times;</a>
-						<strong>Error!</strong> Falsches passwort.
+						<strong>Error!</strong> Passwort ungültig.
 					</div>
 				</div>						
 				<?php 	$wannaGoTo ='index.html'; $wannaExit = true;
@@ -160,7 +160,7 @@
 				<div class="top-alert-container">
 					<div class="alert alert-warning alert-error top-alert fade in">
 						<a href="#" class="close" data-dismiss="alert">&times;</a>
-						<strong>Opppsss!</strong> Keine aktiven profil.
+						<strong>Opppsss!</strong> Profil nicht gültig.
 					</div>
 				</div>						
 				<?php $wannaGoTo ='index.html';
@@ -172,7 +172,7 @@
 				<div class="top-alert-container">
 					<div class="alert alert-warning alert-error top-alert fade in">
 						<a href="#" class="close" data-dismiss="alert">&times;</a>
-						<strong>Opppsss!</strong> Berntzer account nicht aktiviert.
+						<strong>Opppsss!</strong> Berntzer nicht gültig.
 					</div>
 				</div>						
 				<?php $wannaGoTo ='index.html'; 
@@ -196,15 +196,15 @@
 								<div class='modal-content panel-warning'>
 									<div class='modal-header panel-heading'>
 										<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-										<h4 class='modal-title'>Sie müssen ihr passwort ändern bevor sie fortfahren</h4>
+										<h4 class='modal-title'>Sie müssen Ihr Passwort ändern</h4>
 									</div>
 									<div class='well encapsulated'>
-										<!-- If "passwdRestrictionsES.txt" is changed function "checkXXXXXXPassChangeXX" will be needed to be also changed -->
+										<!-- If conditions in "passwdRestrictionsES.txt" are changed, function "checkXXXXXXPassChangeXX" will be needed to be also changed -->
 										<?php include $_SERVER['DOCUMENT_ROOT'] . '/common/passwdRestrictionsDE.txt' ?>
 									</div>
 									<div class='modal-body encapsulated'>
 										<div class='form-group'>
-											<label for='newPassword' class='control-label'>Neues passwort</label>
+											<label for='newPassword' class='control-label'>Neues Passwort</label>
 											<div class='center-block'>
 												<input type='password' class='form-control' name='newPassword' id='newPassword' placeholder='' required data-toggle='tooltip' title='Enter new password' autocapitalize='off'>
 											</div>
@@ -217,7 +217,7 @@
 										</div>
 									</div>
 									<div class='modal-footer'>
-										<button type='submit' class='btn btn-primary'>Änderung</button>
+										<button type='submit' class='btn btn-primary'>Ändern</button>
 									</div>
 								</div>
 							</form><!-- id='changePasswordForm'  -->
@@ -232,7 +232,7 @@
 							<div class="top-alert-container">
 								<div class="alert alert-danger alert-error top-alert fade in">
 									<a href="#" class="close" data-dismiss="alert">&times;</a>
-									<strong>Error!</strong> Es gab ein problem beim aktualisieren des datum der letzten verbindung.
+									<strong>Error!</strong> Die letzte Verbindung konnte nicht aktualisiert werden.
 								</div>
 							</div>								
 							<?php $wannaGoTo ='index.html'; 
@@ -258,7 +258,7 @@
 			<div class="top-alert-container">
 				<div class="alert alert-warning alert-error top-alert fade in">
 					<a href="#" class="close" data-dismiss="alert">&times;</a>
-					<strong>Opppsss!</strong> Sie haben vergessen, keines der felder ausfüllen.
+					<strong>Opppsss!</strong> Sie haben nicht alle Felder ausgefüllt.
 				</div>
 			</div>				
 			<?php $wannaGoTo ='index.html'; 

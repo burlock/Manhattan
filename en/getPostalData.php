@@ -1,4 +1,4 @@
-<?php session_start(); 
+<?php session_start();
 
 if (!$_SESSION['loglogin']){
 	?>
@@ -25,7 +25,7 @@ else {
 		unset($elapsedTime);
 	}
 	require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
-	
+
 	$value = intval($_GET['value']);
 
 	$xmlPostalCodes = simplexml_load_file($_SERVER['DOCUMENT_ROOT'] . '/common/data/postal_codes.xml');
@@ -43,7 +43,12 @@ else {
 	else{
 		echo '<label id="uploadFormLabel" class="control-label col-sm-2" for="blankaddrcity" style="padding-right: 10px;">City: </label><input class="form-control" type="text" name="blankaddrcity" size="50" value="' . $villageSet->municipio['nombre'] . '" readonly style="margin-top:5px;"><br>';
 	}
-	echo '<label id="uploadFormLabel" class="control-label col-sm-2" for="blankaddrprovince" style="padding-right: 10px;">Province: </label><input class="form-control" type="text" name="blankaddrprovince" size="20" value="' . getDBsinglefield('provinceName', 'postalProvincesES', 'id', getDBsinglefield('provCod', 'postalCitiesES', 'postalCode', $value)) . '" readonly style="margin-top:5px;"><br>';
+	// De la población seleccionada por el CP, extraemos su nodo padre en el árbol XML. El pop es para extraer el primer y único elemento.
+	$provinceNode = array_pop($villageSet->xpath('parent::*'));
+	// Ahora, del nodo padre de nuestro municipio (provincia) extraemos su nombre
+	$provinceName = $provinceNode['nombre'];
+	echo '<label id="uploadFormLabel" class="control-label col-sm-2" for="blankaddrprovince" style="padding-right: 10px;">Province: </label><input class="form-control" type="text" name="blankaddrprovince" size="20" value="' . $provinceName . '" readonly style="margin-top:5px;"><br>';
+
 	echo '<label id="uploadFormLabel" class="control-label col-sm-2" for="blankaddrcountry" style="padding-right: 10px;">Country: </label><input class="form-control" type="text" name="blankaddrcountry" size="20" value="España" readonly style="margin-top:5px;"><br>';
 }
 ?>

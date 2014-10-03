@@ -199,7 +199,7 @@
 										<h4 class='modal-title'>You must change your password before continue</h4>
 									</div>
 									<div class='well encapsulated'>
-										<!-- If "passwdRestrictionsES.txt" is changed function "checkXXXXXXPassChangeXX" will be needed to be also changed -->
+										<!-- If conditions in "passwdRestrictionsES.txt" are changed, function "checkXXXXXXPassChangeXX" will be needed to be also changed -->
 										<?php include $_SERVER['DOCUMENT_ROOT'] . '/common/passwdRestrictionsEN.txt' ?>
 									</div>
 									<div class='modal-body encapsulated'>

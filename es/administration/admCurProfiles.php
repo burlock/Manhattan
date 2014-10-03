@@ -10,12 +10,12 @@
 	<title>Gestión de Perfiles</title>
 
 	<!-- Custom styles for this template -->
-	<link href="../../common/css/design.css" rel="stylesheet">
+	<link href="/common/css/design.css" rel="stylesheet">
 
 	<!-- Using the same favicon from perspectiva-alemania.com site -->
 	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
 	<!-- Using the favicon for touch-devices shortcut -->
-	<link rel="apple-touch-icon" href="../../common/img/apple-touch-icon.png">
+	<link rel="apple-touch-icon" href="/common/img/apple-touch-icon.png">
 </head>
 
 <body>
@@ -23,111 +23,25 @@
 	if (!$_SESSION['loglogin']){
 		 ?>
 		<script type="text/javascript">
-			window.location.href='../index.html';
+			window.location.href='/es/index.html';
 		</script>
 		<?php
 	}
 	else{
-		require_once($_SERVER['DOCUMENT_ROOT'] . '/common/library/functions.php');
-		
-		$userRow = getDBrow('users', 'login', $_SESSION['loglogin']);
-		
-		//Identifying the name of the folder this script is in it can be later shown the rest of level 1 menus as the user navigates through them, knowing what of them is active (id='onlink')
-		$myFile = 'administration';
-
-		$lastUpdate = $_SESSION['lastupdate'];
-		$curUpdate = date('Y-m-d H:i:s');
-		$elapsedTime = (strtotime($curUpdate)-strtotime($lastUpdate));
-		//URL direct navigation for loggedin users with no granted access is limited here, as session expiration
-		if(($elapsedTime > $_SESSION['sessionexpiration']) || (!accessGranted($_SERVER['SCRIPT_NAME'], $myFile, $userRow['profile']))){
-			?>
-			<script type="text/javascript">
-				window.location.href='../endsession.php';
-			</script>
-			<?php
-		}
-		else{
-			$_SESSION['lastupdate'] = $curUpdate;
-			unset($lastUpdate);
-			unset($curUpdate);
-			unset($elapsedTime);
-		}
-			
-		//Checks whether loaded php page/file corresponds to logged user's language
-		if(getCurrentLanguage($_SERVER['SCRIPT_NAME']) != $userRow['language']){
-			$userRootLang = getUserRoot($userRow['language']);
-			$noRootPath = getNoRootPath($_SERVER['SCRIPT_NAME']);
-			?>
-			<script type="text/javascript">
-				window.location.href='<?php echo $userRootLang.$noRootPath ?>';
-			</script>
-			<?php
-		}
+		include $_SERVER['DOCUMENT_ROOT'] . '/common/code/es/staticHeader.php';
 		?>
-		
-		
-		<!-- Static navbar -->
-		<div id="header" class="navbar navbar-default navbar-fixed-top" role="navigation" id="fixed-top-bar">
-			<div id="top_line" class="top-page-color"></div>
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<a href="http://www.perspectiva-alemania.com/" title="Perspectiva Alemania">
-						<img src="../../common/img/logo.png" alt="Perspectiva Alemania">
-					</a>
-				</div>
-				<div class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						<button type="button" class="navbar-toggle always-visible" data-toggle="dropdown">
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
-						<ul class="dropdown-menu">
-							<li class="dropdown-header">Conectado como: <?php echo $_SESSION['loglogin']; ?></li>
-							<li class="divider"></li>
-							<li><a href="../home/personalData.php">Configuración Personal</a></li>
-							<li><a data-toggle="modal" data-target="#exitRequest" href="#exitRequest">Salir</a></li>
-						</ul>
-					</li>
-				</div>
-				<?php if($userRow['employee'] == '1'){ ?>
-					<a href="/common/files/CV Managing Tool - User Guide.pdf" style="float: right; margin-right: 60px; margin-top: 15px">Guía de Usuario</a>
-				<?php }?>
-			</div><!--/.container-fluid -->
-		</div>	<!--/Static navbar -->
-		
-		
-		<!-- exitRequest Modal -->
-		<div id="exitRequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exitRequestLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<form class="modal-content" action="../endsession.php">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="exitRequestLabel">Cerrar Sesión</h4>
-					</div>
-					<div class="modal-body">
-						¿Estás seguro de que quieres salir?
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-						<button type="submit" class="btn btn-primary">Sí, cerrar sesión</button>
-					</div>
-				</form>
-			</div>
-		</div>
-		
 		
 		<div id="main-content" class="container bs-docs-container">
 			<div class="row">
 				<div class="col-md-3">
 					<div id="sidebar-navigation-list" class="bs-sidebar hidden-print affix-top" role="complementary">
 						<ul class="nav bs-sidenav">							
-							<?php 
+							<?php
 							$pendingCVs = getPendingCVs();
 							$digitLang = getUserLangDigits($userRow['language']);
-							$LangDigitsName = $digitLang."Name";
+							$langDigitsName = $digitLang."Name";
 							$mainKeysRow = getDBcompletecolumnID('key', 'mainNames', 'id');
-							$mainNamesRow = getDBcompletecolumnID($LangDigitsName, 'mainNames', 'id');
+							$mainNamesRow = getDBcompletecolumnID($langDigitsName, 'mainNames', 'id');
 							$j = 0;
 							foreach($mainKeysRow as $i){
 								if(getDBsinglefield('active', $i, 'profile', $userRow['profile'])){
@@ -142,9 +56,9 @@
 										$myFileProfileRow = getDBrow($myFile, 'profile', $userRow['profile']);
 										for($k=3;$k<$numCols;$k++) {
 											$colNamej = getDBcolumnname($myFile, $k);
-											if(($myFileProfileRow[$k] == 1) && ($subLevelMenu = getDBsinglefield2($LangDigitsName, $namesTable, 'key', $colNamej, 'level', '2'))) {
-												if(!getDBsinglefield2($LangDigitsName, $namesTable, 'fatherKey', $colNamej, 'level', '3')){
-													$level2File = getDBsinglefield('key', $namesTable, $LangDigitsName, $subLevelMenu);
+											if(($myFileProfileRow[$k] == 1) && ($subLevelMenu = getDBsinglefield2($langDigitsName, $namesTable, 'key', $colNamej, 'level', '2'))) {
+												if(!getDBsinglefield2($langDigitsName, $namesTable, 'fatherKey', $colNamej, 'level', '3')){
+													$level2File = getDBsinglefield('key', $namesTable, $langDigitsName, $subLevelMenu);
 													// Because the file we are is a level 2 file, we do this comparision to make active element in list if it's this same file
 													if ($level2File == 'pendingCVs') 
 														$badge = "<span class='badge'>$pendingCVs</span>";
@@ -171,10 +85,7 @@
 															}
 														}
 													}
-													if ($level3File == basename(__FILE__, '.php')) 
-														echo "<li class='active'><a href=$level3File.php>" . $subLevelMenu . "</a></li>";
-													else
-														echo "<li><a href=$level3File.php>" . $subLevelMenu . "</a></li>";
+													echo "<li><a href=$level3File.php>" . $subLevelMenu . "</a></li>";
 												}
 											}
 										}
@@ -186,7 +97,6 @@
 											echo "<li><span class='badge'>$pendingCVs</span><a href=../$i.php>" . $mainNamesRow[$j] . " </a></li>";
 										else 
 											echo "<li><a href=../$i.php>" . $mainNamesRow[$j] . " </a></li>";
-
 										$j++;
 									}
 								}

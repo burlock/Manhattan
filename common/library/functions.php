@@ -14,7 +14,7 @@
  */
 function connectDB(){
 	$connection = mysqli_connect('localhost','root','', 'PRJ2014001') or die('MySQL connection error. Please contact administrator');
-
+	
 	$connection->query("SET NAMES 'utf8'");
 	
 	return $connection;
@@ -29,16 +29,16 @@ function connectDB(){
  * Exit: Boolean that indicates if it was OK or KO
  */
 function deleteDBrow($dbtable, $primaryname, $primaryvalue){
-	$conexion = connectDB();
+	$connection = connectDB();
 
 	$query = "DELETE FROM `$dbtable` WHERE `$primaryname`='$primaryvalue'";
 
-	if(mysqli_query($conexion, $query) or die("Error deleting DB registry: ".mysqli_error($conexion))){
-		mysqli_close($conexion);
+	if(mysqli_query($connection, $query) or die("Error deleting DB registry: ".mysqli_error($connection))){
+		mysqli_close($connection);
 		return 1;
 	}
 	else{
-		mysqli_close($conexion);
+		mysqli_close($connection);
 	}
 }
 
@@ -49,14 +49,14 @@ function deleteDBrow($dbtable, $primaryname, $primaryvalue){
  * Exit: Returns 1 if succesfully executed
  */
 function executeDBquery($query){
-	$conexion = connectDB();
+	$connection = connectDB();
 
-	if(mysqli_query($conexion, $query) or die("Error in DB request: ".mysqli_error($conexion))){
-		mysqli_close($conexion);
+	if(mysqli_query($connection, $query) or die("Error in DB request: ".mysqli_error($connection))){
+		mysqli_close($connection);
 		return 1;
 	}
 	else {
-		mysqli_close($conexion);
+		mysqli_close($connection);
 	}
 }
 
@@ -93,8 +93,8 @@ function getDBcolumnname($dbtable, $column){
  * Exit (row): Array with matched values
  */
 function getDBcolumnvalue($fieldrequested, $dbtable, $fieldsupported, $infosupported){
-	$conexion = connectDB();
-	$result = mysqli_query($conexion, "SELECT `$fieldrequested` FROM `$dbtable` WHERE `$fieldsupported`='$infosupported'") or die("Error extracting matching array: ".mysqli_error($conexion));
+	$connection = connectDB();
+	$result = mysqli_query($connection, "SELECT `$fieldrequested` FROM `$dbtable` WHERE `$fieldsupported`='$infosupported'") or die("Error extracting matching array: ".mysqli_error($connection));
 	$i = 0;
 	if(mysqli_num_rows($result) > 0){
 		while($column = mysqli_fetch_row($result)){
@@ -102,12 +102,12 @@ function getDBcolumnvalue($fieldrequested, $dbtable, $fieldsupported, $infosuppo
 			$i++;
 		}
 		mysqli_free_result($result);
-		mysqli_close($conexion);
+		mysqli_close($connection);
 		return $row;
 	}
 	else{
 		mysqli_free_result($result);
-		mysqli_close($conexion);
+		mysqli_close($connection);
 	}
 }
 
@@ -120,9 +120,9 @@ function getDBcolumnvalue($fieldrequested, $dbtable, $fieldsupported, $infosuppo
  * Exit (row): Array with complete column ordered
  */
 function getDBcompletecolumnID($columnrequested, $dbtable, $id){
-	$conexion = connectDB();
+	$connection = connectDB();
 
-	$result = mysqli_query($conexion, "SELECT `$columnrequested` FROM `$dbtable` ORDER BY `$id`") or die("Complete column extraction error: ".mysqli_error($conexion));
+	$result = mysqli_query($connection, "SELECT `$columnrequested` FROM `$dbtable` ORDER BY `$id`") or die("Complete column extraction error: ".mysqli_error($connection));
 
 	$i = 0;
 	if(mysqli_num_rows($result) > 0){
@@ -131,12 +131,12 @@ function getDBcompletecolumnID($columnrequested, $dbtable, $id){
 			$i++;
 		}
 		mysqli_free_result($result);
-		mysqli_close($conexion);
+		mysqli_close($connection);
 		return $row;
 	}
 	else{
 		mysqli_free_result($result);
-		mysqli_close($conexion);
+		mysqli_close($connection);
 	}
 }
 
@@ -224,17 +224,17 @@ function getDBnumcolumns($dbtable){
  * Exit (fila): Complete and unique row
  */
 function getDBrow($dbtable, $fieldsupported, $infosupported){
-	$conexion = connectDB();
-	$result = mysqli_query($conexion, "SELECT * FROM `$dbtable` WHERE `$fieldsupported`='$infosupported'") or die("Error obtaining registry: ".mysqli_error($conexion));
+	$connection = connectDB();
+	$result = mysqli_query($connection, "SELECT * FROM `$dbtable` WHERE `$fieldsupported`='$infosupported'") or die("Error obtaining registry: ".mysqli_error($connection));
 	if(mysqli_num_rows($result) <= 0 ){
 		mysqli_free_result($result);
-		mysqli_close($conexion);
+		mysqli_close($connection);
 		return 0;
 	}
 	else{
 		$fila = mysqli_fetch_array($result);
 		mysqli_free_result($result);
-		mysqli_close($conexion);
+		mysqli_close($connection);
 		return $fila;
 	}
 }
@@ -246,13 +246,13 @@ function getDBrow($dbtable, $fieldsupported, $infosupported){
  * Exit (num_rows): Integer with number of rows
  */
 function getDBrowsnumber($dbtable){
-	$conexion = connectDB();
+	$connection = connectDB();
 
-	$result = mysqli_query($conexion, "SELECT COUNT(*) FROM `$dbtable`") or die("Error obtaining row's number: ".mysqli_error($conexion));
+	$result = mysqli_query($connection, "SELECT COUNT(*) FROM `$dbtable`") or die("Error obtaining row's number: ".mysqli_error($connection));
 
 	$num_rows = mysqli_fetch_array($result);
 	mysqli_free_result($result);
-	mysqli_close($conexion);
+	mysqli_close($connection);
 	return $num_rows[0];
 }
 
@@ -266,20 +266,20 @@ function getDBrowsnumber($dbtable){
  * Exit (singleDBfield): Array stored in "fieldrequested" var
  */
 function getDBsinglefield($fieldrequested, $dbtable, $fieldsupported, $infosupported){
-	$conexion = connectDB();
+	$connection = connectDB();
 
-	$result = mysqli_query($conexion, "SELECT `$fieldrequested` FROM `$dbtable` WHERE `$fieldsupported`='$infosupported'") or die("Error obtaining single value: ".mysqli_error($conexion));
+	$result = mysqli_query($connection, "SELECT `$fieldrequested` FROM `$dbtable` WHERE `$fieldsupported`='$infosupported'") or die("Error obtaining single value: ".mysqli_error($connection));
 
 	if (mysqli_num_rows($result)>0){
 		$fila = mysqli_fetch_array($result);
 		$singleDBfield = $fila[$fieldrequested];
 		mysqli_free_result($result);
-		mysqli_close($conexion);
+		mysqli_close($connection);
 		return $singleDBfield;
 	}
 	else{
 		mysqli_free_result($result);
-		mysqli_close($conexion);
+		mysqli_close($connection);
 	}
 }
 
@@ -295,18 +295,18 @@ function getDBsinglefield($fieldrequested, $dbtable, $fieldsupported, $infosuppo
  * Exit (singleDBfield): Array stored in "fieldreq" var
  */
 function getDBsinglefield2($fieldreq, $dbtable, $fieldsup1, $infosup1, $fieldsup2, $infosup2){
-	$conexion = connectDB();
-	$result = mysqli_query($conexion, "SELECT `$fieldreq` FROM `$dbtable` WHERE `$fieldsup1`='$infosup1' AND `$fieldsup2`='$infosup2'") or die("Error obtaining single value: ".mysqli_error($conexion));
+	$connection = connectDB();
+	$result = mysqli_query($connection, "SELECT `$fieldreq` FROM `$dbtable` WHERE `$fieldsup1`='$infosup1' AND `$fieldsup2`='$infosup2'") or die("Error obtaining single value: ".mysqli_error($connection));
 	if(mysqli_num_rows($result)>0){
 		$fila = mysqli_fetch_array($result);
 		$singleDBfield = $fila[$fieldreq];
 		mysqli_free_result($result);
-		mysqli_close($conexion);
+		mysqli_close($connection);
 		return $singleDBfield; //Devuelve un string
 	}
 	else{
 		mysqli_free_result($result);
-		mysqli_close($conexion);
+		mysqli_close($connection);
 	}
 }
 
@@ -382,6 +382,26 @@ function insertDBRow($registry, $dbTable){
 		return 0;
 	}
 }
+
+
+
+
+/* Checks whether a list of nouns given in an input array are ALL found between the complete column 
+ * (no quiere decir que el número de datos que hay en la columna de la tabla coincida con el número de palabras del input)
+ * Entry (inputArray): Array that contains the list of words/nouns to be searched
+ * Entry (dbTable): Table in which every word/noun in the array will be searched
+ * Entry (dbColumn): Column where search will be done
+ * Exit (): TRUE or FALSE
+ */ 
+function isAllArrayInColumn($inputArray, $dbTable, $dbColumn){
+	foreach($inputArray as $i){
+		if(!getDBsinglefield($dbColumn, $dbTable, $dbColumn, $i)){
+			return false;
+		}
+	}
+	return true;
+}
+
 
 
 
@@ -502,6 +522,30 @@ function getKeyLanguage($languageToBeTranslated, $languageWritten){
 
 
 
+/* Gets the 2 digits that identify the root for a language ('en', 'es'...). It takes no count on user, only filePath
+ * Entry (filePath): String that contains full relative path (i.e. '/es/home/pendingCVs.php')
+ * Exit (): String with the 2 digits that represents each language as per its filePath
+ */
+/*
+function getLangDigits($filePath){
+	if(strstr($filePath, "/en/")){
+		return "en";
+	}
+	if(strstr($filePath, "/es/")){
+		return "es";
+	}
+}
+*/
+function getLangDigits($filePath){
+	//Elimino el primer carácter (que es "/")
+	$langDigits = substr($filePath, 1);
+	
+	//Elimino todos los caracteres a la derecha del siguiente "/" (barra incluida)
+	return strstr($langDigits, "/", true);
+}
+
+
+
 /* Gets current language for the php page displayed. Done comparing "de", "en" or "es" suffixes in file path
  * Entry (filePath): String where read/search the language suffix
  * Exit (keyLanguage): String with the language where php file is
@@ -559,7 +603,7 @@ function checkHashedPassChange($key1, $key2, $hashedKey, $loggedUserLang, &$keyE
 	switch ($loggedUserLang){
 		case 'german':
 			if($key1 != $key2){
-				$keyError = "Fehler: Beide passwörter müssen übereinstimmen.";
+				$keyError = "Fehler: Die Passwörter müssen übereinstimmen.";
 				return false;
 			}
 			if(strlen($key1) < 6){
@@ -752,6 +796,9 @@ function checkSimplePassChange($key1, $key2, $loggedUserLang, &$keyError){
 
 
 
+/* Obtains a non-hashed password between the '$str' list, with 8 characters length
+ * Exit (cad): String of 8 characters length
+ */
 function getRandomPass(){
 	$str = "_-$%&/()=?!ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
 	$cad = "";
@@ -793,17 +840,183 @@ function suggestPassword($curDate, $curExpirate, &$days){
 
 
 
-/* Checks whether a complete address (Name and Number for this Form) are well-formatted, avoiding as possible security breachs
- * Entry (inText): Input string which contains text written in form
- * Exit (outText): Output string, prepared to be registered in DB
+/* Checks whether a Candidate is under legal age, and whether a birthdate is well formatted, avoiding as possible security breachs.
+ * Called from 'pendingCVs.php'. Multilingual version.
+ * Entry (inDate): String that contains birthdate
+ * Entry (loggedUserLang): String that indicates language of the user whose address must be checked
+ * Exit (outDate): Returned string for birthdate
+ * Exit (checkError): String with text that includes a description of the error
  */
-function cleanFreeText($inText){
-	$connection = connectDB();
+/*
+function checkBirthdate($inDate, $loggedUserLang, &$outDate, &$checkError){
+	if(eregMySQLCheckDate(htmlentities($inDate, ENT_QUOTES, 'UTF-8'))){
+		$inDate = trim(htmlentities($inDate, ENT_QUOTES, 'UTF-8'));
+	}
+	$checkError = "";
 	
-	//$outText = trim(htmlentities(mysqli_real_escape_string($connection, $inText)));
-	$outText = trim(htmlentities(mysqli_real_escape_string($connection, $inText), ENT_QUOTES, 'UTF-8'));
+	switch ($loggedUserLang){
+		case 'german':
+			if(!preg_match('/^d{4}-d{2}-d{2}/', $inDate)){
+				$checkError = "Fehler: Datumsformat Ungültig.";
+				return false;
+			}
+			if(!isAdult($inDate, getDBsinglefield('value', 'otherOptions', 'key', 'legalAge'))){
+				$checkError = "Fehler: Das Datum zeigt an, dass der Kandidat nicht volljährig.";
+				return false;
+			}
+			if($inDate == '0000-00-00'){
+				$checkError = "Fehler: Datum leer.";
+				return false;
+			}
+		break;
+		
+		case 'english':
+			if(!preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $inDate)){
+				$checkError = "Error: Invalid date format.";
+				return false;
+			}
+			if(!isAdult($inDate, getDBsinglefield('value', 'otherOptions', 'key', 'legalAge'))){
+				$checkError = "Error: Date indicates that Candidate is not over legal age.";
+				return false;
+			}
+			if($inDate == '0000-00-00'){
+				$checkError = "Error: Empty date.";
+				return false;
+			}
+			break;
+		
+		default:
+			if(!preg_match('/^d{4}-d{2}-d{2}/', $inDate)){
+				$checkError = "Error: Formato de fecha no válido.";
+				return false;
+			}
+			if(!isAdult($inDate, getDBsinglefield('value', 'otherOptions', 'key', 'legalAge'))){
+				$checkError = "Error: La fecha indica que el Candidato no es mayor de edad.";
+				return false;
+			}
+			if($inDate == '0000-00-00'){
+				$checkError = "Error: Fecha vacía.";
+				return false;
+			}
+			break;
+	}
+	$checkError = "";
+	return true;
+}
+*/
+/*
+function checkBirthdate($inDate, $loggedUserLang, &$outDate, &$checkError){
+	if(eregMySQLCheckDate(htmlentities($inDate, ENT_QUOTES, 'UTF-8'))){
+		$inDate = trim(htmlentities($inDate, ENT_QUOTES, 'UTF-8'));
+	}
+	$checkError = "";
 	
-	return $outText;
+	switch ($loggedUserLang){
+		case 'german':
+			if(!checkDateYYYY_MM_DD($inDate)){
+				$checkError = "Fehler: Datumsformat Ungültig.";
+				return false;
+			}
+			if(!isAdult($inDate, getDBsinglefield('value', 'otherOptions', 'key', 'legalAge'))){
+				$checkError = "Fehler: Das Datum zeigt an, dass der Kandidat nicht volljährig.";
+				return false;
+			}
+			if($inDate == '0000-00-00'){
+				$checkError = "Fehler: Datum leer.";
+				return false;
+			}
+		break;
+		
+		case 'english':
+			if(!checkDateYYYY_MM_DD($inDate)){
+				$checkError = "Error: Invalid date format.";
+				return false;
+			}
+			if(!isAdult($inDate, getDBsinglefield('value', 'otherOptions', 'key', 'legalAge'))){
+				$checkError = "Error: Date indicates that Candidate is not over legal age.";
+				return false;
+			}
+			if($inDate == '0000-00-00'){
+				$checkError = "Error: Empty date.";
+				return false;
+			}
+			break;
+		
+		default:
+			if(!checkDateYYYY_MM_DD($inDate)){
+				$checkError = "Error: Formato de fecha no válido.";
+				return false;
+			}
+			if(!isAdult($inDate, getDBsinglefield('value', 'otherOptions', 'key', 'legalAge'))){
+				$checkError = "Error: La fecha indica que el Candidato no es mayor de edad.";
+				return false;
+			}
+			if($inDate == '0000-00-00'){
+				$checkError = "Error: Fecha vacía.";
+				return false;
+			}
+			break;
+	}
+	$checkError = "";
+	return true;
+}
+*/
+function checkBirthdate($inDate, $loggedUserLang, &$outDate, &$checkError){
+	if(eregMySQLCheckDate(htmlentities($inDate, ENT_QUOTES, 'UTF-8'))){
+		//$connection = connectDB();
+		//$outDate = trim(htmlentities(mysli_real_escape_string($connection, $inDate), ENT_QUOTES, 'UTF-8'));
+		$outDate = trim(htmlentities($inDate, ENT_QUOTES, 'UTF-8'));
+	}
+	$checkError = "";
+	
+	switch ($loggedUserLang){
+		case 'german':
+			if(!checkDateYYYY_MM_DD($outDate)){
+				$checkError = "Fehler: Datumsformat Ungültig.";
+				return false;
+			}
+			if(!isAdult($outDate, getDBsinglefield('value', 'otherOptions', 'key', 'legalAge'))){
+				$checkError = "Fehler: Das Datum zeigt an, dass der Kandidat nicht volljährig.";
+				return false;
+			}
+			if($outDate == '0000-00-00'){
+				$checkError = "Fehler: Datum leer.";
+				return false;
+			}
+		break;
+		
+		case 'english':
+			if(!checkDateYYYY_MM_DD($outDate)){
+				$checkError = "Error: Invalid date format.";
+				return false;
+			}
+			if(!isAdult($outDate, getDBsinglefield('value', 'otherOptions', 'key', 'legalAge'))){
+				$checkError = "Error: Date indicates that Candidate is not over legal age.";
+				return false;
+			}
+			if($outDate == '0000-00-00'){
+				$checkError = "Error: Empty date.";
+				return false;
+			}
+			break;
+		
+		default:
+			if(!checkDateYYYY_MM_DD($outDate)){
+				$checkError = "Error: Formato de fecha no válido.";
+				return false;
+			}
+			if(!isAdult($outDate, getDBsinglefield('value', 'otherOptions', 'key', 'legalAge'))){
+				$checkError = "Error: La fecha indica que el Candidato no es mayor de edad.";
+				return false;
+			}
+			if($outDate == '0000-00-00'){
+				$checkError = "Error: Fecha vacía.";
+				return false;
+			}
+			break;
+	}
+	$checkError = "";
+	return true;
 }
 
 
@@ -913,6 +1126,158 @@ function checkDrivingLicense($type, $licDate, $loggedUserLang, &$checkError){
 
 
 
+/* Checks whether a complete Education (Tittle, Center, Start and End) is OK or KO.
+ * Entry (eTittle): String which represents Education's tittle
+ * Entry (eCenter): String which represents Education's center
+ * Entry (eStart): String that indicates start DATE
+ * Entry (eEnd): String that indicates end DATE
+ * Entry (loggedUserLang): String that indicates language of the user whose address must be checked
+ * Exit (checkError): String with descriptive error text, when something is wrong
+ */
+/*
+function checkEducation($eTittle, $eCenter, $eStart, $eEnd, $loggedUserLang, &$checkError){
+	switch ($loggedUserLang){
+		case 'german':
+			if((strlen($eTittle) < 6) || (strlen($eCenter) < 6)){
+				$checkError = "Fehler: Titel oder Anstalt sollte mehr als 6 Zeichen haben.";
+				return false;
+			}
+			if(!preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $eStart)){
+				$checkError = "Fehler: Das Format des Anfangsdatum Ausbildungen ist falsch.";
+				return false;
+			}
+			if((strlen($eEnd) > 0) && (!preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $eEnd))){
+				$checkError = "Fehler: Das Format des Enddatum Ausbildungen ist falsch.";
+				return false;
+			}
+			if(!isStartPreviousToEndDate($eStart, $eEnd)){
+				$checkError = "Fehler: Die Anfangsdatum Ausbildungen ist neuer als das Enddatum.";
+				return false;
+			}
+		break;
+		
+		case 'english':
+			if((strlen($eTittle) < 6) || (strlen($eCenter) < 6)){
+				$checkError = "Error: Tittle or Center must have more than 6 characters.";
+				return false;
+			}
+			if(!preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $eStart)){
+				$checkError = "Error: Initial Date format is incorrect in one of the educations.";
+				return false;
+			}
+			if((strlen($eEnd) > 0) && (!preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $eEnd))){
+				$checkError = "Error: End Date format is incorrect in one of the educations.";
+				return false;
+			}
+			if(!isStartPreviousToEndDate($eStart, $eEnd)){
+				$checkError = "Error: Initial date in one of the educations is newer than its End date.";
+				return false;
+			}
+		break;
+		
+		default:
+			if((strlen($eTittle) < 6) || (strlen($eCenter) < 6)){
+				$checkError = "Error: Título o Centro deben tener más de 6 caracteres.";
+				return false;
+			}
+			if(!preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $eStart)){
+				$checkError = "Error: El formato de la Fecha Inicial de una de las educaciones es incorrecto.";
+				return false;
+			}
+			if((strlen($eEnd) > 0) && (!preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $eEnd))){
+				$checkError = "Error: El formato de la Fecha Final de una de las educaciones es incorrecto.";
+				return false;
+			}
+			if(!isStartPreviousToEndDate($eStart, $eEnd)){
+				$checkError = "Error: La Fecha inicial de una de las educaciones es más reciente que su Fecha final.";
+				return false;
+			}
+		break;
+	}
+	$checkError = "";
+	return true;
+}
+*/
+function checkEducation($eTittle, $eCenter, $eStart, $eEnd, $loggedUserLang, &$checkError){
+	$arrayTittle = explode("|", $eTittle);
+	$arrayCenter = explode("|", $eCenter);
+	$arrayStart = explode("|", $eStart);
+	$arrayEnd = explode("|", $eEnd);
+	
+	$contArrays = count($arrayTittle);
+	
+	switch ($loggedUserLang){
+		case 'german':
+			//foreach($arrayTittle as $i){
+			for($i=0; $i<$contArrays; $i++){
+				if((strlen($arrayTittle[$i]) < 6) || (strlen($arrayCenter[$i]) < 6)){
+					$checkError = "Fehler: Titel oder Anstalt sollte mehr als 6 Zeichen haben.";
+					return false;
+				}
+				if(!checkDateYYYY_MM_DD($arrayStart[$i])){
+					$checkError = "Fehler: Das Format des Anfangsdatum Ausbildungen ist falsch.";
+					return false;
+				}
+				if((strlen($arrayEnd[$i]) > 0) && (!checkDateYYYY_MM_DD($arrayEnd[$i]))){
+					$checkError = "Fehler: Das Format des Enddatum Ausbildungen ist falsch.";
+					return false;
+				}
+				if((strlen($arrayEnd[$i]) > 0) && (!isStartPreviousToEndDate($arrayStart[$i], $arrayEnd[$i]))){
+					$checkError = "Fehler: Die Anfangsdatum Ausbildungen ist neuer als das Enddatum.";
+					return false;
+				}
+			}
+		break;
+		
+		case 'english':
+			for($i=0; $i<$contArrays; $i++){
+				if((strlen($arrayTittle[$i]) < 6) || (strlen($arrayCenter[$i]) < 6)){
+					$checkError = "Error: Tittle or Center must have more than 6 characters.";
+					return false;
+				}
+				if(!checkDateYYYY_MM_DD($arrayStart[$i])){
+					$checkError = "Error: Initial Date format is incorrect in one of the educations.";
+					return false;
+				}
+				if((strlen($arrayEnd[$i]) > 0) && (!checkDateYYYY_MM_DD($arrayEnd[$i]))){
+					$checkError = "Error: End Date format is incorrect in one of the educations.";
+					return false;
+				}
+				if((strlen($arrayEnd[$i]) > 0) && (!isStartPreviousToEndDate($arrayStart[$i], $arrayEnd[$i]))){
+					$checkError = "Error: Initial date in one of the educations is newer than its End date.";
+					return false;
+				}
+			}
+		break;
+		
+		default:
+			for($i=0; $i<$contArrays; $i++){
+				if((strlen($arrayTittle[$i]) < 6) || (strlen($arrayCenter[$i]) < 6)){
+					$checkError = "Error: Título o Centro deben tener más de 6 caracteres.";
+					return false;
+				}
+				if(!checkDateYYYY_MM_DD($arrayStart[$i])){
+					$checkError = "Error: El formato de la Fecha Inicial de una de las educaciones es incorrecto.";
+					return false;
+				}
+				if((strlen($arrayEnd[$i]) > 0) && (!checkDateYYYY_MM_DD($arrayEnd[$i]))){
+					$checkError = "Error: El formato de la Fecha Final de una de las educaciones es incorrecto.";
+					return false;
+				}
+				if((strlen($arrayEnd[$i]) > 0) && (!isStartPreviousToEndDate($arrayStart[$i], $arrayEnd[$i]))){
+					$checkError = "Error: La Fecha inicial de una de las educaciones es más reciente que su Fecha final.";
+					return false;
+				}
+			}
+		break;
+	}
+	$checkError = "";
+	return true;
+}
+
+	
+
+
 /* Checks whether a complete address (Name and Number for this Form) are well-formatted, avoiding as possible security breachs. Called from 'upload.php'
  * Multilingual version.
  * Entry (inName): String which contains name of the address
@@ -1010,6 +1375,8 @@ function checkFullName($inName, $inSurname, $loggedUserLang, &$outName, &$outSur
 }
 
 
+
+
 /* Checks whether a MOBILE phone number is valid or not
  * Entry (mobile): Integer which contains a number
  * Exit: Boolean
@@ -1031,8 +1398,8 @@ function checkMobile($mobile){
 
 
 /* Checks whether field Nationality in form is properly fulfilled
- * Entry (inNations): Input string acting as an array with 1 or more nationalities
- * Exit (outNations): Output string acting as an array for nationalities
+ * Entry (inNations): Input STRING acting as an ARRAY with 1 or more nationalities
+ * Exit (outNations): Output STRING acting as an ARRAY for nationalities
  * Exit: Boolean
  */
 function checkNationality($inNations, &$outNations){
@@ -1049,7 +1416,7 @@ function checkNationality($inNations, &$outNations){
 
 
 
-/* Checks whether a phone number is valid or not
+/* Checks whether a phone number is valid or not (00XX-XXXXXXXXXXXXX)
  * Entry (phone): Integer which contains a number
  * Exit: Boolean
  */
@@ -1065,6 +1432,21 @@ function checkPhone($phone){
 		return false;
 	}
 	return true;
+}
+
+
+
+/* Checks whether a complete address (Name and Number for this Form) are well-formatted, avoiding as possible security breachs
+ * Entry (inText): Input string which contains text written in form
+ * Exit (outText): Output string, prepared to be registered in DB
+ */
+function cleanFreeText($inText){
+	$connection = connectDB();
+	
+	//$outText = trim(htmlentities(mysqli_real_escape_string($connection, $inText)));
+	$outText = trim(htmlentities(mysqli_real_escape_string($connection, $inText), ENT_QUOTES, 'UTF-8'));
+	
+	return $outText;
 }
 
 
@@ -1208,6 +1590,20 @@ function prepareArray($inArray){
  **************************************************************************/
 
 
+/* Calculates a future date adding X years to an input date
+ * Entry (givenDate): Input given date in format 'YYYY-MM-DD'
+ * Entry (years): Integer which indicates the number of years to be added
+ * Entry (months): Integer which indicates the number of months to be added
+ * Entry (days): Integer which indicates the number of days to be added
+ * Exit (endDate): Date in format "YYYY-MM-DD"
+ */
+function addDateToDate($givenDate, $years){
+	$endDate = date('Y-m-d', strtotime("$givenDate + $years years"));
+	return $endDate;
+}
+
+
+
 /* Generates a future date from current date
  * Entry (monthsNumber): Integer which indicates the number of months to be added
  * Exit (endDate): Date in format "YYYY-MM-DD"
@@ -1219,15 +1615,33 @@ function addMonthsToDate($monthsNumber){
 
 
 
-/* Calculates a future date adding X years to an input date
- * Entry (givenDate): Input given date in format 'YYYY-MM-DD'
- * Entry (years): Integer which indicates the number of years to be added
- * Entry (months): Integer which indicates the number of months to be added
- * Entry (days): Integer which indicates the number of days to be added
+/* Checks whether an input string has MySQL DATE format (YYYY-MM-DD).
+ * Entry (dateString): Input string where is supposed to be a date in format YYYY-MM-DD
+ * Exit (): Boolean
+ */
+function checkDateYYYY_MM_DD($dateString){
+	return ereg("(19|20)[0-9]{2}[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])", $dateString);
+}
+
+
+
+/* Changes a given date to format "Y-m-d" (YYYY-MM-DD)
+ * Entry (oldDate): String that includes the old format date
  * Exit (endDate): Date in format "YYYY-MM-DD"
  */
-function addDateToDate($givenDate, $years){
-	$endDate = date('Y-m-d', strtotime("$givenDate + $years years"));
+function dateFormatToDB($oldDate){
+	$endDate = date('Y-m-d', strtotime($oldDate));
+	return $endDate;
+}
+
+
+
+/* Changes a given date (usually in DB) to format "d-m-Y" (DD-MM-YYYY). A common one to spanish people
+ * Entry (oldDate): String that includes the old format date
+ * Exit (endDate): Date in format "DD-MM-YYYY"
+ */
+function dateToSpanishFormat($oldDate){
+	$endDate = date('d-m-Y', strtotime($oldDate));
 	return $endDate;
 }
 
@@ -1273,24 +1687,22 @@ function isPreviousDate($prevDate){
 
 
 
-/* Changes a given date to format "Y-m-d" (YYYY-MM-DD)
- * Entry (oldDate): String that includes the old format date
- * Exit (endDate): Date in format "YYYY-MM-DD"
+/* Checks whether 2 given dates (both in YYYY-MM-DD format) are well-formatted and if Start Date is previous to End Date.
+ * PRE: Both dates (that really are strings) MUST be in YYYY-MM-DD format.
+ * Entry (inStartDate): String that represents Date in format YYYY-MM-DD
+ * Entry (inEndDate): String that represents Date in format YYYY-MM-DD
+ * Exit: TRUE if Start Date is previous (older) to End Date. FALSE if not.
  */
-function dateFormatToDB($oldDate){
-	$endDate = date('Y-m-d', strtotime($oldDate));
-	return $endDate;
-}
-
-
-
-/* Changes a given date (usually in DB) to format "d-m-Y" (DD-MM-YYYY). A common one to spanish people
- * Entry (oldDate): String that includes the old format date
- * Exit (endDate): Date in format "DD-MM-YYYY"
- */
-function dateToSpanishFormat($oldDate){
-	$endDate = date('d-m-Y', strtotime($oldDate));
-	return $endDate;
+function isStartPreviousToEndDate($inStartDate, $inEndDate){
+	$auxStartDate = strtotime($inStartDate);
+	$auxEndDate = strtotime($inEndDate);
+	
+	if($auxStartDate < $auxEndDate){
+		return true;
+	}
+	else{
+		return false;
+	}
 }
 
 
@@ -1311,13 +1723,8 @@ function dateToSpanishFormat($oldDate){
 /*
 function accessGranted($filePath, $myFile, $userProfile){
 	$fileName = getPhpFileName($filePath);
-	return getDBsinglefield($fileName, $myFile, 'profile', $userProfile);
-}
-*/
-function accessGranted($filePath, $myFile, $userProfile){
-	$fileName = getPhpFileName($filePath);
-	//Si se trata de un fichero excepción, devuelvo 'true', sin comprobar
-	//if($fileName == 'searchResult'){
+	echo 'fileName vale '.$fileName.'<br>';
+	//Si se trata de un fichero excepción (ser excepción significa que no tienen su correspondiente columna en ninguna tabla de BBDD), devuelvo 'true', sin comprobar
 	if(($fileName == 'searchResult') || ($fileName == 'viewCV')){
 		if(($userProfile == 'SuperAdmin') || ($userProfile == 'Administrador') || ($userProfile == 'Lector')){
 			return true;
@@ -1330,6 +1737,30 @@ function accessGranted($filePath, $myFile, $userProfile){
 		return getDBsinglefield($fileName, $myFile, 'profile', $userProfile);
 	}
 }
+*/
+/* Esta función tiene problemas <NO CHUTA> al comprobar los ficheros de nivel 1 (home y administration). Por lo que, para evitar que falle dicha comprobación, debo establecer una excepción más:
+ * A home.php debo dejarle acceso a todo el mundo, sea el perfil que sea
+ * A administration.php no hay problema, porque dicho fichero redirige automáticamente a admGenOptions.php, fichero que sí está controlado dinámicamente
+ */
+function accessGranted($filePath, $myFile, $userProfile){
+	$fileName = getPhpFileName($filePath);
+	//Si se trata de un fichero excepción (ser excepción significa que no tienen su correspondiente columna en ninguna tabla de BBDD), devuelvo 'true', sin comprobar
+	if(($fileName == 'searchResult') || ($fileName == 'viewCV')){
+		if(($userProfile == 'SuperAdmin') || ($userProfile == 'Administrador') || ($userProfile == 'Lector')){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	elseif($fileName == 'home'){
+		return true;
+	}
+	else{
+		return getDBsinglefield($fileName, $myFile, 'profile', $userProfile);
+	}
+}
+
 
 
 
@@ -1435,6 +1866,35 @@ function getNextCandidateName(){
 	$nextCandidateName="pa_".$nextCandidateNumber;
 	
 	return $nextCandidateName;
+}
+
+
+
+/* Gets the name for 'myFile' to make this variable dynamic
+ * Entry (filePath): String that contains full relative path, from 'myFile' name could be reached
+ * Entry (userCurProject): String that contains key name of user's project 
+ * Exit (): String that corresponds to 'myFile' name
+ */
+function getMyFile($filePath){
+	//2 language digits are extracted
+	$lang = getLangDigits($filePath);
+	
+	//Now, universal path is reached (i.e. "es/home.php")
+	$langPath = strstr($filePath, $lang);
+	
+	//Language digits does not matter here. We delete them (i.e. "es/")
+	$noLangPath = substr($langPath, 3);
+	
+	//Si es "/es/home/myFiles.php" será...
+	//If path in here is something like "home/myFiles.php" we cut the string from the next "/" and on
+	if($myFile = strstr($noLangPath, "/", true)){
+		return $myFile;
+	}
+	//Si es "/es/home.php" será...
+	//If path in here is sth like "home.php" we cut the string from the "." and on
+	elseif($myFile = strstr($noLangPath, ".", true)){
+		return $myFile;
+	}
 }
 
 
