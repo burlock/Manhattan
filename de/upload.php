@@ -1001,21 +1001,43 @@ Die Felder mit * sind Pflichtfelder.
 					</div>
 				</div>
 			</div>
-
-			<div class="form-group tooltip-demo"> <!-- Educación -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Umfasst die titel, die sie auf folgende weise haben: Titel und Spezialität, Zentrum der Studien, Anfangs und Enddatum"></span> Ausbildung: </label> 
-				<div id="uploadFormDegree" class="col-sm-9">
-					<input class="form-control" type="text" name="add_educ" placeholder='Drücken sie auf "+" nach wie ausbildung... ' />
-					<input class="form-control" type="text" name="add_educ" placeholder='Drücken sie auf "+" nach wie ausbildung... ' />
-					<input class="form-control" type="text" name="add_educ" placeholder='Drücken sie auf "+" nach wie ausbildung... ' />
-				</div>
-				<div class="btn-toolbar col-sm-1">
-					<div class="btn-group btn-group-sm"><button class="btn btn-default" onclick="addDegree(this.form);" type="button"><span class="glyphicon glyphicon-plus"></span></button></div>
+			
+			<div class="form-group"> <!-- Educación -->
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Umfasst die titel, die sie auf folgende weise haben: Titel und Spezialität, Zentrum der Studien, Anfangs und Enddatum"></span> Ausbildung: </label>
+				<div class="col-sm-10" id="uploadFormDegree">
+					<div class="row" style="padding-left: 0px; margin-bottom: 10px;">
+						<div class="col-sm-11">
+							<div class="row">
+								<div class="col-sm-12">
+									<input class="form-control" type="text" name="add_educ" placeholder='Drücken sie auf "+" nach wie ausbildung... ' />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<input class="form-control" type="text" name="addEducCenter" placeholder="Lernzentrum" />
+								</div>
+							</div>
+							<div class="row">
+								<label id="uploadFormLabel" class="control-label col-sm-2">Beginn</label>
+								<div class="col-sm-4">
+									<input class="form-control" type="date" name="addEducStart" />
+								</div>			
+								<label id="uploadFormLabel" class="control-label col-sm-2">Ende</label>
+								<div class="col-sm-4">
+									<input class="form-control" type="date" name="addEducEnd" />
+								</div>
+							</div>
+						</div>
+						<div class="btn-toolbar col-sm-1">
+							<div class="btn-group btn-group-sm"><button class="btn btn-default" onclick="addDegree(this.form);" type="button"><span class="glyphicon glyphicon-plus"></span></button></div>
+						</div>
+					</div>
 				</div>
 			</div>
 			
 			<div class="form-group tooltip-demo"> <!-- Profesión -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Wenn ihr titel nicht in der liste angezeigt wird, wählen sie andere und kontaktieren sie uns bitte über administracion@perspectiva-alemania.com"></span> Beruf: *</label>
+				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Wenn ihr titel nicht in der liste angezeigt wird, wählen sie andere und kontaktieren sie uns bitte über administracion@perspectiva-alemania.com"></span> Beruf: *</label> -->
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title=""></span> Beruf: *</label>
 				<div id="uploadFormProf" class="col-sm-9">
 					<select class="form-control" name="add_prof">
 						<option selected value=""> Presse "+" nach wahl... </option>

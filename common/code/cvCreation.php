@@ -86,7 +86,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 				$texto_pdf=$texto_pdf."<tr><td><b>Personalausweis:</b></td><td>".$fila[nie]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Derzeitige Anschrift:</b></td><td>".$fila[addrType]." ".$fila[addrName]." ".$fila[addrNum].", ".$fila[portal]." ".$fila[stair]." ".$fila[addrFloor]." ".$fila[addrDoor]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Postleitzahl, Stadt:</b></td><td>".$fila[postalCode].", ".$fila[city]."</td></tr>";
-				$texto_pdf=$texto_pdf."<tr><td><b>Provinz:</b></td><td>".$fila[province]."</td></tr>";
+				$texto_pdf=$texto_pdf."<tr><td><b>Kreis:</b></td><td>".$fila[province]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Telefon:</b></td><td>".$fila[phone]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Mobiltelefon:</b></td><td>".$fila[mobile]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>E-Mail:</b></td><td>".$fila[mail]."</td></tr>";
@@ -100,7 +100,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 				$texto=$texto."<tr><td><b>Personalausweis:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[nie]."</td></tr>";
 				$texto=$texto."<tr><td><b>Derzeitige Anschrift:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[addrType]." ".$fila[addrName]." ".$fila[addrNum].", ".$fila[portal]." ".$fila[stair]." ".$fila[addrFloor]." ".$fila[addrDoor]."</td></tr>";
 				$texto=$texto."<tr><td><b>Postleitzahl, Stadt:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[postalCode].", ".$fila[city]."</td></tr>";
-				$texto=$texto."<tr><td><b>Provinz:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[province]."</td></tr>";
+				$texto=$texto."<tr><td><b>Kreis:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[province]."</td></tr>";
 				$texto=$texto."<tr><td><b>Telefon:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[phone]."</td></tr>";
 				$texto=$texto."<tr><td><b>Mobiltelefon:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[mobile]."</td></tr>";
 				$texto=$texto."<tr><td><b>E-Mail:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[mail]."</td></tr>";
@@ -267,7 +267,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 				$texto_pdf=$texto_pdf."<tr><td><b>Geburtsdatum:</b></td><td>".date("d-m-Y", strtotime($fila[birthdate]))."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Staatsangehörigkeit:</b></td><td>".$fila[nationalities]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Postleitzahl, Stadt:</b></td><td>".$fila[postalCode].", ".$fila[city]."</td></tr>";
-				$texto_pdf=$texto_pdf."<tr><td><b>Provinz:</b></td><td>".$fila[province]."</td></tr>";
+				$texto_pdf=$texto_pdf."<tr><td><b>Kreis:</b></td><td>".$fila[province]."</td></tr>";
 			$texto_pdf = $texto_pdf."</table><br><br>";
 			
 			$texto = $texto."<table>";
@@ -275,7 +275,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 				$texto=$texto."<tr><td><b>Geburtsdatum:</b></td><td>&nbsp;&nbsp;</td><td>".date("d-m-Y", strtotime($fila[birthdate]))."</td></tr>";
 				$texto=$texto."<tr><td><b>Staatsangehörigkeit:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[nationalities]."</td></tr>";
 				$texto=$texto."<tr><td><b>Postleitzahl, Stadt:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[postalCode].", ".$fila[city]."</td></tr>";
-				$texto=$texto."<tr><td><b>Provinz:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[province]."</td></tr>";
+				$texto=$texto."<tr><td><b>Kreis:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[province]."</td></tr>";
 			$texto = $texto."</table><br><br>";
 			
 			/* *****  Generating PDF & HTML Experience paragraph  ***** */
@@ -448,8 +448,8 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 						break;
 						
 						case 'province':
-							$texto_pdf=$texto_pdf."<tr><td><b>Provinz:</b></td><td>".$fila[province]."</td></tr>";
-							$texto=$texto."<tr><td><b>Provinz:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[province]."</td></tr>";
+							$texto_pdf=$texto_pdf."<tr><td><b>Kreis:</b></td><td>".$fila[province]."</td></tr>";
+							$texto=$texto."<tr><td><b>Kreis:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[province]."</td></tr>";
 						break;
 						
 						case 'phone':
