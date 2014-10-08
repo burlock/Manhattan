@@ -13,7 +13,7 @@
  * Exit: Connection instance
  */
 function connectDB(){
-	$connection = mysqli_connect('localhost','root','', 'PRJ2014001') or die('MySQL connection error. Please contact administrator');
+	$connection = mysqli_connect('localhost','pa_db','fOr3v3r', 'prj2014001') or die('MySQL connection error. Please contact administrator');
 	
 	$connection->query("SET NAMES 'utf8'");
 	
@@ -241,6 +241,35 @@ function getDBrow($dbtable, $fieldsupported, $infosupported){
 
 
 
+/* Gets a complete row from a Table by using 2 different search fields (necessary when getDBrow is not enough to distinguish a unique row).
+ * Entry (dbtable): Name for the table where row must be get.
+ * Entry (columnName1): 1st column used to identify uniquely the row.
+ * Entry (fieldValue1): 1st unique value used to help identifying uniquely the row.
+ * Entry (columnName2): 2nd column used to identify uniquely the row.
+ * Entry (fieldValue2): 2nd unique value used to help identifying uniquely the row.
+ * Exit (): Complete and unique row.
+ */
+function getDBrow2($dbtable, $columnName1, $fieldValue1, $columnName2, $fieldValue2){
+	$connection = connectDB();
+
+	$result = mysqli_query($connection, "SELECT * FROM `$dbtable` WHERE `$columnName1`='$fieldValue1' AND `$columnName2`='$fieldValue2'") or die("Error obtaining 2 values row: ".mysqli_error($connection));
+
+	if(mysqli_num_rows($result) <= 0 ){
+		mysqli_free_result($result);
+		mysqli_close($connection);
+		return 0;
+	}
+	else{
+		//el login es valido, pero la contraseña puede ser KO
+		$outRow = mysqli_fetch_array($result);
+		mysqli_free_result($result);
+		mysqli_close($connection);
+		return $outRow;
+	}
+}
+
+
+
 /* Counts total number of rows in a table
  * Entry (dbtable): DB where wanted to know total number of registries
  * Exit (num_rows): Integer with number of rows
@@ -434,6 +463,25 @@ function massiveUpload($file, $delimiter, $dbTable){
 		}
 	}
 	return 1;
+}
+
+
+
+/* Cuenta el número de registros que hay en una determinada tabla dado un valor de una columna
+ * Entry (dbTable): Table in which column and searched info are
+ * Entry (dbColumn): Column used to search number of registers
+ * Entry (referenceValue): Value used to find the total number of registers
+ */
+function numRegistersByColumn ($dbTable, $dbColumn, $referenceValue){
+	$connection = connectDB();
+
+	//$result = mysqli_query($connection, "SELECT COUNT(*) FROM `$dbtable`") or die("Error obtaining row's number: ".mysqli_error($connection));
+	$result = mysqli_query($connection, "SELECT COUNT(*) FROM `$dbtable` WHERE `$dbTable` = '$referenceValue'") or die("Error obtaining row's number by reference: ".mysqli_error($connection));
+
+	$num_rows = mysqli_fetch_array($result);
+	mysqli_free_result($result);
+	mysqli_close($connection);
+	return $num_rows[0];
 }
 
 
@@ -1198,6 +1246,7 @@ function checkEducation($eTittle, $eCenter, $eStart, $eEnd, $loggedUserLang, &$c
 	return true;
 }
 */
+/*
 function checkEducation($eTittle, $eCenter, $eStart, $eEnd, $loggedUserLang, &$checkError){
 	$arrayTittle = explode("|", $eTittle);
 	$arrayCenter = explode("|", $eCenter);
@@ -1269,6 +1318,69 @@ function checkEducation($eTittle, $eCenter, $eStart, $eEnd, $loggedUserLang, &$c
 					return false;
 				}
 			}
+		break;
+	}
+	$checkError = "";
+	return true;
+}
+*/
+function checkEducation($eTittle, $eCenter, $eStart, $eEnd, $loggedUserLang, &$checkError){
+	switch ($loggedUserLang){
+		case 'german':
+				if((strlen($eTittle) < 6) || (strlen($eCenter) < 6)){
+					$checkError = "Fehler: Titel oder Anstalt sollte mehr als 6 Zeichen haben.";
+					return false;
+				}
+				if(!checkDateYYYY_MM_DD($eStart)){
+					$checkError = "Fehler: Das Format des Anfangsdatum Ausbildungen ist falsch.";
+					return false;
+				}
+				if((strlen($eEnd) > 0) && (!checkDateYYYY_MM_DD($eEnd))){
+					$checkError = "Fehler: Das Format des Enddatum Ausbildungen ist falsch.";
+					return false;
+				}
+				if((strlen($eEnd) > 0) && (!isStartPreviousToEndDate($eStart, $eEnd))){
+					$checkError = "Fehler: Die Anfangsdatum Ausbildungen ist neuer als das Enddatum.";
+					return false;
+				}
+		break;
+		
+		case 'english':
+				if((strlen($eTittle) < 6) || (strlen($eCenter) < 6)){
+					$checkError = "Error: Tittle or Center must have more than 6 characters.";
+					return false;
+				}
+				if(!checkDateYYYY_MM_DD($eStart)){
+					$checkError = "Error: Initial Date format is incorrect in one of the educations.";
+					return false;
+				}
+				if((strlen($eEnd) > 0) && (!checkDateYYYY_MM_DD($eEnd))){
+					$checkError = "Error: End Date format is incorrect in one of the educations.";
+					return false;
+				}
+				if((strlen($eEnd) > 0) && (!isStartPreviousToEndDate($eStart, $eEnd))){
+					$checkError = "Error: Initial date in one of the educations is newer than its End date.";
+					return false;
+				}
+		break;
+		
+		default:
+				if((strlen($eTittle) < 6) || (strlen($eCenter) < 6)){
+					$checkError = "Error: Título o Centro deben tener más de 6 caracteres.";
+					return false;
+				}
+				if(!checkDateYYYY_MM_DD($eStart)){
+					$checkError = "Error: El formato de la Fecha Inicial de una de las educaciones es incorrecto.";
+					return false;
+				}
+				if((strlen($eEnd) > 0) && (!checkDateYYYY_MM_DD($eEnd))){
+					$checkError = "Error: El formato de la Fecha Final de una de las educaciones es incorrecto.";
+					return false;
+				}
+				if((strlen($eEnd) > 0) && (!isStartPreviousToEndDate($eStart, $eEnd))){
+					$checkError = "Error: La Fecha inicial de una de las educaciones es más reciente que su Fecha final.";
+					return false;
+				}
 		break;
 	}
 	$checkError = "";
@@ -1402,6 +1514,7 @@ function checkMobile($mobile){
  * Exit (outNations): Output STRING acting as an ARRAY for nationalities
  * Exit: Boolean
  */
+/* DESPUES DE HABER PUESTO ESTE CAMPO COMO DESPLEGABLE EN upload.php (DONDE SE USABA UNICAMENTE) NO TIENE SENTIDO MANTENERLO
 function checkNationality($inNations, &$outNations){
 	$connection = connectDB();
 	
@@ -1413,6 +1526,7 @@ function checkNationality($inNations, &$outNations){
 	}
 	$outNations = implode("|",$outArray);
 }
+*/
 
 
 
@@ -1432,21 +1546,6 @@ function checkPhone($phone){
 		return false;
 	}
 	return true;
-}
-
-
-
-/* Checks whether a complete address (Name and Number for this Form) are well-formatted, avoiding as possible security breachs
- * Entry (inText): Input string which contains text written in form
- * Exit (outText): Output string, prepared to be registered in DB
- */
-function cleanFreeText($inText){
-	$connection = connectDB();
-	
-	//$outText = trim(htmlentities(mysqli_real_escape_string($connection, $inText)));
-	$outText = trim(htmlentities(mysqli_real_escape_string($connection, $inText), ENT_QUOTES, 'UTF-8'));
-	
-	return $outText;
 }
 
 
@@ -1580,6 +1679,38 @@ function prepareArray($inArray){
 	$inArray[0] = lcfirst($inArray[0]);
 	return $inArray;
 }
+
+
+
+/* Executes 'mysqli_real_escape_string', 'htmlentities' and 'trim' securization PHP methods to ensure information uploaded in MySQL DDBB is free of vulnerabilities
+ * Entry (inArray): Array that could have dangerous text.
+ * Exit (): Secured Array
+ */
+//function securizeArray ($inArray, $loggedUserLang, &$outArray){
+function securizeArray ($inArray){
+	$connection = connectDB();
+	
+	$contArray = count($inArray);
+	for($i=0; $i<$contArray; $i++){
+		$outArray[$i] = trim(htmlentities(mysqli_real_escape_string($connection, $inArray[$i]), ENT_QUOTES, 'UTF-8'));
+	}
+	return $outArray;
+}
+
+
+
+/* Checks whether an input string (whatever its contained information is) is secure, avoiding as possible security breachs
+ * Entry (inString): Input string which contains text.
+ * Exit (outString): Output string, prepared to be registered in DB
+ */
+function securizeString($inString){
+	$connection = connectDB();
+	
+	$outString = trim(htmlentities(mysqli_real_escape_string($connection, $inString), ENT_QUOTES, 'UTF-8'));
+	
+	return $outString;
+}
+
 
 
 
