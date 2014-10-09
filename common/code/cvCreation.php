@@ -1,23 +1,25 @@
 <?php
+	//File retrived from 'viewCV.php'
+
 $nota=$_POST['nota'];
 
 $output_dir = $_SERVER['DOCUMENT_ROOT'] . "/cvs/";
-$imagen_o=$output_dir.$fila['userLogin']."/fotor.jpg";
+$imagen_o=$output_dir.$fila['userLogin']."/photo.jpg";
 $report=$_GET[reportType];
 $id_ac=$_GET["id_b"];
 $id_aco=$_GET["id_bb"];
 $id =unserialize($_SESSION["id"]);
-$id_o =unserialize($_SESSION["id_o"]);
+$unserializedNIEs =unserialize($_SESSION["serializedNIEs"]);
 if(strlen($id_ac)>0){
 	$actual=$id[$id_ac];
 	$ida=$id_ac;
 }
 if(strlen($id_aco)>0){
-	$actual=$id_o[$id_aco];
+	$actual=$unserializedNIEs[$id_aco];
 	$ida=$id_aco;
 }
 $i=0;
-foreach ($id_o as $valor){
+foreach ($unserializedNIEs as $valor){
 	if($valor == $actual){
 		$ind_a=$i;
 		$h=$i-1;
@@ -38,12 +40,14 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 		$pagetext=$fila['userLogin'];
 		$curUserLogin = $fila['userLogin'];
 		$id[$fila['id']] = $fila['nie'];
+		/*
 		if ($fila['sex']==0){
 			$fila['sex'] = "hombre";
 		}
 		if ($fila['sex']==1){
 			$fila['sex'] = "mujer";
 		}
+		*/
 		
 		// Añadido tras el merge de Miguel Hita
 		$texto_pdf="<html>
@@ -71,7 +75,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 		 * *********************************************/
 		if($report == "full_report"){
 			$texto_pdf=$texto_pdf."<div id=header><img center src='../../common/img/logo.jpg' width='300px' height='80px'/></div>";
-			$imagen=$fila['userLogin']."/fotor.jpg";
+			$imagen=$fila['userLogin']."/photo.jpg";
 			$texto_pdf = $texto_pdf."<div id=foto><img src='../../cvs/".$imagen."' width='120px' height='120px'/></div>";
 			$texto = $texto . "<img class='pull-right img-circle img-thumbnail' src='../../cvs/".$imagen."' width='140px'/><br>";
 			
@@ -82,11 +86,11 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto_pdf = $texto_pdf."<table>";
 				//$texto_pdf=$texto_pdf."<tr><td><b>Geburtsdatum:</b></td><td>".$fila[birthdate]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Geburtsdatum:</b></td><td>".date("d-m-Y", strtotime($fila[birthdate]))."</td></tr>";
-				$texto_pdf=$texto_pdf."<tr><td><b>Staatsangehörigkeit:</b></td><td>".$fila[nationalities]."</td></tr>";
+				$texto_pdf=$texto_pdf."<tr><td><b>Staatsangehörigkeit:</b></td><td>".implode(", ", getDBcolumnvalue('keyCountry', 'userCountries', 'userNIE', $fila['nie']))."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Personalausweis:</b></td><td>".$fila[nie]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Derzeitige Anschrift:</b></td><td>".$fila[addrType]." ".$fila[addrName]." ".$fila[addrNum].", ".$fila[portal]." ".$fila[stair]." ".$fila[addrFloor]." ".$fila[addrDoor]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Postleitzahl, Stadt:</b></td><td>".$fila[postalCode].", ".$fila[city]."</td></tr>";
-				$texto_pdf=$texto_pdf."<tr><td><b>Provinz:</b></td><td>".$fila[province]."</td></tr>";
+				$texto_pdf=$texto_pdf."<tr><td><b>Kreis:</b></td><td>".$fila[province]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Telefon:</b></td><td>".$fila[phone]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Mobiltelefon:</b></td><td>".$fila[mobile]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>E-Mail:</b></td><td>".$fila[mail]."</td></tr>";
@@ -96,11 +100,11 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto = $texto."<table>";
 				//$texto=$texto."<tr><td><b>Geburtsdatum:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[birthdate]."</td></tr>";
 				$texto=$texto."<tr><td><b>Geburtsdatum:</b></td><td>&nbsp;&nbsp;</td><td>".date("d-m-Y", strtotime($fila[birthdate]))."</td></tr>";
-				$texto=$texto."<tr><td><b>Staatsangehörigkeit:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[nationalities]."</td></tr>";
+				$texto=$texto."<tr><td><b>Staatsangehörigkeit:</b></td><td>&nbsp;&nbsp;</td><td>".implode(", ", getDBcolumnvalue('keyCountry', 'userCountries', 'userNIE', $fila['nie']))."</td></tr>";
 				$texto=$texto."<tr><td><b>Personalausweis:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[nie]."</td></tr>";
 				$texto=$texto."<tr><td><b>Derzeitige Anschrift:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[addrType]." ".$fila[addrName]." ".$fila[addrNum].", ".$fila[portal]." ".$fila[stair]." ".$fila[addrFloor]." ".$fila[addrDoor]."</td></tr>";
 				$texto=$texto."<tr><td><b>Postleitzahl, Stadt:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[postalCode].", ".$fila[city]."</td></tr>";
-				$texto=$texto."<tr><td><b>Provinz:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[province]."</td></tr>";
+				$texto=$texto."<tr><td><b>Kreis:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[province]."</td></tr>";
 				$texto=$texto."<tr><td><b>Telefon:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[phone]."</td></tr>";
 				$texto=$texto."<tr><td><b>Mobiltelefon:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[mobile]."</td></tr>";
 				$texto=$texto."<tr><td><b>E-Mail:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[mail]."</td></tr>";
@@ -111,13 +115,13 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto=$texto."<img src='../../common/img/Berufserfahrung.jpg' />";
 			
 			//Creating 'Experience' array from string
-			$exp_comp_a = explode("|", $fila[experCompany]);
-			$exp_start_a = explode("|", $fila[experStart]);
-			$exp_end_a = explode("|", $fila[experEnd]);
-			$exp_pos_a = explode("|", $fila[experPos]);
-			$expCity = explode("|", $fila[experCity]);
-			$expCountry = explode("|", $fila[experCountry]);
-			$exp_desc_a = explode("|", $fila[experDesc]);
+			$exp_comp_a = getDBcolumnvalue('company', 'userExperiences', 'userNIE', $fila['nie']);
+			$exp_pos_a = getDBcolumnvalue('position', 'userExperiences', 'userNIE', $fila['nie']);
+			$exp_start_a = getDBcolumnvalue('start', 'userExperiences', 'userNIE', $fila['nie']);
+			$exp_end_a = getDBcolumnvalue('end', 'userExperiences', 'userNIE', $fila['nie']);
+			$expCity = getDBcolumnvalue('city', 'userExperiences', 'userNIE', $fila['nie']);
+			$expCountry = getDBcolumnvalue('country', 'userExperiences', 'userNIE', $fila['nie']);
+			$exp_desc_a = getDBcolumnvalue('description', 'userExperiences', 'userNIE', $fila['nie']);
 			$tot=count($exp_start_a);
 			
 			$texto_pdf=$texto_pdf."<table>";
@@ -139,10 +143,17 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 				$texto = $texto.$educ_a[$i]."<br>";
 			}
 			*/
+			
+			/*
 			$educTittles = explode("|", $fila['educTittle']);
 			$educCenters = explode("|", $fila['educCenter']);
 			$educStarts = explode("|", $fila['educStart']);
 			$educEnds = explode("|", $fila['educEnd']);
+			*/
+			$educTittles = getDBcolumnvalue('educTittle', 'userEducations', 'userNIE', $fila['nie']);
+			$educCenters = getDBcolumnvalue('educCenter', 'userEducations', 'userNIE', $fila['nie']);
+			$educStarts = getDBcolumnvalue('educStart', 'userEducations', 'userNIE', $fila['nie']);
+			$educEnds = getDBcolumnvalue('educEnd', 'userEducations', 'userNIE', $fila['nie']);
 			$numTittles = count($educTittles);
 			
 			$texto_pdf=$texto_pdf."<table>";
@@ -157,8 +168,12 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto = $texto."<br></table>";
 			
 			/* *****  Generating PDF & HTML Language paragraph  ***** */
+			/*
 			$lang_a = explode("|", $fila[language]);
 			$langT_a = explode("|", $fila[langLevel]);
+			*/
+			$lang_a = getDBcolumnvalue('keyLanguage', 'userLanguages', 'userNIE', $fila['nie']);
+			$langT_a = getDBcolumnvalue('level', 'userLanguages', 'userNIE', $fila['nie']);
 			$tot=count($lang_a);
 			$texto_pdf = $texto_pdf."<br><img src='../../common/img/Sprachkenntnisse.jpg' /><br>";
 			$texto = $texto."<br><img src='../../common/img/Sprachkenntnisse.jpg' /><br>";
@@ -182,7 +197,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto_pdf=$texto_pdf."</table><br><br>";
 			$texto=$texto."</table>";
 			
-			//Other interesting information
+			/* *****  Other interesting information  ***** */
 			$texto_pdf = $texto_pdf."<br><br><img src='../../common/img/Angaben.jpg' /><br>";
 			$texto_pdf = $texto_pdf."<table>";
 				/*
@@ -207,7 +222,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 				$texto = $texto."<tr><td><b> - </b></td><td><b>Kinder: &nbsp</b></td><td> ".$fila[sons]."</td></tr>";
 			$texto = $texto."</table><br>";
 			
-			//10 key points from my personal experience
+			/* *****  10 key points from my personal experience  ***** */
 			$texto_pdf = $texto_pdf."<br><br><img src='../../common/img/Wesentliche.jpg' /><br>";
 			$texto= $texto."<img src='../../common/img/Wesentliche.jpg' /><br>";
 			$texto_pdf = $texto_pdf."<table>";
@@ -226,7 +241,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto_pdf = $texto_pdf."</table>";
 			$texto = $texto."</table>";
 			
-			//Perspectiva Alemania personal notes
+			/* *****  Perspectiva Alemania personal notes  ***** */
 			if (strlen($nota)>0){
 				$texto=$texto."<div class=cuadronegro><h3>BEWERTUNG DURCH PERSPECTIVA ALEMANIA</h3><br>".$nota."</div>";
 				$texto_pdf=$texto_pdf."<div class=cuadronegro><h3>BEWERTUNG DURCH PERSPECTIVA ALEMANIA</h3><br>".$nota."</div>";
@@ -255,7 +270,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 		 * **********************************************/
 		if($report == "blind_report"){
 			$texto_pdf=$texto_pdf."<div id=header><img center src='../../common/img/logo.jpg' width='300px' height='80px'/></div>";
-			$imagen=$fila['userLogin']."/fotor.jpg";
+			$imagen=$fila['userLogin']."/photo.jpg";
 			$texto_pdf = $texto_pdf."<div id=foto><img src='../../cvs/".$imagen."' width='120px' height='120px'/></div>";
 			$texto = $texto . "<img class='pull-right img-circle img-thumbnail' src='../../cvs/".$imagen."' width='140px'/><br>";
 			
@@ -265,17 +280,17 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto_pdf = $texto_pdf."<table>";
 				//$texto_pdf=$texto_pdf."<tr><td><b>Geburtsdatum:</b></td><td>".$fila[birthdate]."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Geburtsdatum:</b></td><td>".date("d-m-Y", strtotime($fila[birthdate]))."</td></tr>";
-				$texto_pdf=$texto_pdf."<tr><td><b>Staatsangehörigkeit:</b></td><td>".$fila[nationalities]."</td></tr>";
+				$texto_pdf=$texto_pdf."<tr><td><b>Staatsangehörigkeit:</b></td><td>".implode(", ", getDBcolumnvalue('keyCountry', 'userCountries', 'userNIE', $fila['nie']))."</td></tr>";
 				$texto_pdf=$texto_pdf."<tr><td><b>Postleitzahl, Stadt:</b></td><td>".$fila[postalCode].", ".$fila[city]."</td></tr>";
-				$texto_pdf=$texto_pdf."<tr><td><b>Provinz:</b></td><td>".$fila[province]."</td></tr>";
+				$texto_pdf=$texto_pdf."<tr><td><b>Kreis:</b></td><td>".$fila[province]."</td></tr>";
 			$texto_pdf = $texto_pdf."</table><br><br>";
 			
 			$texto = $texto."<table>";
 				//$texto=$texto."<tr><td><b>Geburtsdatum:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[birthdate]."</td></tr>";
 				$texto=$texto."<tr><td><b>Geburtsdatum:</b></td><td>&nbsp;&nbsp;</td><td>".date("d-m-Y", strtotime($fila[birthdate]))."</td></tr>";
-				$texto=$texto."<tr><td><b>Staatsangehörigkeit:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[nationalities]."</td></tr>";
+				$texto=$texto."<tr><td><b>Staatsangehörigkeit:</b></td><td>&nbsp;&nbsp;</td><td>".implode(", ", getDBcolumnvalue('keyCountry', 'userCountries', 'userNIE', $fila['nie']))."</td></tr>";
 				$texto=$texto."<tr><td><b>Postleitzahl, Stadt:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[postalCode].", ".$fila[city]."</td></tr>";
-				$texto=$texto."<tr><td><b>Provinz:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[province]."</td></tr>";
+				$texto=$texto."<tr><td><b>Kreis:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[province]."</td></tr>";
 			$texto = $texto."</table><br><br>";
 			
 			/* *****  Generating PDF & HTML Experience paragraph  ***** */
@@ -283,13 +298,13 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto=$texto."<img src='../../common/img/Berufserfahrung.jpg' />";
 			
 			//Creating 'Experience' array from string
-			$exp_comp_a = explode("|", $fila[experCompany]);
-			$exp_start_a = explode("|", $fila[experStart]);
-			$exp_end_a = explode("|", $fila[experEnd]);
-			$exp_pos_a = explode("|", $fila[experPos]);
-			$expCity = explode("|", $fila[experCity]);
-			$expCountry = explode("|", $fila[experCountry]);
-			$exp_desc_a = explode("|", $fila[experDesc]);
+			$exp_comp_a = getDBcolumnvalue('company', 'userExperiences', 'userNIE', $fila['nie']);
+			$exp_pos_a = getDBcolumnvalue('position', 'userExperiences', 'userNIE', $fila['nie']);
+			$exp_start_a = getDBcolumnvalue('start', 'userExperiences', 'userNIE', $fila['nie']);
+			$exp_end_a = getDBcolumnvalue('end', 'userExperiences', 'userNIE', $fila['nie']);
+			$expCity = getDBcolumnvalue('city', 'userExperiences', 'userNIE', $fila['nie']);
+			$expCountry = getDBcolumnvalue('country', 'userExperiences', 'userNIE', $fila['nie']);
+			$exp_desc_a = getDBcolumnvalue('description', 'userExperiences', 'userNIE', $fila['nie']);
 			$tot=count($exp_start_a);
 			
 			$texto_pdf=$texto_pdf."<table>";
@@ -302,18 +317,24 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto = $texto."<br><br></table><img src='../../common/img/Ausbildung.jpg' /><br>";
 			
 			/* *****  Generating PDF & HTML Education paragraph  ***** */
-			$educ_a = explode("|", $fila[education]);
-			$tot=count($educ_a);
-			for ($i=0;$i<$tot;$i++){
-				$texto_pdf = $texto_pdf.$educ_a[$i]."<br>";
-				$texto = $texto.$educ_a[$i]."<br>";
+			$educTittles = getDBcolumnvalue('educTittle', 'userEducations', 'userNIE', $fila['nie']);
+			$educCenters = getDBcolumnvalue('educCenter', 'userEducations', 'userNIE', $fila['nie']);
+			$educStarts = getDBcolumnvalue('educStart', 'userEducations', 'userNIE', $fila['nie']);
+			$educEnds = getDBcolumnvalue('educEnd', 'userEducations', 'userNIE', $fila['nie']);
+			$numTittles = count($educTittles);
+			
+			$texto_pdf=$texto_pdf."<table>";
+			$texto = $texto . "<table class='table table-striped table-hover'>";
+			for($i=0; $i<$numTittles; $i++){
+				$texto_pdf = $texto_pdf."<tr><td><b>".date("m-Y", strtotime($educStarts[$i]))." / ".date("m-Y", strtotime($educEnds[$i]))."</b></td><td><b>".$educTittles[$i]."</b><br>".$educCenters[$i]."</td></tr>";
+				$texto = $texto."<tr><td><b>".date("m-Y", strtotime($educStarts[$i]))." / ".date("m-Y", strtotime($educEnds[$i]))."</b></td><td><b>".dropAccents($educTittles[$i])."</b><br>".dropAccents($educCenters[$i])."</td></tr>";
 			}
-			$texto_pdf = $texto_pdf."<br>";//To ensure there are 2 <br> between paragraphs
-			$texto = $texto."<br>";
+			$texto_pdf = $texto_pdf."<br></table>";//To ensure there are 2 <br> between paragraphs
+			$texto = $texto."<br></table>";
 			
 			/* *****  Generating PDF & HTML Language paragraph  ***** */
-			$lang_a = explode("|", $fila[language]);
-			$langT_a = explode("|", $fila[langLevel]);
+			$lang_a = getDBcolumnvalue('keyLanguage', 'userLanguages', 'userNIE', $fila['nie']);
+			$langT_a = getDBcolumnvalue('level', 'userLanguages', 'userNIE', $fila['nie']);
 			$tot=count($lang_a);
 			$texto_pdf = $texto_pdf."<br><img src='../../common/img/Sprachkenntnisse.jpg' /><br>";
 			$texto = $texto."<br><img src='../../common/img/Sprachkenntnisse.jpg' /><br>";
@@ -333,7 +354,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto_pdf=$texto_pdf."</table><br><br>";
 			$texto=$texto."</table>";
 			
-			//Other interesting information
+			/* *****  Other interesting information  ***** */
 			$texto_pdf = $texto_pdf."<br><br><img src='../../common/img/Angaben.jpg' /><br>";
 			$texto_pdf = $texto_pdf."<table>";
 				$texto_pdf = $texto_pdf."<tr><td><b> - </b></td><td><b>Führerschein und Ausstellungsdatum: </b></td><td> ".$fila[drivingType]." / ".date("d-m-Y", strtotime($fila[drivingDate]))."</td></tr>";
@@ -348,7 +369,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 				$texto = $texto."<tr><td><b> - </b></td><td><b>Kinder: &nbsp</b></td><td> ".$fila[sons]."</td></tr>";
 			$texto = $texto."</table><br>";
 			
-			//10 key points from my personal experience
+			/* *****  10 key points from my personal experience  ***** */
 			$texto_pdf = $texto_pdf."<br><br><img src='../../common/img/Wesentliche.jpg' /><br>";
 			$texto= $texto."<img src='../../common/img/Wesentliche.jpg' /><br>";
 			$texto_pdf = $texto_pdf."<table>";
@@ -363,7 +384,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto_pdf = $texto_pdf."</table>";
 			$texto = $texto."</table>";
 			
-			//Perspectiva Alemania personal notes
+			/* *****  Perspectiva Alemania personal notes  ***** */
 			if (strlen($nota)>0){
 				$texto=$texto."<div class='cuadronegro'><h3>BEWERTUNG DURCH PERSPECTIVA ALEMANIA</h3><br>".$nota."</div>";
 				$texto_pdf=$texto_pdf."<div class='cuadronegro'><h3>BEWERTUNG DURCH PERSPECTIVA ALEMANIA</h3><br>".$nota."</div>";
@@ -392,7 +413,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 		 * ***********************************************/
 		if($report == "custom_report"){
 			$texto_pdf=$texto_pdf."<div id=header><img center src='../../common/img/logo.jpg' width='300px' height='80px'/></div>";
-			$imagen=$fila['userLogin']."/fotor.jpg";
+			$imagen=$fila['userLogin']."/photo.jpg";
 			$texto_pdf = $texto_pdf."<div id=foto><img src='../../cvs/".$imagen."' width='120px' height='120px'/></div>";
 			$texto = $texto . "<img class='pull-right img-circle img-thumbnail' src='../../cvs/".$imagen."' width='140px'/><br>";
 			
@@ -428,9 +449,9 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 						break;
 						
 						case 'nationalities':
-							$texto_pdf=$texto_pdf."<tr><td><b>Staatsangehörigkeit:</b></td><td>".$fila[nationalities]."</td></tr>";
-							$texto=$texto."<tr><td><b>Staatsangehörigkeit:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[nationalities]."</td></tr>";
-						break;
+							$texto_pdf=$texto_pdf."<tr><td><b>Staatsangehörigkeit:</b></td><td>".implode(", ", getDBcolumnvalue('keyCountry', 'userCountries', 'userNIE', $fila['nie']))."</td></tr>";
+							$texto=$texto."<tr><td><b>Staatsangehörigkeit:</b></td><td>&nbsp;&nbsp;</td><td>".implode(", ", getDBcolumnvalue('keyCountry', 'userCountries', 'userNIE', $fila['nie']))."</td></tr>";
+							break;
 						
 						case 'nie':
 							$texto_pdf=$texto_pdf."<tr><td><b>Personalausweis:</b></td><td>".$fila[nie]."</td></tr>";
@@ -448,8 +469,8 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 						break;
 						
 						case 'province':
-							$texto_pdf=$texto_pdf."<tr><td><b>Provinz:</b></td><td>".$fila[province]."</td></tr>";
-							$texto=$texto."<tr><td><b>Provinz:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[province]."</td></tr>";
+							$texto_pdf=$texto_pdf."<tr><td><b>Kreis:</b></td><td>".$fila[province]."</td></tr>";
+							$texto=$texto."<tr><td><b>Kreis:</b></td><td>&nbsp;&nbsp;</td><td>".$fila[province]."</td></tr>";
 						break;
 						
 						case 'phone':
@@ -480,13 +501,13 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto=$texto."<img src='../../common/img/Berufserfahrung.jpg' />";
 			
 			//Creating 'Experience' array from string
-			$exp_comp_a = explode("|", $fila[experCompany]);
-			$exp_start_a = explode("|", $fila[experStart]);
-			$exp_end_a = explode("|", $fila[experEnd]);
-			$exp_pos_a = explode("|", $fila[experPos]);
-			$expCity = explode("|", $fila[experCity]);
-			$expCountry = explode("|", $fila[experCountry]);
-			$exp_desc_a = explode("|", $fila[experDesc]);
+			$exp_comp_a = getDBcolumnvalue('company', 'userExperiences', 'userNIE', $fila['nie']);
+			$exp_pos_a = getDBcolumnvalue('position', 'userExperiences', 'userNIE', $fila['nie']);
+			$exp_start_a = getDBcolumnvalue('start', 'userExperiences', 'userNIE', $fila['nie']);
+			$exp_end_a = getDBcolumnvalue('end', 'userExperiences', 'userNIE', $fila['nie']);
+			$expCity = getDBcolumnvalue('city', 'userExperiences', 'userNIE', $fila['nie']);
+			$expCountry = getDBcolumnvalue('country', 'userExperiences', 'userNIE', $fila['nie']);
+			$exp_desc_a = getDBcolumnvalue('description', 'userExperiences', 'userNIE', $fila['nie']);
 			$tot=count($exp_start_a);
 			
 			$texto_pdf=$texto_pdf."<table>";
@@ -499,18 +520,24 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto = $texto."<br><br></table><img src='../../common/img/Ausbildung.jpg' /><br>";
 			
 			/* *****  Generating PDF & HTML Education paragraph  ***** */
-			$educ_a = explode("|", $fila[education]);
-			$tot=count($educ_a);
-			for ($i=0;$i<$tot;$i++){
-				$texto_pdf = $texto_pdf.$educ_a[$i]."<br>";
-				$texto = $texto.$educ_a[$i]."<br>";
+			$educTittles = getDBcolumnvalue('educTittle', 'userEducations', 'userNIE', $fila['nie']);
+			$educCenters = getDBcolumnvalue('educCenter', 'userEducations', 'userNIE', $fila['nie']);
+			$educStarts = getDBcolumnvalue('educStart', 'userEducations', 'userNIE', $fila['nie']);
+			$educEnds = getDBcolumnvalue('educEnd', 'userEducations', 'userNIE', $fila['nie']);
+			$numTittles = count($educTittles);
+			
+			$texto_pdf=$texto_pdf."<table>";
+			$texto = $texto . "<table class='table table-striped table-hover'>";
+			for($i=0; $i<$numTittles; $i++){
+				$texto_pdf = $texto_pdf."<tr><td><b>".date("m-Y", strtotime($educStarts[$i]))." / ".date("m-Y", strtotime($educEnds[$i]))."</b></td><td><b>".$educTittles[$i]."</b><br>".$educCenters[$i]."</td></tr>";
+				$texto = $texto."<tr><td><b>".date("m-Y", strtotime($educStarts[$i]))." / ".date("m-Y", strtotime($educEnds[$i]))."</b></td><td><b>".dropAccents($educTittles[$i])."</b><br>".dropAccents($educCenters[$i])."</td></tr>";
 			}
-			$texto_pdf = $texto_pdf."<br>";//To ensure there are 2 <br> between paragraphs
-			$texto = $texto."<br>";
+			$texto_pdf = $texto_pdf."<br></table>";//To ensure there are 2 <br> between paragraphs
+			$texto = $texto."<br></table>";
 			
 			/* *****  Generating PDF & HTML Language paragraph  ***** */
-			$lang_a = explode("|", $fila[language]);
-			$langT_a = explode("|", $fila[langLevel]);
+			$lang_a = getDBcolumnvalue('keyLanguage', 'userLanguages', 'userNIE', $fila['nie']);
+			$langT_a = getDBcolumnvalue('level', 'userLanguages', 'userNIE', $fila['nie']);
 			$tot=count($lang_a);
 			$texto_pdf = $texto_pdf."<br><img src='../../common/img/Sprachkenntnisse.jpg' /><br>";
 			$texto = $texto."<br><img src='../../common/img/Sprachkenntnisse.jpg' /><br>";
@@ -530,7 +557,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto_pdf=$texto_pdf."</table><br><br>";
 			$texto=$texto."</table>";
 			
-			//Other interesting information
+			/* *****  Other interesting information  ***** */
 			$texto_pdf = $texto_pdf."<br><br><img src='../../common/img/Angaben.jpg' /><br>";
 			$texto_pdf = $texto_pdf."<table>";
 				$texto_pdf = $texto_pdf."<tr><td><b> - </b></td><td><b>Führerschein und Ausstellungsdatum: </b></td><td> ".$fila[drivingType]." / ".date("d-m-Y", strtotime($fila[drivingDate]))."</td></tr>";
@@ -545,7 +572,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 				$texto = $texto."<tr><td><b> - </b></td><td><b>Kinder: &nbsp</b></td><td> ".$fila[sons]."</td></tr>";
 			$texto = $texto."</table><br>";
 			
-			//10 key points from my personal experience
+			/* *****  10 key points from my personal experience  ***** */
 			$texto_pdf = $texto_pdf."<br><br><img src='../../common/img/Wesentliche.jpg' /><br>";
 			$texto= $texto."<img src='../../common/img/Wesentliche.jpg' /><br>";
 			$texto_pdf = $texto_pdf."<table>";
@@ -560,7 +587,7 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto_pdf = $texto_pdf."</table>";
 			$texto = $texto."</table>";
 			
-			//Perspectiva Alemania personal notes
+			/* *****  Perspectiva Alemania personal notes  ***** */
 			if (strlen($nota)>0){
 				$texto=$texto."<div class='cuadronegro'><h3>BEWERTUNG DURCH PERSPECTIVA ALEMANIA</h3><br>".$nota."</div>";
 				$texto_pdf=$texto_pdf."<div class='cuadronegro'><h3>BEWERTUNG DURCH PERSPECTIVA ALEMANIA</h3><br>".$nota."</div>";

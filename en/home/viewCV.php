@@ -143,7 +143,7 @@
 			<div class="panel panel-default cvViewer tooltip-demo col-md-8" role="main"> <!-- Panel -->
 				<div class="btn-group pull-right">
 					<?php
-					if(strlen($id_o[$ind_p])>0){
+					if(strlen($unserializedNIEs[$ind_p])>0){
 						echo "<a href='viewCV.php?id_bb=$ind_p&reportType=".$report."' class='btn btn-default btn-sm' data-toggle='tooltip' data-original-title='Previous'><span class='glyphicon glyphicon-chevron-left'></span></a>";
 					}
 					else{
@@ -152,13 +152,13 @@
 					?>
 						<a href="<?php echo "../../cvs/".$pagetext.".pdf" ?>" target="_blank" class="btn btn-default btn-sm" data-toggle='tooltip' data-original-title='Download CV in PDF'><span class='glyphicon glyphicon-download-alt'></span></a>
 					<?php
-					if(strlen($id_o[$ind_n])>0){
+					if(strlen($unserializedNIEs[$ind_n])>0){
 						echo "<a href='viewCV.php?id_bb=$ind_n&reportType=".$report."' class='btn btn-default btn-sm' data-toggle='tooltip' data-original-title='Next'><span class='glyphicon glyphicon-chevron-right'></span></a>";
 					}
 					else{
 						echo "<a class='btn btn-default btn-sm' disabled><span class='glyphicon glyphicon-chevron-right'></span></a>";
 					}
-					$_SESSION["id_o"] = serialize($id_o);
+					$_SESSION["serializedNIEs"] = serialize($unserializedNIEs);
 					$_SESSION["id"] = serialize($id);
 					?>
 				</div>

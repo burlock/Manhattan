@@ -6,36 +6,43 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<title>Área privada - En mantenimiento</title>
+	<title>Private Area</title>
 
 	<!-- Custom styles for this template -->
-	<link href="/common/css/design.css" rel="stylesheet">
+	<link href="../common/css/design.css" rel="stylesheet">
 
 	<!-- Using the same favicon from perspectiva-alemania.com site -->
-	<link rel="shortcut icon" href="/common/img/favicon.png">
+	<link rel="shortcut icon" href="http://www.perspectiva-alemania.com/wp-content/themes/perspectiva2013/bilder/favicon.png">
 	<!-- Using the favicon for touch-devices shortcut -->
-	<link rel="apple-touch-icon" href="/common/img/apple-touch-icon.png">
-
+	<link rel="apple-touch-icon" href="../common/img/apple-touch-icon.png">
 </head>
 
-<body style="margin-top: 50px;">
-
+<body>
 	<!-- Static navbar -->
-	<div class="maintenance" class="container center-block">
-		<a href="http://www.perspectiva-alemania.com/" title="Perspectiva Alemania">
-			<img class="img-responsive img-thumbnail center-block" src="/common/img/logo.png" alt="Perspectiva Alemania">
-		</a>
-		<br>
-		<div class="container center-block">
-			<center><h2 class="maintenance">Estamos trabajando en el área privada de candidatos<br>
-			<small>Pronto estará online. Agradecemos su paciencia.</small></h2></center>
-		</div>
-		<br> <br> <br>	
-		<img class="img-responsive img-thumbnail center-block" src="/common/img/picateclas.png">
-		
+	<div id="header" class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div id="top_line" class="top-page-color"></div>
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="http://www.perspectiva-alemania.com/" title="Perspectiva Alemania">
+					<img src="../common/img/logo.png" alt="Perspectiva Alemania">
+				</a>
+			</div>
+			<div class="flags-set pull-right">
+				<a href="../es/index.html" title="Español"><img src="../common/img/blank.gif" class="flag flag-es" alt="Español"></a>
+				<a href="../en/index.html" title="English"><img src="../common/img/blank.gif" class="flag flag-gb" alt="English"></a>
+				<a href="../de/index.html" title="Deutsch"><img src="../common/img/blank.gif" class="flag flag-de" alt="Deutsch"></a>
+			</div>
+		</div><!--/.container-fluid -->
 	</div>
 
-
+	<div class="container">
+		<form class="form-signin tooltip-demo" method="post" action="validatefront.php"> <!-- autocomplete="off"> -->
+			<h2 class="form-signin-heading ">Access</h2>
+			<input type="login" class="form-control" name="loglogin" placeholder="Login" required autofocus data-toggle="tooltip" title="Introduce your access username" autocapitalize="off">
+			<input type="password" class="form-control" name="logpasswd" placeholder="Password" required data-toggle="tooltip" title="Introduce your user password" autocapitalize="off">
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Enter</button>
+		</form>
+	</div>
 
 
 <!-- Footer bar & info
@@ -52,15 +59,8 @@
 	<!-- Placed at the end of the document so the pages load faster -->
 	<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-	
 	<!-- Do you wanna use tooltips or validation instead of? -->
-	<!-- <script src="common/js/application.js"></script> -->
-
-	<!-- Site own functions -->
-	<script src="/common/js/jquery.maskedinput.min.js"></script>
-	<!-- <script src="common/js/functions.js"></script> -->
-	<!-- <script src="common/js/docs.min.js"></script> -->
+	<!-- <script src="../common/js/application.js"></script> -->
 
 </body>
 </html>
-

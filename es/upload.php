@@ -280,117 +280,8 @@
 	
 	if(isset($_POST['push_button'])){
 		
-		//At the very beggining I will ensure that no local var has a previous value
-		unset($key);
-		unset($entry);
-		unset($str_idiomas);
-		unset($str_nidiomas);
-		unset($str_educ);
-		unset($strEducCenter);
-		unset($strEducStart);
-		unset($strEducEnd);
-		unset($str_prof);
-		unset($str_empr);
-		unset($str_categ);
-		unset($str_expstart);
-		unset($str_expend);
-		unset($str_expcity);
-		unset($str_expcountry);
-		unset($str_desc);
-		unset($str_nat);
-		unset($outNations);
-		unset($outName);
-		unset($outSurname);
-		unset($checkError);
-		unset($outAddrName);
-		unset($outAddrNumber);
-		unset($cleanedOther);
-		unset($cleanedSkill1);
-		unset($cleanedSkill2);
-		unset($cleanedSkill3);
-		unset($cleanedSkill4);
-		unset($cleanedSkill5);
-		unset($cleanedSkill6);
-		unset($cleanedSkill7);
-		unset($cleanedSkill8);
-		unset($cleanedSkill9);
-		unset($cleanedSkill10);
-		unset($userDir);
-		unset($insertCVQuery);
-		unset($photoUploadFile);
-		unset($image);
-		unset($strCountry);
+		include $_SERVER['DOCUMENT_ROOT'] . '/common/code/varAssignments.php';
 		
-		//The very first validation will be LOPD checkbox
-		foreach ($_POST as $key => $entry){
-			if(is_array($entry)){
-				if($key == idiomas){
-					$str_idiomas = implode('|',$entry);
-				}
-				if($key == nidiomas){
-					$str_nidiomas = implode('|',$entry);
-				}
-				if($key == educ){
-					//Must be checked with htmlentities
-					$str_educ = implode('|', $entry);
-					$str_educ = trim(htmlentities($str_educ));
-				}
-				if($key == educCenter){
-					//Must be checked with htmlentities
-					$strEducCenter = implode('|', $entry);
-					$strEducCenter = trim(htmlentities($strEducCenter));
-				}
-				if($key == educStart){
-					$strEducStart = implode('|',$entry);
-				}
-				if($key == educEnd){
-					$strEducEnd = implode('|',$entry);
-				}
-				if($key == prof){
-					//No need to check it as it becomes from a 'select'
-					$str_prof = implode('|', $entry);
-				}
-				if($key == empr){
-					//Must be checked with htmlentities
-					$str_empr = implode('|',$entry);
-					$str_empr = trim(htmlentities($str_empr));
-				}
-				if($key == categ){
-					//Must be checked with htmlentities
-					$str_categ = implode('|',$entry);
-					$str_categ = trim(htmlentities($str_categ));
-				}
-				if($key == expstart){
-					$str_expstart = implode('|',$entry);
-				}
-				if($key == expend){
-					$str_expend = implode('|',$entry);
-				}
-				if($key == expcity){
-					//Must be checked with htmlentities
-					$str_expcity = implode('|',$entry);
-					$str_expcity = trim(htmlentities($str_expcity));
-				}
-				if($key == expcountry){
-					//Must be checked with htmlentities
-					$str_expcountry = implode('|',$entry);
-					$str_expcountry = trim(htmlentities($str_expcountry));
-				}
-				if($key == desc){
-					//Must be checked with htmlentities
-					$str_desc = implode('|',$entry);
-					$str_desc = trim(htmlentities($str_desc));
-				}
-				if($key == nat){
-					//str_nat es 'nationalities' en la BD (en addRow5)
-					if(isset($key)){
-						//This is made to avoid as possible SQL Injection
-						checkNationality($entry, $outNations);
-						$str_nat = $outNations;
-					}
-				}
-			 }
-		}
 		//This first validation lets the system avoid double-recording of the registry if form is refreshed by Candidate via 'CMD+R' or 'F5' in his/her keyboard
 		if(getDBsinglefield('cvSaved', 'users', 'login', $_SESSION['loglogin'])){
 			//If CV had been previously saved user will be blocked and sent to loggin page
@@ -568,38 +459,16 @@
 		
 		//Only if EVERY check is OK can proceed with process to insert registry in DB
 		else{
-			$cleanedOther = cleanFreeText($_POST['blankother']);
-			$cleanedSkill1 = cleanFreeText($_POST['blankskill1']);
-			$cleanedSkill2 = cleanFreeText($_POST['blankskill2']);
-			$cleanedSkill3 = cleanFreeText($_POST['blankskill3']);
-			$cleanedSkill4 = cleanFreeText($_POST['blankskill4']);
-			$cleanedSkill5 = cleanFreeText($_POST['blankskill5']);
-			$cleanedSkill6 = cleanFreeText($_POST['blankskill6']);
-			$cleanedSkill7 = cleanFreeText($_POST['blankskill7']);
-			$cleanedSkill8 = cleanFreeText($_POST['blankskill8']);
-			$cleanedSkill9 = cleanFreeText($_POST['blankskill9']);
-			$cleanedSkill10 = cleanFreeText($_POST['blankskill10']);
+			$insertCVQuery = "INSERT INTO `cvitaes` (`nie`, `cvStatus`, `name`, `surname`, `birthdate`, `sex`, `addrType`, `addrName`, `addrNum`, `portal`, `stair`, `addrFloor`, `addrDoor`, `phone`, 
+			`postalCode`, `country`, `province`, `city`, `mobile`, `mail`, `drivingType`, `drivingDate`, `marital`, `sons`, `otherDetails`, `skill1`, `skill2`, `skill3`, `skill4`, `skill5`, `skill6`, 
+			`skill7`, `skill8`, `skill9`, `skill10`, `cvDate`, `userLogin`, `salary`) VALUES 
+			('".$_POST['blanknie']."', 'pending', '".$outName."', '".$outSurname."', '".$_POST['blankbirthdate']."', '".$_POST['blanksex']."', '".$_POST['blankaddrtype']."', '".$outAddrName."', '".$outAddrNumber."', 
+			'".$_POST['blankaddrportal']."', '".$_POST['blankaddrstair']."', '".$_POST['blankaddrfloor']."', '".$_POST['blankaddrdoor']."', '".$_POST['blankphone']."', '".$_POST['blankaddrpostalcode']."', '".$strCountry."', 
+			'".$_POST['blankaddrprovince']."', '".$_POST['blankaddrcity']."', '".$_POST['blankmobile']."', '".$_POST['blankmail']."', '".$_POST['blankdrivingtype']."', '".$_POST['blankdrivingdate']."', 
+			'".$_POST['blankmarital']."', '".$_POST['blanksons']."', '".$securedOther."', '".$securedSkill1."', '".$securedSkill2."', '".$securedSkill3."', '".$securedSkill4."', '".$securedSkill5."', 
+			'".$securedSkill6."', '".$securedSkill7."', '".$securedSkill8."', '".$securedSkill9."', '".$securedSkill10."', CURRENT_TIMESTAMP, '".$_SESSION['loglogin']."', '".$_POST['blanksalary']."')";
 			
-			//One last change. If Candidate introduced a Postal code, as it only permits "España", we change it to "Spanien", just to be in german when showing CV
-			if($_POST['blankaddrcountry'] == 'España'){
-				$strCountry = 'Spanien';
-			}
-			else{
-				$strCountry = $_POST['blankaddrcountry'];
-			}
 			
-			$insertCVQuery = "INSERT INTO `cvitaes` (`id`, `nie`, `cvStatus`, `name`, `surname`, `birthdate`, `nationalities`, `sex`, `addrType`, `addrName`, `addrNum`, `portal`, `stair`, `addrFloor`, `addrDoor`, 
-			`phone`, `postalCode`, `country`, `province`, `city`, `mobile`, `mail`, `drivingType`, `drivingDate`, `marital`, `sons`, `language`, `langLevel`, `educTittle`, `educCenter`, `educStart`, `educEnd`, `career`, 
-			`experCompany`, `experStart`, `experEnd`, `experPos`, `experDesc`, `experCity`, `experCountry`, `otherDetails`, `skill1`, `skill2`, `skill3`, `skill4`, `skill5`, `skill6`, `skill7`, `skill8`, `skill9`, `skill10`, 
-			`cvDate`, `userLogin`, `salary`) VALUES 
-			(NULL, '".$_POST['blanknie']."', 'pending', '".$outName."', '".$outSurname."', '".$_POST['blankbirthdate']."', '".$str_nat."', '".$_POST['blanksex']."', '".$_POST['blankaddrtype']."', '".$outAddrName."', 
-			'".$outAddrNumber."', '".$_POST['blankaddrportal']."', '".$_POST['blankaddrstair']."', '".$_POST['blankaddrfloor']."', '".$_POST['blankaddrdoor']."', '".$_POST['blankphone']."', 
-			'".$_POST['blankaddrpostalcode']."', '".$strCountry."', '".$_POST['blankaddrprovince']."', '".$_POST['blankaddrcity']."', '".$_POST['blankmobile']."', '".$_POST['blankmail']."', 
-			'".$_POST['blankdrivingtype']."', '".$_POST['blankdrivingdate']."', '".$_POST['blankmarital']."', '".$_POST['blanksons']."', '".$str_idiomas."', '".$str_nidiomas."', '".$str_educ."', '".$strEducCenter."', 
-			'".$strEducStart."', '".$strEducEnd."', '".$str_prof."', '".$str_empr."', '".$str_expstart."', '".$str_expend."', '".$str_categ."', '".$str_desc."', '".$str_expcity."', '".$str_expcountry."', '".$cleanedOther."', 
-			'".$cleanedSkill1."', '".$cleanedSkill2."', '".$cleanedSkill3."', '".$cleanedSkill4."', '".$cleanedSkill5."', '".$cleanedSkill6."', '".$cleanedSkill7."', 
-			'".$cleanedSkill8."', '".$cleanedSkill9."', '".$cleanedSkill10."', CURRENT_TIMESTAMP, '".$_SESSION['loglogin']."', '".$_POST['blanksalary']."')";
-						
 					$userDir = $_SERVER['DOCUMENT_ROOT'] . "/cvs/".$_SESSION['loglogin']."/";
 					/*
 					if(ifCreateDir($userDir, 0777)){
@@ -670,6 +539,39 @@
 				<?php 
 			}
 			else{
+				//Each user's Language is saved in 'userLanguages' table.
+				$auxCont = count($arrayLanguages);
+				for($i=0; $i<$auxCont; $i++){
+					executeDBquery("INSERT INTO `userLanguages` (`userNIE`, `keyLanguage`, `level`) VALUES ('".$_POST['blanknie']."', '".$arrayLanguages[$i]."', '".$arrayLangLevels[$i]."')");
+				}
+				
+				//Each user's Education is saved in 'userEducations' table.
+				$auxCont = count($securedEducTittle);
+				for($i=0; $i<$auxCont; $i++){
+					executeDBquery("INSERT INTO `userEducations` (`userNIE`, `educTittle`, `educCenter`, `educStart`, `educEnd`) VALUES 
+					('".$_POST['blanknie']."', '".$securedEducTittle[$i]."', '".$securedEducCenter[$i]."', '".$arrayEducStart[$i]."', '".$arrayEducEnd[$i]."')");
+				}
+				
+				//Each user's Occupation is saved in 'userOccupations' table.
+				$auxCont = count($arrayOccupations);
+				for($i=0; $i<$auxCont; $i++){
+					executeDBquery("INSERT INTO `userOccupations` (`userNIE`, `keyOccupation`) VALUES ('".$_POST['blanknie']."', '".$arrayOccupations[$i]."')");
+				}
+				
+				//Each user's Experience is saved in 'userExperiences' table.
+				$auxCont = count($securedExperPosition);
+				for($i=0; $i<$auxCont; $i++){
+					executeDBquery("INSERT INTO `userExperiences` (`userNIE`, `company`, `position`, `start`, `end`, `city`, `country`, `description`) VALUES 
+					('".$_POST['blanknie']."', '".$securedExperCompany[$i]."', '".$securedExperPosition[$i]."', '".$arrayExperStart[$i]."', '".$arrayExperEnd[$i]."', 
+					'".$securedExperCity[$i]."', '".$securedExperCountry[$i]."', '".$securedExperDescription[$i]."')");
+				}
+				
+				//Each user's Nationality/Country is saved in 'userCountries' table.
+				$auxCont = count($arrayCountries);
+				for($i=0; $i<$auxCont; $i++){
+					executeDBquery("INSERT INTO `userCountries` (`userNIE`, `keyCountry`) VALUES ('".$_POST['blanknie']."', '".$arrayCountries[$i]."')");
+				}
+				
 				/* Being here (under this 'else') means that insert query was OK. So user must be inactivated and redirected to 'index.html'
 				 * But before, we check if user wishes to upload any file or photo
 				 */
@@ -773,7 +675,7 @@
 				</script>
 				<?php
 			}
-		}
+		}//End of DB registry saving, and all its corresponding files
 		
 	}//For (isset($_POST['push_button'])) that check whether FORM has being sent or not
 
@@ -894,7 +796,7 @@ Los campos que poseen * son obligatorios.
 					<input class="form-control" type="text" name="blankmobile" maxlength="9" placeholder="[6-7]XXXXXXXX" required onkeypress="return checkOnlyNumbers(event)">
 				</div>
 				
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankphone">Tlf. adicional: </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankphone">Otro teléfono: </label> 
 				<div class="col-sm-4">
 					<input class="form-control" type="text" name="blankphone" maxlength="18" placeholder="Ej. 0034-910000000" onkeypress="return checkDashedNumbers(event)">
 				</div>
@@ -908,7 +810,7 @@ Los campos que poseen * son obligatorios.
 			</div>		
 
 			<div class="form-group">  <!-- Carnet de Conducir -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankdrivingtype">Carnet conducir: </label>
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankdrivingtype">Carnet de conducir: </label>
 				<div class="col-sm-10 form-inline">
 					<select class="form-control form-inline" name="blankdrivingtype" >
 						<?php
@@ -1001,19 +903,44 @@ Los campos que poseen * son obligatorios.
 					</div>
 				</div>
 			</div>
-
-			<div class="form-group tooltip-demo"> <!-- Educación -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Incluye los títulos que tengas de la siguiente forma: Titulo y Especialidad, Centro de estudios, Fechas de inicio y fin"></span> Educación: </label> 
-				<div id="uploadFormDegree" class="col-sm-9">
-					<input class="form-control" type="text" name="add_educ" placeholder='Pulse "+" tras elegir su educación... ' />
-				</div>
-				<div class="btn-toolbar col-sm-1">
-					<div class="btn-group btn-group-sm"><button class="btn btn-default" onclick="addDegree(this.form);" type="button"><span class="glyphicon glyphicon-plus"></span></button></div>
+			
+			<div class="form-group"> <!-- Educación -->
+				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Incluye los títulos que tengas de la siguiente forma: Titulo y Especialidad, Centro de estudios, Fechas de inicio y fin"></span> Educación: </label> -->
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title=""></span> Educación: *</label> 
+				<div class="col-sm-10" id="uploadFormDegree">
+					<div class="row" style="padding-left: 0px; margin-bottom: 10px;">
+						<div class="col-sm-11">
+							<div class="row">
+								<div class="col-sm-12">
+									<input class="form-control" type="text" name="add_educ" placeholder='Título (Pulse "+" tras elegir su educación)' />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<input class="form-control" type="text" name="addEducCenter" placeholder="Centro Educativo" />
+								</div>
+							</div>
+							<div class="row">
+								<label id="uploadFormLabel" class="control-label col-sm-2">Inicio</label>
+								<div class="col-sm-4">
+									<input class="form-control" type="date" name="addEducStart" />
+								</div>			
+								<label id="uploadFormLabel" class="control-label col-sm-2">Fin</label>
+								<div class="col-sm-4">
+									<input class="form-control" type="date" name="addEducEnd" />
+								</div>
+							</div>
+						</div>
+						<div class="btn-toolbar col-sm-1">
+							<div class="btn-group btn-group-sm"><button class="btn btn-default" onclick="addDegree(this.form);" type="button"><span class="glyphicon glyphicon-plus"></span></button></div>
+						</div>
+					</div>
 				</div>
 			</div>
 			
 			<div class="form-group tooltip-demo"> <!-- Profesión -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Si su título no aparece en el listado, seleccione Otra y póngase en contacto con nosotros a traves de administracion@perspectiva-alemania.com"></span> Profesión: *</label>
+				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Si su título no aparece en el listado, seleccione Otra y póngase en contacto con nosotros a traves de administracion@perspectiva-alemania.com"></span> Profesión: *</label> -->
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title=""></span> Profesión: *</label>
 				<div id="uploadFormProf" class="col-sm-9">
 					<select class="form-control" name="add_prof">
 						<option selected value=""> Pulse "+" tras elegir... </option>

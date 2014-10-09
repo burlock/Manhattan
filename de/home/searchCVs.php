@@ -163,7 +163,7 @@
 										<input type="text" class="form-control" name="blankCity" placeholder="Stadt" />
 										</div>
 										<div class="col-xs-4">
-											<input type="text" class="form-control" name="blankProvince" placeholder="Provinz" />
+											<input type="text" class="form-control" name="blankProvince" placeholder="Kreis" />
 										</div>
 									</div> <!-- id="formResidence" -->
 									
@@ -293,7 +293,7 @@
 													</tr>
 													<tr>
 														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="city" disabled> Stadt</td>
-														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="province" disabled> Provinz</td>
+														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="province" disabled> Kreis</td>
 														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="phone" disabled> Telefon</td>
 														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="mobile" disabled> Mobiltelefon</td>
 														<td style="padding-left:40px; padding-top:10px; font-size: 14px;"><input type="checkbox" name="per[]" value="mail" disabled> Email</td>

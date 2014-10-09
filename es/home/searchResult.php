@@ -123,62 +123,94 @@
 								$this->__construct($p, $o,'none',array());
 							}
 						}
-						$enlace = connectDB();
 						
-						if(strlen($_POST[blankWordKey])>0){
-							$criteria = "WHERE (`nie` LIKE '%$_POST[blankWordKey]%' OR `name` LIKE '%$_POST[blankWordKey]%' OR `surname` LIKE '%$_POST[blankWordKey]%' OR `nationalities` LIKE '%$_POST[blankWordKey]%' OR `country` LIKE '%$_POST[blankWordKey]%' OR `province` LIKE '%$_POST[blankWordKey]%' OR `city` LIKE '%$_POST[blankWordKey]%' OR `mail` LIKE '%$_POST[blankWordKey]%' OR `marital` LIKE '%$_POST[blankWordKey]%' OR `language` LIKE '%$_POST[blankWordKey]%' OR `educTittle` LIKE '%$_POST[blankWordKey]%' OR `educCenter` LIKE '%$_POST[blankWordKey]%' OR `career` LIKE '%$_POST[blankWordKey]%' OR `experCity` LIKE '%$_POST[blankWordKey]%' OR `experCountry` LIKE '%$_POST[blankWordKey]%' OR `experPos` LIKE '%$_POST[blankWordKey]%' OR `experDesc` LIKE '%$_POST[blankWordKey]%' OR `otherDetails` LIKE '%$_POST[blankWordKey]%' OR `skill1` LIKE '%$_POST[blankWordKey]%' OR `skill2` LIKE '%$_POST[blankWordKey]%' OR `skill3` LIKE '%$_POST[blankWordKey]%' OR `skill4` LIKE '%$_POST[blankWordKey]%' OR `skill5` LIKE '%$_POST[blankWordKey]%' OR `skill6` LIKE '%$_POST[blankWordKey]%' OR `skill7` LIKE '%$_POST[blankWordKey]%' OR `skill8` LIKE '%$_POST[blankWordKey]%' OR `skill9` LIKE '%$_POST[blankWordKey]%' OR `skill10` LIKE '%$_POST[blankWordKey]%') AND `cvStatus` = 'checked'";
+						if(strlen($_POST[blankWordKey]) > 0){
+							//Búsqueda por campo clave. El Administrador introduce 1 sola palabra y la App busca entre todos los campos posibles
+							//echo 'la clave es mayor que 0';
+							//exit();
+							$criteria = "WHERE (
+								`nie` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`name` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`surname` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`keyCountry` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`country` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`province` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`city` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`mail` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`marital` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`keyLanguage` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`educTittle` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`educCenter` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`keyOccupation` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`company` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`position` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`city` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`country` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`description` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`otherDetails` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`skill1` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`skill2` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`skill3` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`skill4` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`skill5` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`skill6` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`skill7` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`skill8` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`skill9` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
+								`skill10` LIKE '%".securizeString($_POST[blankWordKey])."%' ) AND `cvStatus` = 'checked'";
 						}
 						else{
+							//Búsqueda específica. Solo se usarán como filtro aquellos campos que vengan provisionados
 							$moreThanOne = false; //If there is more than one fields to look for.
 							$criteria ="WHERE `cvStatus` = 'checked'";
 							$otherFields = "";
-							if(strlen($_POST['blankNIE']) > 0){
+							if(strlen($_POST[blankNIE]) > 0){
 								if($moreThanOne){
-									$otherFields = $otherFields." AND `nie` LIKE '%$_POST[blankNIE]%'";
+									$otherFields = $otherFields." AND `nie` LIKE '%".securizeString($_POST[blankNIE])."%'";
 								}
 								else{
 									$moreThanOne = true;
-									$otherFields = $otherFields."`nie` LIKE '%$_POST[blankNIE]%'";
+									$otherFields = $otherFields."`nie` LIKE '%".securizeString($_POST[blankNIE])."%'";
 								}
 							}
 							
 							if(strlen($_POST['blankNationality']) > 0){
 								if($moreThanOne){
-									$otherFields = $otherFields." AND `nationalities` LIKE '%$_POST[blankNationality]%'";
+									$otherFields = $otherFields." AND `keyCountry` = '$_POST[blankNationality]'";
 								}
 								else{
 									$moreThanOne = true;
-									$otherFields = $otherFields."`nationalities` LIKE '%$_POST[blankNationality]%'";
+									$otherFields = $otherFields."`keyCountry` = '$_POST[blankNationality]'";
 								}
 							}
 							
 							if(isset($_POST['blankSex'])){
 								if($moreThanOne){
-									$otherFields = $otherFields." AND `sex` LIKE '%$_POST[blankSex]%'";
+									$otherFields = $otherFields." AND `sex` = '$_POST[blankSex]'";
 								}
 								else{
 									$moreThanOne = true;
-									$otherFields = $otherFields."`sex` LIKE '%$_POST[blankSex]%'";
+									$otherFields = $otherFields."`sex` = '$_POST[blankSex]'";
 								}
 							}
 							
 							if(strlen($_POST['blankCity']) > 0){
 								if($moreThanOne){
-									$otherFields = $otherFields." AND `city` LIKE '%$_POST[blankCity]%'";
+									$otherFields = $otherFields." AND `city` LIKE '%".securizeString($_POST[blankCity])."%'";
 								}
 								else{
 									$moreThanOne = true;
-									$otherFields = $otherFields."`city` LIKE '%$_POST[blankCity]%'";
+									$otherFields = $otherFields."`city` LIKE '%".securizeString($_POST[blankCity])."%'";
 								}
 							}
 							
 							if(strlen($_POST['blankProvince']) > 0){
 								if($moreThanOne){
-									$otherFields = $otherFields." AND `province` LIKE '%$_POST[blankProvince]%'";
+									$otherFields = $otherFields." AND `province` LIKE '%".securizeString($_POST[blankProvince])."%'";
 								}
 								else{
 									$moreThanOne = true;
-									$otherFields = $otherFields."`province` LIKE '%$_POST[blankProvince]%'";
+									$otherFields = $otherFields."`province` LIKE '%".securizeString($_POST[blankProvince])."%'";
 								}
 							}
 							
@@ -194,11 +226,11 @@
 							
 							if(strlen($_POST['blankCivilStatus']) > 0){
 								if($moreThanOne){
-									$otherFields = $otherFields." AND `marital` LIKE '%$_POST[blankCivilStatus]%'";
+									$otherFields = $otherFields." AND `marital` = '%$_POST[blankCivilStatus]%'";
 								}
 								else{
 									$moreThanOne = true;
-									$otherFields = $otherFields."`marital` LIKE '%$_POST[blankCivilStatus]%'";
+									$otherFields = $otherFields."`marital` = '%$_POST[blankCivilStatus]%'";
 								}
 							}
 							
@@ -214,51 +246,51 @@
 							
 							if(strlen($_POST['blankLanguages']) > 0){
 								if($moreThanOne){
-									$otherFields = $otherFields." AND `language` LIKE '%$_POST[blankLanguages]%'";
+									$otherFields = $otherFields." AND `keyLanguage` = '%$_POST[blankLanguages]%'";
 								}
 								else{
 									$moreThanOne = true;
-									$otherFields = $otherFields."`language` LIKE '%$_POST[blankLanguages]%'";
+									$otherFields = $otherFields."`keyLanguage` = '%$_POST[blankLanguages]%'";
 								}
 							}
 							
 							if(strlen($_POST['blankLangLevels']) > 0){
 								if($moreThanOne){
-									$otherFields = $otherFields." AND `langLevel` LIKE '%$_POST[blankLangLevels]%'";
+									$otherFields = $otherFields." AND `level` = '%$_POST[blankLangLevels]%'";
 								}
 								else{
 									$moreThanOne = true;
-									$otherFields = $otherFields."`langLevel` LIKE '%$_POST[blankLangLevels]%'";
+									$otherFields = $otherFields."`level` = '%$_POST[blankLangLevels]%'";
 								}
 							}
 							
 							if(strlen($_POST['blankEducTittle']) > 0){
 								if($moreThanOne){
-									$otherFields = $otherFields." AND `educTittle` LIKE '%$_POST[blankEducTittle]%'";
+									$otherFields = $otherFields." AND `educTittle` LIKE '%".securizeString($_POST[blankEducTittle])."%'";
 								}
 								else{
 									$moreThanOne = true;
-									$otherFields = $otherFields."`educTittle` LIKE '%$_POST[blankEducTittle]%'";
+									$otherFields = $otherFields."`educTittle` LIKE '%".securizeString($_POST[blankEducTittle])."%'";
 								}
 							}
 							
 							if(strlen($_POST['blankEducCenter']) > 0){
 								if($moreThanOne){
-									$otherFields = $otherFields." AND `educCenter` LIKE '%$_POST[blankEducCenter]%'";
+									$otherFields = $otherFields." AND `educCenter` LIKE '%".securizeString($_POST[blankEducCenter])."%'";
 								}
 								else{
 									$moreThanOne = true;
-									$otherFields = $otherFields."`educCenter` LIKE '%$_POST[blankEducCenter]%'";
+									$otherFields = $otherFields."`educCenter` LIKE '%".securizeString($_POST[blankEducCenter])."%'";
 								}
 							}
 							
 							if(strlen($_POST['blankCareer']) > 0){
 								if($moreThanOne){
-									$otherFields = $otherFields." AND `career` LIKE '%$_POST[blankCareer]%'";
+									$otherFields = $otherFields." AND `career` LIKE '%".securizeString($_POST[blankCareer])."%'";
 								}
 								else{
 									$moreThanOne = true;
-									$otherFields = $otherFields."`career` LIKE '%$_POST[blankCareer]%'";
+									$otherFields = $otherFields."`career` LIKE '%".securizeString($_POST[blankCareer])."%'";
 								}
 							}
 							
@@ -272,23 +304,51 @@
 								}
 							}
 							
+							//exit();
 							$and = " AND ";
 							$open = "(";
 							$close = ")";
 							if($moreThanOne){
 								$criteria = $criteria.$and.$open.$otherFields.$close;
+							echo $criteria;
 							}
 							else{
 								//aqui no vendría nada si se hace una búsqueda vacía, solo los CVs 'checked' se buscarían.
 								//Entrar en este 'else' implica estar haciendo una búsqueda vacía, sin filtros. Eso mostraría todos los CVs en estado 'checked'.
 							}
-						}						
+						}//else que busca por campos específicos
 						
-						$consulta = "SELECT * FROM `cvitaes`".$criteria;
 						
-						if ($resultado = mysqli_query($enlace, $consulta)) {
+						$query = "SELECT DISTINCT cvitaes.*, (SELECT GROUP_CONCAT(userCountries.keyCountry SEPARATOR '|') FROM userCountries WHERE cvitaes.nie = userCountries.userNIE), 
+							(SELECT GROUP_CONCAT(userLanguages.keyLanguage SEPARATOR '|') FROM userLanguages WHERE cvitaes.nie = userLanguages.userNIE), 
+							(SELECT GROUP_CONCAT(userLanguages.level SEPARATOR '|') FROM userLanguages WHERE cvitaes.nie = userLanguages.userNIE),
+							(SELECT GROUP_CONCAT(userEducations.educTittle SEPARATOR '|') FROM userEducations WHERE cvitaes.nie = userEducations.userNIE), 
+							(SELECT GROUP_CONCAT(userEducations.educCenter SEPARATOR '|') FROM userEducations WHERE cvitaes.nie = userEducations.userNIE), 
+							(SELECT GROUP_CONCAT(userEducations.educStart SEPARATOR '|') FROM userEducations WHERE cvitaes.nie = userEducations.userNIE), 
+							(SELECT GROUP_CONCAT(userEducations.educEnd SEPARATOR '|') FROM userEducations WHERE cvitaes.nie = userEducations.userNIE), 
+							(SELECT GROUP_CONCAT(userOccupations.keyOccupation SEPARATOR '|') FROM userOccupations WHERE cvitaes.nie = userOccupations.userNIE), 
+							(SELECT GROUP_CONCAT(userExperiences.company SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE), 
+							(SELECT GROUP_CONCAT(userExperiences.position SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE), 
+							(SELECT GROUP_CONCAT(userExperiences.start SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE), 
+							(SELECT GROUP_CONCAT(userExperiences.end SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE), 
+							(SELECT GROUP_CONCAT(userExperiences.city SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE), 
+							(SELECT GROUP_CONCAT(userExperiences.country SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE), 
+							(SELECT GROUP_CONCAT(userExperiences.description SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE) 
+							FROM cvitaes INNER JOIN userCountries ON cvitaes.nie = userCountries.userNIE ".$criteria;
+						
+						//AÑADIR UN 'ORDER BY `surname`' PARA QUE PUEDA MOSTRAR EL RESULTADO ORDENADO ALFABÉTICAMENTE SEGUN LOS APELLIDOS
+						
+						
+						/****************************************/
+						
+						//echo $query;
+						//exit();
+						
+						
+						/*
+						if ($result = mysqli_query($connection, $query)) {
 							//Obtaining field information for every column
-							//$info_campo = mysqli_fetch_fields($resultado);
+							//$info_campo = mysqli_fetch_fields($result);
 							$valores_mostrar = array("id", "name", "surname", "nationalities", "career");
 							$columnTittles = array("ID", "Nombre", "Apellidos", "Nacionalidad", "Profesión");
 							echo "<div class='table-responsive'>";
@@ -302,13 +362,13 @@
 									echo "</thead>";
 									
 									//Extracting number of rows in result
-									$auxNumRow = 1;
-									while ($fila = $resultado->fetch_assoc()) {
-										$pdf_file_name = "";
-										$pdf_file_name = $fila['userLogin'];
-										$imagen_o=$output_dir.$fila['userLogin']."/photo.jpg";
-										$logo=$output_dir."/logo.png";
-										$id[$fila['id']] = $fila['nie'];
+									$rowID = 1;
+									while ($fila = $result->fetch_assoc()) {
+										//$pdf_file_name = "";
+										//$pdf_file_name = $fila['userLogin'];
+										//$imagen_o=$output_dir.$fila['userLogin']."/photo.jpg";
+										//$logo=$output_dir."/logo.png";
+										$id[$fila['id']] = $fila['nie'];//AQUI ESTA GUARDANDO EL 'NIE' DE CADA CANDIDATO APARECIDO EN LA BUSQUEDA
 										if ($fila['sex']==0){
 											$fila['sex'] = "hombre";
 										}
@@ -326,32 +386,129 @@
 										}
 										echo "<tr>";
 											//Instead of using user's id, will be used an auto-increment id
-											echo "<td>".$auxNumRow."</td>";
+											echo "<td>".$rowID."</td>";
 											echo "<td><a href=viewCV.php?id_b=".$fila['id']."&reportType=".$reportType." target=_blank>".$fila[$valores_mostrar[1]]."</a></td>";
 											echo "<td>".($fila[$valores_mostrar[2]])."</td>";
 											echo "<td>".($fila[$valores_mostrar[3]])."</td>";
 											echo "<td>".($fila[$valores_mostrar[4]])."</td>";
 										echo "</tr>";
-										$auxNumRow++;
+										$rowID++;
 									}
 								echo "</table>";
 							echo "</div>";
-							mysqli_free_result($resultado);
+							mysqli_free_result($result);
 						}
 						$i=0;
 						foreach ($id as $valor) {
-							$id_o[$i]=$valor;
+							$id_o[$i]=$valor; //LO QUE SE GUARDA AQUI SON 'NIEs'     $id_o pasa a ser $resultNIEsRow
 							$i++;
 						}
+						*/
+						$connection = connectDB();
+						
+						if($result = mysqli_query($connection, $query)) {
+							//$valores_mostrar = array("id", "name", "surname", "nationalities", "career");
+							//$columnTittles = array("ID", "Nombre", "Apellidos", "Nacionalidad", "Profesión");
+							$columnTittles = array("ID", "Nombre", "Nacionalidades", "Profesión");
+							//echo mysqli_num_rows($result);
+							//If query returns any result, table with information is showed.
+							if(mysqli_num_rows($result) > 0){
+								$rowID = 0;
+								//echo $_POST[reportType].'<br>';
+								$reportType = $_POST[reportType];
+								if ($_POST[reportType] == "custom_report"){
+									//$reportType=custom_report;
+									$_SESSION['customReportChecks'] = $_POST['per'];
+								}
+								/*
+								if ($_POST[reportType] == "blind_report"){
+									$reportType=blind_report;
+								}
+								if ($_POST[reportType] == "full_report"){
+									$reportType=full_report;
+								}
+								*/
+								//NIE from resultant Candidate is saved in an Array
+								$resultNIEsRow = array();
+								echo "<div class='table-responsive'>";
+									echo "<table id='resultTable' class='table table-striped table-hover'>";
+										echo "<thead>";
+											echo "<tr>";
+											foreach ($columnTittles as $valor){
+												echo "<th>$valor</th>";
+											}
+											echo "</tr>";
+										echo "</thead>";
+										while($resultRow = mysqli_fetch_row($result)){
+											$id[$resultRow[0]] = $resultRow[1]; //$id[$fila['id']] = $fila['nie'];
+											echo "<tr>";
+												//Instead of using user's id, will be used an auto-increment id
+												echo "<td>".($rowID+1)."</td>";
+												//echo "<td><a href=viewCV.php?id_b=".$fila['id']."&reportType=".$reportType." target=_blank>".$fila[$valores_mostrar[1]]."</a></td>";
+												echo "<td><a href=viewCV.php?id_b=".$resultRow[0]."&reportType=".$reportType." target=_blank>".$resultRow[4].', '.$resultRow[3]."</a></td>";
+												//INCLUIR SOLO SI QUIEREN SEPARADOS NOMBRE Y APELLIDOS echo "<td>".($resultRow[4])."</td>";
+												echo "<td>".($resultRow[43])."</td>";
+												echo "<td>".($resultRow[50])."</td>";
+											echo "</tr>";
+											$resultNIEsRow[$rowID] = $resultRow[1]; //ESTO ES $id_o[$i]=$valor
+											$rowID++;
+											/*
+											echo '<br>';
+											//echo $resultRow[0].' - ';
+											echo $resultRow[1].' - ';//NIE
+											echo $resultRow[2].' - ';
+											echo $resultRow[3].' - ';
+											echo $resultRow[4].' - ';
+											echo $resultRow[5].' - ';
+											echo $resultRow[14].' - ';//phone
+											echo $resultRow[16].' - ';//country
+											echo $resultRow[17].' - ';//province
+											echo $resultRow[18].' - ';//city
+											echo $resultRow[19].' - ';//mobile
+											echo $resultRow[20].' - ';//mail
+											echo $resultRow[23].' - ';//marital
+											//echo $resultRow[24].' - ';
+											//echo $resultRow[27].' - ';//otherDetails
+											echo $resultRow[41].' - ';//userLogin
+											echo $resultRow[43].' - ';//keyCountry (debe ser múltiple)
+											echo $resultRow[44].' - ';//keyLanguage (debe ser múltiple)
+											echo $resultRow[45].' - ';//level (múltiple)
+											echo $resultRow[46].' - ';//educTittle
+											echo $resultRow[47].' - ';//educCenter
+											echo $resultRow[48].' - ';//educStart
+											echo $resultRow[49].' - ';//educEnd
+											echo $resultRow[50].' - ';//keyOccupation
+											echo $resultRow[51].' - ';//company
+											echo $resultRow[52].' - ';//position
+											echo $resultRow[53].' - ';//start
+											echo $resultRow[54].' - ';//end
+											echo $resultRow[55].' - ';//city
+											echo $resultRow[56].' - ';//country
+											echo $resultRow[57].' - ';//description
+											echo '<br>';
+											*/
+										}//while
+									echo "</table>";
+								echo "</div>";
+								mysqli_free_result($result);
+							}
+							else{
+								echo "No hay resultados para su búsqueda.";
+							}
+						}
+						
 						echo "<form id='downloadSearchReport' name='downloadSearchReport' class='form-horizontal' method='post' action='downloadFile.php?doc=$filezip'>";
 							echo "<div id='form_download' class='form-group pull-right' style='margin: 1px;'>";
-								echo "<button type='submit' name='downloadSearchReportButton' class='btn btn-primary' >Descargar Informe   <span class='glyphicon glyphicon-download-alt'> </span></button>";
+								echo "<button type='submit' name='downloadSearchReportButton' class='btn btn-primary' >Descargar Informe <span class='glyphicon glyphicon-download-alt'> </span></button>";
 							echo "</div>";
 						echo "</form>";
+						
 						//$_SESSION["custom"]= serialize($_POST[per]);
-						$_SESSION["id_o"] = serialize($id_o);
-						$_SESSION["id"] = serialize($id);
-						$_SESSION['customReportChecks'] = $_POST['per'];
+						//$_SESSION['customReportChecks'] = $_POST['per'];//ESTOS SON LOS NOMBRES DE LOS CAMPOS QUE SE QUIEREN MOSTRAR TRAS HABER ELEGIDO UN INFORME DE TIPO 'custom'. DEBE IR EN EL 'if ($_POST[reportType] == "custom_report"){'
+						//$_SESSION["id_o"] = serialize($id_o);//AQUI ESTA SERIALIZANDO LOS NIEs DE LOS CANDIDATOS QUE HAN APARECIDO EN LA BUSQUEDA
+						$_SESSION["serializedNIEs"] = serialize($resultNIEsRow);
+						$_SESSION["id"] = serialize($id);//ESTO ES UN ARRAY CON LOS VALORES DEL CAMPO 'id' EN LA TABLA cvitaes
+						
 						?>
 					</div> <!-- bs-docs-section -->
 				</div> <!-- col-md-9 scrollable role=main -->
