@@ -125,36 +125,60 @@
 						}
 						
 						if(strlen($_POST[blankWordKey])>0){
-							$criteria = "WHERE (
-								`nie` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`name` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`surname` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`keyCountry` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`country` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`province` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`city` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`mail` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`marital` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`keyLanguage` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`educTittle` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`educCenter` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`keyOccupation` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`company` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`position` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`city` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`country` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`description` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`otherDetails` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`skill1` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`skill2` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`skill3` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`skill4` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`skill5` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`skill6` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`skill7` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`skill8` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`skill9` LIKE '%".securizeString($_POST[blankWordKey])."%' OR 
-								`skill10` LIKE '%".securizeString($_POST[blankWordKey])."%' ) AND `cvStatus` = 'checked'";
+						$query ="SELECT cvitaes.id, cvitaes.nie, cvitaes.name, cvitaes.surname, cvitaes.birthdate, cvitaes.addrType, cvitaes.addrName, cvitaes.addrNum, cvitaes.portal, cvitaes.stair, cvitaes.addrFloor, 
+							cvitaes.addrDoor, cvitaes.phone, cvitaes.postalCode, cvitaes.country, cvitaes.province, cvitaes.city, cvitaes.mobile, cvitaes.mail, cvitaes.drivingType, cvitaes.drivingDate, cvitaes.marital, 
+							cvitaes.sons, cvitaes.otherDetails, cvitaes.skill1, cvitaes.skill2, cvitaes.skill3, cvitaes.skill4, cvitaes.skill5, cvitaes.skill6, cvitaes.skill7, cvitaes.skill8, cvitaes.skill9, 
+							cvitaes.skill10, cvitaes.comments, cvitaes.candidateStatus, cvitaes.userLogin, cvitaes.salary, 
+							GROUP_CONCAT(DISTINCT userNationalities.keyCountry SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userEducations.educTittle SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userEducations.educCenter SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userEducations.educStart SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userEducations.educEnd SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userLanguages.keyLanguage SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userLanguages.level SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userOccupations.keyOccupation SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userExperiences.expCompany SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userExperiences.expPosition SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userExperiences.expStart SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userExperiences.expEnd SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userExperiences.expCity SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userExperiences.expCountry SEPARATOR '|'), 
+							GROUP_CONCAT(DISTINCT userExperiences.expDescription SEPARATOR '|') 
+						FROM cvitaes 
+							INNER JOIN userNationalities ON userNationalities.userNIE = cvitaes.nie 
+							INNER JOIN userEducations ON userEducations.userNIE = cvitaes.nie 
+							INNER JOIN userLanguages ON userLanguages.userNIE = cvitaes.nie
+							INNER JOIN userOccupations ON userOccupations.userNIE = cvitaes.nie
+							LEFT JOIN userExperiences ON userExperiences.userNIE = cvitaes.nie 
+						WHERE (
+							nie LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							name  LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							surname LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							province LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							mobile LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							mail LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							marital LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							otherDetails LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							skill1 LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							skill2 LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							skill3 LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							skill4 LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							skill5 LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							skill6 LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							skill7 LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							skill8 LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							skill9 LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							skill10 LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							comments LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							candidateStatus LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							userLogin LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							keyCountry LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							educTittle LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							educCenter LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							keyLanguage LIKE '%".securizeString($_POST[blankWordKey])."%' OR
+							keyOccupation LIKE '%".securizeString($_POST[blankWordKey])."%'
+						) AND cvStatus = 'checked'
+						GROUP BY cvitaes.nie";
 						}
 						else{
 							//Búsqueda específica. Solo se usarán como filtro aquellos campos que vengan provisionados
@@ -191,6 +215,7 @@
 								}
 							}
 							
+							//From 'cvitaes' table...
 							if(strlen($_POST['blankCity']) > 0){
 								if($moreThanOne){
 									$otherFields = $otherFields." AND `city` LIKE '%".securizeString($_POST[blankCity])."%'";
@@ -283,11 +308,11 @@
 							
 							if(strlen($_POST['blankCareer']) > 0){
 								if($moreThanOne){
-									$otherFields = $otherFields." AND `career` LIKE '%".securizeString($_POST[blankCareer])."%'";
+									$otherFields = $otherFields." AND `keyOccupation` LIKE '%".securizeString($_POST[blankCareer])."%'";
 								}
 								else{
 									$moreThanOne = true;
-									$otherFields = $otherFields."`career` LIKE '%".securizeString($_POST[blankCareer])."%'";
+									$otherFields = $otherFields."`keyOccupation` LIKE '%".securizeString($_POST[blankCareer])."%'";
 								}
 							}
 							
@@ -302,36 +327,69 @@
 							}
 							
 							$and = " AND ";
-							$open = "(";
-							$close = ")";
+							//$open = "(";
+							//$close = ")";
+							$group = " GROUP BY cvitaes.nie";
 							if($moreThanOne){
-								$criteria = $criteria.$and.$open.$otherFields.$close;
+								$criteria = $criteria.$and.$otherFields.$group;
+								$query = "SELECT cvitaes.id, cvitaes.nie, cvitaes.name, cvitaes.surname, cvitaes.birthdate, cvitaes.addrType, cvitaes.addrName, cvitaes.addrNum, cvitaes.portal, cvitaes.stair, cvitaes.addrFloor, 
+									cvitaes.addrDoor, cvitaes.phone, cvitaes.postalCode, cvitaes.country, cvitaes.province, cvitaes.city, cvitaes.mobile, cvitaes.mail, cvitaes.drivingType, cvitaes.drivingDate, cvitaes.marital, 
+									cvitaes.sons, cvitaes.otherDetails, cvitaes.skill1, cvitaes.skill2, cvitaes.skill3, cvitaes.skill4, cvitaes.skill5, cvitaes.skill6, cvitaes.skill7, cvitaes.skill8, cvitaes.skill9, 
+									cvitaes.skill10, cvitaes.comments, cvitaes.candidateStatus, cvitaes.userLogin, cvitaes.salary, 
+									GROUP_CONCAT(DISTINCT userNationalities.keyCountry SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userEducations.educTittle SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userEducations.educCenter SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userEducations.educStart SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userEducations.educEnd SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userLanguages.keyLanguage SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userLanguages.level SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userOccupations.keyOccupation SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expCompany SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expPosition SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expStart SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expEnd SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expCity SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expCountry SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expDescription SEPARATOR '|') 
+								FROM cvitaes 
+									INNER JOIN userNationalities ON userNationalities.userNIE = cvitaes.nie 
+									INNER JOIN userEducations ON userEducations.userNIE = cvitaes.nie 
+									INNER JOIN userLanguages ON userLanguages.userNIE = cvitaes.nie
+									INNER JOIN userOccupations ON userOccupations.userNIE = cvitaes.nie
+									LEFT JOIN userExperiences ON userExperiences.userNIE = cvitaes.nie ".$criteria;
 							}
 							else{
 								//aqui no vendría nada si se hace una búsqueda vacía, solo los CVs 'checked' se buscarían.
 								//Entrar en este 'else' implica estar haciendo una búsqueda vacía, sin filtros. Eso mostraría todos los CVs en estado 'checked'.
+								$query = "SELECT cvitaes.id, cvitaes.nie, cvitaes.name, cvitaes.surname, cvitaes.birthdate, cvitaes.addrType, cvitaes.addrName, cvitaes.addrNum, cvitaes.portal, cvitaes.stair, cvitaes.addrFloor, 
+									cvitaes.addrDoor, cvitaes.phone, cvitaes.postalCode, cvitaes.country, cvitaes.province, cvitaes.city, cvitaes.mobile, cvitaes.mail, cvitaes.drivingType, cvitaes.drivingDate, cvitaes.marital, 
+									cvitaes.sons, cvitaes.otherDetails, cvitaes.skill1, cvitaes.skill2, cvitaes.skill3, cvitaes.skill4, cvitaes.skill5, cvitaes.skill6, cvitaes.skill7, cvitaes.skill8, cvitaes.skill9, 
+									cvitaes.skill10, cvitaes.comments, cvitaes.candidateStatus, cvitaes.userLogin, cvitaes.salary, 
+									GROUP_CONCAT(DISTINCT userNationalities.keyCountry SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userEducations.educTittle SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userEducations.educCenter SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userEducations.educStart SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userEducations.educEnd SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userLanguages.keyLanguage SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userLanguages.level SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userOccupations.keyOccupation SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expCompany SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expPosition SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expStart SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expEnd SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expCity SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expCountry SEPARATOR '|'), 
+									GROUP_CONCAT(DISTINCT userExperiences.expDescription SEPARATOR '|') 
+								FROM cvitaes 
+									INNER JOIN userNationalities ON userNationalities.userNIE = cvitaes.nie 
+									INNER JOIN userEducations ON userEducations.userNIE = cvitaes.nie 
+									INNER JOIN userLanguages ON userLanguages.userNIE = cvitaes.nie
+									INNER JOIN userOccupations ON userOccupations.userNIE = cvitaes.nie
+									LEFT JOIN userExperiences ON userExperiences.userNIE = cvitaes.nie 
+								WHERE cvitaes.cvStatus = 'checked'
+								GROUP BY cvitaes.nie";
 							}
 						}//else que busca por campos específicos
-						
-						
-						$query = "SELECT DISTINCT cvitaes.*, (SELECT GROUP_CONCAT(userCountries.keyCountry SEPARATOR '|') FROM userCountries WHERE cvitaes.nie = userCountries.userNIE), 
-							(SELECT GROUP_CONCAT(userLanguages.keyLanguage SEPARATOR '|') FROM userLanguages WHERE cvitaes.nie = userLanguages.userNIE), 
-							(SELECT GROUP_CONCAT(userLanguages.level SEPARATOR '|') FROM userLanguages WHERE cvitaes.nie = userLanguages.userNIE),
-							(SELECT GROUP_CONCAT(userEducations.educTittle SEPARATOR '|') FROM userEducations WHERE cvitaes.nie = userEducations.userNIE), 
-							(SELECT GROUP_CONCAT(userEducations.educCenter SEPARATOR '|') FROM userEducations WHERE cvitaes.nie = userEducations.userNIE), 
-							(SELECT GROUP_CONCAT(userEducations.educStart SEPARATOR '|') FROM userEducations WHERE cvitaes.nie = userEducations.userNIE), 
-							(SELECT GROUP_CONCAT(userEducations.educEnd SEPARATOR '|') FROM userEducations WHERE cvitaes.nie = userEducations.userNIE), 
-							(SELECT GROUP_CONCAT(userOccupations.keyOccupation SEPARATOR '|') FROM userOccupations WHERE cvitaes.nie = userOccupations.userNIE), 
-							(SELECT GROUP_CONCAT(userExperiences.company SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE), 
-							(SELECT GROUP_CONCAT(userExperiences.position SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE), 
-							(SELECT GROUP_CONCAT(userExperiences.start SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE), 
-							(SELECT GROUP_CONCAT(userExperiences.end SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE), 
-							(SELECT GROUP_CONCAT(userExperiences.city SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE), 
-							(SELECT GROUP_CONCAT(userExperiences.country SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE), 
-							(SELECT GROUP_CONCAT(userExperiences.description SEPARATOR '|') FROM userExperiences WHERE cvitaes.nie = userExperiences.userNIE) 
-							FROM cvitaes INNER JOIN userCountries ON cvitaes.nie = userCountries.userNIE ".$criteria;
-						
-						//AÑADIR UN 'ORDER BY `surname`' PARA QUE PUEDA MOSTRAR EL RESULTADO ORDENADO ALFABÉTICAMENTE SEGUN LOS APELLIDOS
 						
 						
 						$connection = connectDB();
@@ -361,10 +419,9 @@
 											echo "<tr>";
 												//Instead of using user's id, will be used an auto-increment id
 												echo "<td>".($rowID+1)."</td>";
-												echo "<td><a href=viewCV.php?id_b=".$resultRow[0]."&reportType=".$reportType." target=_blank>".$resultRow[4].', '.$resultRow[3]."</a></td>";
-												//INCLUIR SOLO SI QUIEREN SEPARADOS NOMBRE Y APELLIDOS echo "<td>".($resultRow[4])."</td>";
-												echo "<td>".($resultRow[43])."</td>";
-												echo "<td>".($resultRow[50])."</td>";
+												echo "<td><a href=viewCV.php?id_b=".$resultRow[0]."&reportType=".$reportType." target=_blank>".$resultRow[3].', '.$resultRow[2]."</a></td>";
+												echo "<td>".($resultRow[38])."</td>";
+												echo "<td>".($resultRow[45])."</td>";
 											echo "</tr>";
 											$resultNIEsRow[$rowID] = $resultRow[1]; //ESTO ES $id_o[$i]=$valor
 											$rowID++;
@@ -374,8 +431,11 @@
 								mysqli_free_result($result);
 							}
 							else{
-								echo "Es gibt keine Ergebnisse für Ihre Suche.";
+								echo "<br>Es gibt keine Ergebnisse für Ihre Suche.";
 							}
+						}
+						else{
+							echo "<br>Query malformed. Please contact administrator.";
 						}
 						
 						echo "<form id='downloadSearchReport' name='downloadSearchReport' class='form-horizontal' method='post' action='downloadFile.php?doc=$filezip'>";

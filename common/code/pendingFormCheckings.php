@@ -13,15 +13,21 @@ else {
 	$wholeNationalities = explode("|", $_POST['eCCVnationalities']);
 	$securedNats = securizeArray($wholeNationalities);
 	
-	$natIDs = getDBcolumnvalue('id', 'userCountries', 'userNIE', $_POST['eCCVnie']);
+	//$natIDs = getDBcolumnvalue('id', 'userCountries', 'userNIE', $_POST['eCCVnie']);
+	$natIDs = getDBcolumnvalue('idNat', 'userNationalities', 'userNIE', $_POST['eCCVnie']);
 	$j = 0;
 	foreach($securedNats as $i){
 		//Checking that new Nationality is valid as per 'countries' table
 		//ESTO ES NECESARIO PORQUE, PARA QUE SE PUDIERAN LISTAR LOS PAISES POR ORDEN ALFABETICO ESTANDO ESPAÑA LA 1ª ERA NECESARIO SACARLA DE LA TABLA
 		if(getDBsinglefield('german', 'countries', 'german', $i) || $i == 'Spanien'){
 			//If that nationality does not appear inside table for that userNIE must be inserted
+			/*
 			if(!getDBsinglefield2('keyCountry', 'userCountries', 'userNIE', $_POST['eCCVnie'], 'keyCountry', $i)){
 				executeDBquery("INSERT INTO `userCountries` (`userNIE`, `keyCountry`) VALUES ('".$_POST['eCCVnie']."', '".$i."')");
+			}
+			*/
+			if(!getDBsinglefield2('keyCountry', 'userNationalities', 'userNIE', $_POST['eCCVnie'], 'keyCountry', $i)){
+				executeDBquery("INSERT INTO `userNationalities` (`userNIE`, `keyCountry`) VALUES ('".$_POST['eCCVnie']."', '".$i."')");
 			}
 		}
 		//If new hand-written nationality does not exists, error must be returned
@@ -59,8 +65,13 @@ else {
 	
 	//LUEGO RECORRO EL VIEJO Y ELIMINARÉ EL 'language' Y 'langLevel' DEL VIEJO QUE NO ESTEN EN EL NUEVO
 	foreach($natIDs as $i){
+		/*
 		if(!in_array(getDBsinglefield('keyCountry', 'userCountries', 'id', $i), $securedNats)){
 			executeDBquery("DELETE FROM `userCountries` WHERE `id` = '".$i."'");
+		}
+		*/
+		if(!in_array(getDBsinglefield('keyCountry', 'userNationalities', 'id', $i), $securedNats)){
+			executeDBquery("DELETE FROM `userNationalities` WHERE `idNat` = '".$i."'");
 		}
 	}
 	/*  -----------------  End of Natinalities/Countries Treatment  ----------------  */
@@ -85,7 +96,7 @@ else {
 	
 	//TENDRE 2 VECTORES DE 'languages', UNO EL DE ENTRADA NUEVO, Y OTRO EL QUE YA ESTUVIERA.
 	//TENGO QUE RECORRER EL NUEVO Y COMPARARLO CON EL VIEJO. SI EL IDIOMA DEL NUEVO ESTABA YA EN EL VIEJO, COMPARO SI SUS 'langLevel' TAMBIEN COINCIDEN PARA MODIFICARLO O NO
-	$langIDs = getDBcolumnvalue('id', 'userLanguages', 'userNIE', $_POST['eCCVnie']);
+	$langIDs = getDBcolumnvalue('idLan', 'userLanguages', 'userNIE', $_POST['eCCVnie']);
 	$j = 0;
 	foreach($securedLangs as $i){
 		//Checking that new language is valid as per 'languages' table
@@ -135,7 +146,7 @@ else {
 	
 	//LUEGO RECORRO EL VIEJO Y ELIMINARÉ EL 'language' Y 'langLevel' DEL VIEJO QUE NO ESTEN EN EL NUEVO
 	foreach($langIDs as $i){
-		if(!in_array(getDBsinglefield('keyLanguage', 'userLanguages', 'id', $i), $securedLangs)){
+		if(!in_array(getDBsinglefield('keyLanguage', 'userLanguages', 'idLan', $i), $securedLangs)){
 			executeDBquery("DELETE FROM `userLanguages` WHERE `id` = '".$i."'");
 		}
 	}
@@ -143,7 +154,7 @@ else {
 	
 	
 	/************  Education's Treatment previous to be saved in DDBB  *************/
-	$educIDs = getDBcolumnvalue('id', 'userEducations', 'userNIE', $_POST['eCCVnie']);
+	$educIDs = getDBcolumnvalue('idEdu', 'userEducations', 'userNIE', $_POST['eCCVnie']);
 	for($i=0; $i<$_POST['eCCVcontEduc']; $i++){
 		$securedEducTittle = securizeString($_POST["eCCVeducTittle$i"]);
 		$securedEducCenter = securizeString($_POST["eCCVeducCenter$i"]);
@@ -167,8 +178,8 @@ else {
 					`educTittle` = '".$securedEducTittle."', 
 					`educCenter` = '".$securedEducCenter."', 
 					`educStart` = '".$securedEducStart."', 
-					`educEnd` = '".$securedEducEnd."', 
-				WHERE `userNIE` = '".$_POST['eCCVnie']."' AND `id` = '".$educIDs[$i]."'");
+					`educEnd` = '".$securedEducEnd."' 
+				WHERE `userNIE` = '".$_POST['eCCVnie']."' AND `idEdu` = '".$educIDs[$i]."'");
 			}
 		}
 	}
@@ -180,7 +191,7 @@ else {
 	$wholeOccupations = explode("|", $_POST['eCCVcareer']);
 	$securedOccupations = securizeArray($wholeOccupations);
 	
-	$occupIDs = getDBcolumnvalue('id', 'userOccupations', 'userNIE', $_POST['eCCVnie']);
+	$occupIDs = getDBcolumnvalue('idOcc', 'userOccupations', 'userNIE', $_POST['eCCVnie']);
 	foreach($securedOccupations as $i){
 		//PODRIA COMPROBAR SI TIENE TAMAÑO MINIMO, PERO PASANDO.
 		//If form occupation does not appear as one of user's occupations, it will be inserted
@@ -191,8 +202,8 @@ else {
 	
 	//After that, must be checked if any previous occupation should be deleted from 'userOccupations' table
 	foreach($occupIDs as $i){
-		if(!in_array(getDBsinglefield('keyOccupation', 'userOccupations', 'id', $i), $securedOccupations)){
-			executeDBquery("DELETE FROM `userOccupations` WHERE `id` = '".$i."'");
+		if(!in_array(getDBsinglefield('keyOccupation', 'userOccupations', 'idOcc', $i), $securedOccupations)){
+			executeDBquery("DELETE FROM `userOccupations` WHERE `idOcc` = '".$i."'");
 		}
 	}
 	
@@ -210,7 +221,8 @@ else {
 		$securedExperCountry = securizeString($_POST["eCCVexperCountry$i"]);
 		$securedExperDesc = securizeString($_POST["eCCVexperDesc$i"]);
 		
-		$prevExperRow = getDBrow('userExperiences', 'id', $expIDs[$i]);
+		$prevExperRow = getDBrow('userExperiences', 'idExp', $expIDs[$i]);
+		/*
 		if(!(($securedExperCompany == $prevExperRow['company']) && ($securedExperPos == $prevExperRow['position']) && 
 		($securedExperStart == $prevExperRow['start']) && ($securedExperEnd == $prevExperRow['end']) && 
 		($securedExperCity == $prevExperRow['city']) && ($securedExperCountry == $prevExperRow['country']) && ($securedExperDesc == $prevExperRow['description']))){
@@ -224,6 +236,21 @@ else {
 				`country` = '".$securedExperCountry."',
 				`description` = '".$securedExperDesc."' 
 			WHERE `userNIE` = '".$_POST['eCCVnie']."' AND `id` = '".$expIDs[$i]."'");
+		}
+		*/
+		if(!(($securedExperCompany == $prevExperRow['expCompany']) && ($securedExperPos == $prevExperRow['expPosition']) && 
+		($securedExperStart == $prevExperRow['expStart']) && ($securedExperEnd == $prevExperRow['expEnd']) && 
+		($securedExperCity == $prevExperRow['expCity']) && ($securedExperCountry == $prevExperRow['expCountry']) && ($securedExperDesc == $prevExperRow['expDescription']))){
+			executeDBquery("UPDATE `userExperiences` SET 
+				`userNIE` = '".$_POST["eCCVnie"]."', 
+				`expCompany` = '".$securedExperCompany."', 
+				`expPosition` = '".$securedExperPos."', 
+				`expStart` = '".$securedExperStart."', 
+				`expEnd` = '".$securedExperEnd."', 
+				`expCity` = '".$securedExperCity."', 
+				`expCountry` = '".$securedExperCountry."',
+				`expDescription` = '".$securedExperDesc."' 
+			WHERE `userNIE` = '".$_POST['eCCVnie']."' AND `idExp` = '".$expIDs[$i]."'");
 		}
 	}
 	/*  --------------------  End of Experience's Treatment  --------------------  */

@@ -47,7 +47,8 @@ else {
 			?>
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="auto" title='Spanien, <?php echo $nationalities_string; ?>'></span> Nationality: * </label>
 			<div class="col-sm-10">
-				<input class="form-control" type='text' name='eCCVnationalities' value="<?php echo implode("|", getDBcolumnvalue('keyCountry', 'userCountries', 'userNIE', $editedCVRow['nie'])); ?>" data-role='tagsinput' />
+				<!-- <input class="form-control" type='text' name='eCCVnationalities' value="< ?php echo implode("|", getDBcolumnvalue('keyCountry', 'userCountries', 'userNIE', $editedCVRow['nie'])); ?>" data-role='tagsinput' /> -->
+				<input class="form-control" type='text' name='eCCVnationalities' value="<?php echo implode("|", getDBcolumnvalue('keyCountry', 'userNationalities', 'userNIE', $editedCVRow['nie'])); ?>" data-role='tagsinput' />
 			</div>
 		</div>
 		
@@ -249,7 +250,7 @@ else {
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducation">Education: * </label>
 			<div class="col-sm-10">
 				<?php
-				$educIDs = getDBcolumnvalue('id', 'userEducations', 'userNIE', $editedCVRow['nie']);
+				$educIDs = getDBcolumnvalue('idEdu', 'userEducations', 'userNIE', $editedCVRow['nie']);
 				if(count($educIDs) == 0){
 					echo 'This Candidate has no written Education. How is this possible?<br>';
 				}
@@ -264,23 +265,23 @@ else {
 						echo "			<div class='form-group'>";
 						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVeducTittle$j'>Tittle: </label>";
 						echo " 				<div class='col-sm-10'>";
-						echo "					<input class='form-control' type='text' name='eCCVeducTittle$j' value='" . getDBsinglefield('educTittle', 'userEducations', 'id', $i) . "' >";
+						echo "					<input class='form-control' type='text' name='eCCVeducTittle$j' value='" . getDBsinglefield('educTittle', 'userEducations', 'idEdu', $i) . "' >";
 						echo " 				</div>";
 						echo "			</div>";
 						echo "			<div class='form-group'>";
 						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVeducCenter$j'>Center: </label>";
 						echo " 				<div class='col-sm-10'>";
-						echo "					<input class='form-control' type='text' name='eCCVeducCenter$j' value='" . getDBsinglefield('educCenter', 'userEducations', 'id', $i) . "' >";
+						echo "					<input class='form-control' type='text' name='eCCVeducCenter$j' value='" . getDBsinglefield('educCenter', 'userEducations', 'idEdu', $i) . "' >";
 						echo " 				</div>";
 						echo "			</div>";
 						echo "			<div class='form-group'>";
 						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVeducStart$j'>Start: </label>";
 						echo " 				<div class='col-sm-4'>";
-						echo "					<input class='form-control' type='date' name='eCCVeducStart$j' value='" . getDBsinglefield('educStart', 'userEducations', 'id', $i) . "' >";
+						echo "					<input class='form-control' type='date' name='eCCVeducStart$j' value='" . getDBsinglefield('educStart', 'userEducations', 'idEdu', $i) . "' >";
 						echo " 				</div>";
 						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVeducEnd$j'>End: </label>";
 						echo " 				<div class='col-sm-4'>";
-						echo "					<input class='form-control' type='date' name='eCCVeducEnd$j' value='" . getDBsinglefield('educEnd', 'userEducations', 'id', $i) . "' >";
+						echo "					<input class='form-control' type='date' name='eCCVeducEnd$j' value='" . getDBsinglefield('educEnd', 'userEducations', 'idEdu', $i) . "' >";
 						echo " 				</div>";
 						echo "			</div>";
 						echo "		</div>";
@@ -304,7 +305,7 @@ else {
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperience">Last years: </label>
 			<div class="col-sm-10">
 				<?php
-				$experIDs = getDBcolumnvalue('id', 'userExperiences', 'userNIE', $editedCVRow['nie']);
+				$experIDs = getDBcolumnvalue('idExp', 'userExperiences', 'userNIE', $editedCVRow['nie']);
 				if(count($experIDs) == 0){
 					echo 'This Candidate has no written Experiences.<br>';
 				}
@@ -319,39 +320,39 @@ else {
 						echo "			<div class='form-group'>";
 						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperCompany$j'>Company: </label>";
 						echo " 				<div class='col-sm-10'>";
-						echo "					<input class='form-control' type='text' name='eCCVexperCompany$j' value='" . getDBsinglefield('company', 'userExperiences', 'id', $i) . "' >";
+						echo "					<input class='form-control' type='text' name='eCCVexperCompany$j' value='" . getDBsinglefield('expCompany', 'userExperiences', 'idExp', $i) . "' >";
 						echo " 				</div>";
 						echo "			</div>";
 						echo "			<div class='form-group'>";
 						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperPos$j'>Position: </label>";
 						echo " 				<div class='col-sm-10'>";
-						echo "					<input class='form-control' type='text' name='eCCVexperPos$j' value='" . getDBsinglefield('position', 'userExperiences', 'id', $i) . "' >";
+						echo "					<input class='form-control' type='text' name='eCCVexperPos$j' value='" . getDBsinglefield('expPosition', 'userExperiences', 'idExp', $i) . "' >";
 						echo " 				</div>";
 						echo "			</div>";
 						echo "			<div class='form-group'>";
 						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperCity$j'>City: </label>";
 						echo " 				<div class='col-sm-4'>";
-						echo "					<input class='form-control' type='text' name='eCCVexperCity$j' value='" . getDBsinglefield('city', 'userExperiences', 'id', $i) . "' >";
+						echo "					<input class='form-control' type='text' name='eCCVexperCity$j' value='" . getDBsinglefield('expCity', 'userExperiences', 'idExp', $i) . "' >";
 						echo " 				</div>";
 						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperCountry$j'>Country: </label>";
 						echo " 				<div class='col-sm-4'>";
-						echo "					<input class='form-control' type='text' name='eCCVexperCountry$j' value='" . getDBsinglefield('country', 'userExperiences', 'id', $i) . "' >";
+						echo "					<input class='form-control' type='text' name='eCCVexperCountry$j' value='" . getDBsinglefield('expCountry', 'userExperiences', 'idExp', $i) . "' >";
 						echo " 				</div>";
 						echo "			</div>";
 						echo "			<div class='form-group'>";
 						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperStart$j'>Start: </label>";
 						echo " 				<div class='col-sm-4'>";
-						echo "					<input class='form-control' type='date' name='eCCVexperStart$j' value='" . getDBsinglefield('start', 'userExperiences', 'id', $i) . "' >";
+						echo "					<input class='form-control' type='date' name='eCCVexperStart$j' value='" . getDBsinglefield('expStart', 'userExperiences', 'idExp', $i) . "' >";
 						echo " 				</div>";
 						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperEnd$j'>End: </label>";
 						echo " 				<div class='col-sm-4'>";
-						echo "					<input class='form-control' type='date' name='eCCVexperEnd$j' value='" . getDBsinglefield('end', 'userExperiences', 'id', $i) . "' >";
+						echo "					<input class='form-control' type='date' name='eCCVexperEnd$j' value='" . getDBsinglefield('expEnd', 'userExperiences', 'idExp', $i) . "' >";
 						echo " 				</div>";
 						echo "			</div>";
 						echo "			<div class='form-group'>";
 						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperDesc$j'>Description: </label>";
 						echo " 				<div class='col-sm-10'>";
-						echo "					<input class='form-control' type='text' name='eCCVexperDesc$j' value='" . getDBsinglefield('description', 'userExperiences', 'id', $i) . "' >";
+						echo "					<input class='form-control' type='text' name='eCCVexperDesc$j' value='" . getDBsinglefield('expDescription', 'userExperiences', 'idExp', $i) . "' >";
 						echo " 				</div>";
 						echo "			</div>";
 						echo "		</div>";

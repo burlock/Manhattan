@@ -561,7 +561,12 @@
 				//Each user's Experience is saved in 'userExperiences' table.
 				$auxCont = count($securedExperPosition);
 				for($i=0; $i<$auxCont; $i++){
+					/*
 					executeDBquery("INSERT INTO `userExperiences` (`userNIE`, `company`, `position`, `start`, `end`, `city`, `country`, `description`) VALUES 
+					('".$_POST['blanknie']."', '".$securedExperCompany[$i]."', '".$securedExperPosition[$i]."', '".$arrayExperStart[$i]."', '".$arrayExperEnd[$i]."', 
+					'".$securedExperCity[$i]."', '".$securedExperCountry[$i]."', '".$securedExperDescription[$i]."')");
+					*/
+					executeDBquery("INSERT INTO `userExperiences` (`userNIE`, `expCompany`, `expPosition`, `expStart`, `expEnd`, `expCity`, `expCountry`, `expDescription`) VALUES 
 					('".$_POST['blanknie']."', '".$securedExperCompany[$i]."', '".$securedExperPosition[$i]."', '".$arrayExperStart[$i]."', '".$arrayExperEnd[$i]."', 
 					'".$securedExperCity[$i]."', '".$securedExperCountry[$i]."', '".$securedExperDescription[$i]."')");
 				}
@@ -569,7 +574,8 @@
 				//Each user's Nationality/Country is saved in 'userCountries' table.
 				$auxCont = count($arrayCountries);
 				for($i=0; $i<$auxCont; $i++){
-					executeDBquery("INSERT INTO `userCountries` (`userNIE`, `keyCountry`) VALUES ('".$_POST['blanknie']."', '".$arrayCountries[$i]."')");
+					//executeDBquery("INSERT INTO `userCountries` (`userNIE`, `keyCountry`) VALUES ('".$_POST['blanknie']."', '".$arrayCountries[$i]."')");
+					executeDBquery("INSERT INTO `userNationalities` (`userNIE`, `keyCountry`) VALUES ('".$_POST['blanknie']."', '".$arrayCountries[$i]."')");
 				}
 				
 				/* Being here (under this 'else') means that insert query was OK. So user must be inactivated and redirected to 'index.html'
@@ -945,9 +951,11 @@ Die Felder mit * sind Pflichtfelder.
 						<option selected value=""> Presse "+" nach wahl... </option>
 						<option value="other"> Andere </option>
 						<?php 
-							$eduNames = getDBcompleteColumnID(getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']), 'careers', 'id');
+							//$eduNames = getDBcompleteColumnID(getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']), 'careers', 'id');
+							$eduNames = getDBcompleteColumnID($userRow['language'], 'careers', 'id');
 							foreach($eduNames as $i){
-								echo '<option value="'.$i.'">' . $i . '</option>';
+								//echo '<option value="'.$i.'">' . $i . '</option>';
+								echo '<option value="'.getDBsinglefield('german', 'careers', $userRow['language'], $i).'">' . $i . '</option>';
 							}
 						?>
 					</select>
