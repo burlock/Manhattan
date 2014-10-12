@@ -13,7 +13,7 @@
  * Exit: Connection instance
  */
 function connectDB(){
-	$connection = mysqli_connect('localhost','pa_db','fOr3v3r', 'prj2014001') or die('MySQL connection error. Please contact administrator');
+	$connection = mysqli_connect('localhost','root','', 'PRJ2014001') or die('MySQL connection error. Please contact administrator');
 	
 	$connection->query("SET NAMES 'utf8'");
 	

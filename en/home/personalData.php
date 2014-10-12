@@ -187,13 +187,13 @@
 									<div class="form-group">
 										<label for="newPassword" class="control-label col-xs-3">New password</label>
 										<div class="col-xs-8">
-											<input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="" required data-toggle="tooltip" title="Introduce la nueva contraseña" autocapitalize="off">
+											<input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="" required data-toggle="tooltip" title="Introduce la nueva contraseña" autocapitalize="off" autocomplete="off">
 										</div> 
 									</div>
 									<div class="form-group">
 										<label for="confirmNewPassword" class="control-label col-xs-3">Repeat password</label>
 										<div class="col-xs-8">
-											<input type="password" class="form-control" name="confirmNewPassword" id="confirmNewPassword" placeholder="" required data-toggle="tooltip" title="Confirma la nueva contraseña" autocapitalize="off">
+											<input type="password" class="form-control" name="confirmNewPassword" id="confirmNewPassword" placeholder="" required data-toggle="tooltip" title="Confirma la nueva contraseña" autocapitalize="off" autocomplete="off">
 											<div class="fluid-container pull-right" style="margin-top: 15px;">
 												<input type="hidden" value="hChangePassSubmit" name="hiddenPOST">
 												<button type="submit" class="btn btn-primary" name="changePassword">Change</button>

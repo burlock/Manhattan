@@ -710,6 +710,10 @@ function confirmPendingCVDeletion(userLang) {
 		case "spanish":
 			return confirm('¿Está seguro de borrar este CV y su usuario?');
 		break;
+		
+		default:
+			alert ('Idioma no encontrado');
+		break;
 	}
 }
 
