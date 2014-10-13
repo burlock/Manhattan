@@ -288,7 +288,7 @@ else {
 						echo "	</div>";
 						$j++;
 					}//Foreach
-					echo "<input type='hidden' name='eCCVcontEduc' value='$j'";
+					echo "<input type='hidden' name='eCCVcontEduc' value='$j' />";
 				}
 				?>
 			</div>
@@ -359,7 +359,7 @@ else {
 						echo "	</div>";
 						$j++;
 					}//Foreach
-					echo "<input type='hidden' name='eCCVcontExp' value='$j'";
+					echo "<input type='hidden' name='eCCVcontExp' value='$j' />";
 				}
 				?>
 			</div>

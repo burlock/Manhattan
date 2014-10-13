@@ -70,7 +70,7 @@ else {
 			executeDBquery("DELETE FROM `userCountries` WHERE `id` = '".$i."'");
 		}
 		*/
-		if(!in_array(getDBsinglefield('keyCountry', 'userNationalities', 'id', $i), $securedNats)){
+		if(!in_array(getDBsinglefield('keyCountry', 'userNationalities', 'idNat', $i), $securedNats)){
 			executeDBquery("DELETE FROM `userNationalities` WHERE `idNat` = '".$i."'");
 		}
 	}
@@ -147,7 +147,7 @@ else {
 	//LUEGO RECORRO EL VIEJO Y ELIMINARÉ EL 'language' Y 'langLevel' DEL VIEJO QUE NO ESTEN EN EL NUEVO
 	foreach($langIDs as $i){
 		if(!in_array(getDBsinglefield('keyLanguage', 'userLanguages', 'idLan', $i), $securedLangs)){
-			executeDBquery("DELETE FROM `userLanguages` WHERE `id` = '".$i."'");
+			executeDBquery("DELETE FROM `userLanguages` WHERE `idLan` = '".$i."'");
 		}
 	}
 	/*  ----------  End of Language and Language level's Treatment  ----------  */
@@ -170,7 +170,7 @@ else {
 			<?php 
 		}
 		else{
-			$prevEducRow = getDBrow('userEducations', 'id', $educIDs[$i]);
+			$prevEducRow = getDBrow('userEducations', 'idEdu', $educIDs[$i]);
 			if(!(($securedEducTittle == $prevEducRow['educTittle']) && ($securedEducCenter == $prevEducRow['educCenter']) && 
 			($securedEducStart == $prevEducRow['educStart']) &&($securedEducEnd == $prevEducRow['educEnd']))){
 				executeDBquery("UPDATE `userEducations` SET
@@ -211,7 +211,7 @@ else {
 	
 	
 	/************  Experience's Treatment previous to be saved in DDBB  ************/
-	$expIDs = getDBcolumnvalue('id', 'userExperiences', 'userNIE', $_POST['eCCVnie']);
+	$expIDs = getDBcolumnvalue('idExp', 'userExperiences', 'userNIE', $_POST['eCCVnie']);
 	for($i=0; $i<$_POST['eCCVcontExp']; $i++){
 		$securedExperCompany = securizeString($_POST["eCCVexperCompany$i"]);
 		$securedExperPos = securizeString($_POST["eCCVexperPos$i"]);

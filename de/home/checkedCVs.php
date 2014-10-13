@@ -344,7 +344,7 @@
 										echo "<td><a href='checkedCVs.php?codvalue=" . ($cvRow['nie']) . "'>" . ($cvRow['nie']) . "</a></td>";
 										echo "<td>" . ($cvRow['name']) . "</td>";
 										echo "<td>" . ($cvRow['surname']) . "</td>";
-										echo "<td><a href='checkedCVs.php?codvalue=" . $cvRow['id'] . "&hiddenGET=hDelCheckedCV' onclick='return confirmCheckedCVDeletionDE();'>Löschen</a></td>";
+										echo "<td><a href='checkedCVs.php?codvalue=" . $cvRow['id'] . "&hiddenGET=hDelCheckedCV' onclick='return confirmCheckedCVDeletion(\"german\");'>Löschen</a></td>";
 										echo "</tr>";
 									}
 									?>

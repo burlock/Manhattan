@@ -347,7 +347,7 @@
 											echo "<td>" . ($cvRow['name']) . "</td>";
 											echo "<td>" . ($cvRow['surname']) . "</td>";
 											//echo "<td><a href='pendingCVs.php?codvalue=" . $cvRow['id'] . "&hiddenGET=hDelPendingCV' onclick='return confirmPendingCVDeletionDE();'>Löschen</a></td>";
-											echo "<td><a href='pendingCVs.php?codvalue=" . $cvRow['id'] . "&hiddenGET=hDelPendingCV' onclick='return confirmPendingCVDeletion(" . getCurrentLanguage($_SERVER['SCRIPT_NAME']) . ");'>Löschen</a></td>";
+											echo "<td><a href='pendingCVs.php?codvalue=" . $cvRow['id'] . "&hiddenGET=hDelPendingCV' onclick='return confirmPendingCVDeletion(\"" . getCurrentLanguage($_SERVER['SCRIPT_NAME']) . "\");'>Löschen</a></td>";
 											echo "</tr>";
 										}
 										?>
