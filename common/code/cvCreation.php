@@ -252,6 +252,16 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			$texto_pdf = $texto_pdf."</table>";
 			$texto = $texto."</table>";
 			
+			/* *****  Added files and photo  ***** */
+			$files  = scandir($output_dir.$fila[userLogin]);
+			$dir = $output_dir.$fila[userLogin]."/";
+			
+			foreach ($files as $value){
+				if (preg_match("/\w+/i", $value)) {
+					$texto=$texto."<br><a href=downloadFileSingle.php?doc=".$dir.$value.">$value</a>";
+				}
+			}
+			
 			/* *****  Perspectiva Alemania personal notes  ***** */
 			if (strlen($nota)>0){
 				$texto=$texto."<div class=cuadronegro><h3>BEWERTUNG DURCH PERSPECTIVA ALEMANIA</h3><br>".$nota."</div>";
@@ -405,6 +415,16 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			}
 			$texto_pdf = $texto_pdf."</table>";
 			$texto = $texto."</table>";
+			
+			/* *****  Added files and photo  ***** */
+			$files  = scandir($output_dir.$fila[userLogin]);
+			$dir = $output_dir.$fila[userLogin]."/";
+			
+			foreach ($files as $value){
+				if (preg_match("/\w+/i", $value)) {
+					$texto=$texto."<br><a href=downloadFileSingle.php?doc=".$dir.$value.">$value</a>";
+				}
+			}
 			
 			/* *****  Perspectiva Alemania personal notes  ***** */
 			if (strlen($nota)>0){
@@ -621,6 +641,16 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 			}
 			$texto_pdf = $texto_pdf."</table>";
 			$texto = $texto."</table>";
+			
+			/* *****  Added files and photo  ***** */
+			$files  = scandir($output_dir.$fila[userLogin]);
+			$dir = $output_dir.$fila[userLogin]."/";
+			
+			foreach ($files as $value){
+				if (preg_match("/\w+/i", $value)) {
+					$texto=$texto."<br><a href=downloadFileSingle.php?doc=".$dir.$value.">$value</a>";
+				}
+			}
 			
 			/* *****  Perspectiva Alemania personal notes  ***** */
 			if (strlen($nota)>0){
