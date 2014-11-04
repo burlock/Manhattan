@@ -196,7 +196,7 @@
 								<div class='modal-content panel-warning'>
 									<div class='modal-header panel-heading'>
 										<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-										<h4 class='modal-title'>Sie müssen Ihr Passwort ändern</h4>
+										<h4 class='modal-title'>Sie müssen Ihr Passwort ändern, bevor Sie fortfahren</h4>
 									</div>
 									<div class='well encapsulated'>
 										<!-- If conditions in "passwdRestrictionsES.txt" are changed, function "checkXXXXXXPassChangeXX" will be needed to be also changed -->

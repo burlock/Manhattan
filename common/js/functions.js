@@ -753,7 +753,7 @@ function confirmFormSend(form, userLang){
 	switch (userLang){
 		case "german":
 			if(jsCheckFormDE(form, legalAge)){
-				if(confirm('Sind Sie sicher, dass Sie alle Ihre Daten überpüft haben und das Formular senden wollen?')){
+				if(confirm('Sind Sie sicher, dass Sie alle Ihre Daten überprüft haben und das Formular senden wollen?')){
 					return document.formu.submit();
 				}
 				else{
