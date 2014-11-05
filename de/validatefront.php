@@ -63,7 +63,7 @@
 			<?php $wannaGoTo ='index.html';
 		}
 		//Both 'needPass' == '1' and 'passExpiration' a past date. Password, in this case, is 8 characters length
-		elseif(($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkSimplePassChangeDE($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['language'], $keyError))){
+		elseif(($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkSimplePassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['language'], $keyError))){
 			//echo 'error checkpasschange no pasado con needpass y passexpiration.';
 			?>
 			<div class="top-alert-container">
@@ -196,7 +196,7 @@
 								<div class='modal-content panel-warning'>
 									<div class='modal-header panel-heading'>
 										<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-										<h4 class='modal-title'>Sie müssen Ihr Passwort ändern</h4>
+										<h4 class='modal-title'>Sie müssen Ihr Passwort ändern, bevor Sie fortfahren</h4>
 									</div>
 									<div class='well encapsulated'>
 										<!-- If conditions in "passwdRestrictionsES.txt" are changed, function "checkXXXXXXPassChangeXX" will be needed to be also changed -->

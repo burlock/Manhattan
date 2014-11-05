@@ -63,7 +63,7 @@
 			<?php $wannaGoTo ='index.html';
 		}
 		//Both 'needPass' == '1' and 'passExpiration' a past date. Password, in this case, is 8 characters length
-		elseif(($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkSimplePassChangeES($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['language'], $keyError))){
+		elseif(($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkSimplePassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['language'], $keyError))){
 			//echo 'error checkpasschange no pasado con needpass y passexpiration.';
 			?>
 			<div class="top-alert-container">

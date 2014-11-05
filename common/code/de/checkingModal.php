@@ -387,7 +387,7 @@ else {
 				$userFilesArray  = scandir($userFilesDir);
 				foreach ($userFilesArray as $value){
 					if (preg_match("/\w+/i", $value)) {
-						echo "<a href=/en/home/downloadFileSingle.php?doc=".$userFilesDir.$value.">$value</a><br>";
+						echo "<a href=/de/home/downloadFileSingle.php?doc=".$userFilesDir.$value.">$value</a><br>";
 					}
 				}
 				?>		

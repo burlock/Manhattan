@@ -700,14 +700,14 @@ Die Felder mit * sind Pflichtfelder.
 			<div class="form-group"> <!-- Nombre -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankname">Namen: * </label> 
 				<div class="col-sm-10">
-					<input class="form-control" type='text' name='blankname' minlength='3' maxlength='50' placeholder="Min. 3 zeichen" required/>
+					<input class="form-control" type='text' name='blankname' minlength='3' maxlength='50' placeholder="Min. 3 Buchstaben" required/>
 				</div>
 			</div>
 
 			<div class="form-group"> <!-- Apellidos -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanksurname">Nachnamen: * </label> 
 				<div class="col-sm-10">
-					<input class="form-control" type='text' name='blanksurname' maxlength='50' placeholder="Min. 3 zeichen" required/>
+					<input class="form-control" type='text' name='blanksurname' maxlength='50' placeholder="Min. 3 Buchstaben" required/>
 				</div>
 			</div>
 			
@@ -735,7 +735,7 @@ Die Felder mit * sind Pflichtfelder.
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_nat">Nationalität: * </label> 
 				<div class="col-sm-4" id="uploadFormNationality">
 					<select class="form-control" name="add_nat" >
-						<option value="" selected disabled> Presse "+" nach wahl... </option>
+						<option value="" selected disabled> + nach Auswahl </option>
 						<option value="Spanien"> Spanien </option>
 						<?php 
 						$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
@@ -857,18 +857,18 @@ Die Felder mit * sind Pflichtfelder.
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="foto">Fotografie: </label>
 				<div class="col-sm-10">
 					<input class="form-control" type="file" name="foto" id="foto" onchange="checkJSPhotoExtension(this.id)">
-					<p class="help-block">Unterstützte typen: JPG, JPEG o PNG. Máx: 1024Kb</p>
+					<p class="help-block">Mögliche Dateien: JPG, JPEG o PNG. Máx: 1024Kb</p>
 				</div>
 			</div>
 
 			<div class="form-group tooltip-demo"> <!-- Archivos -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Unterstützte typen: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Máx: 1024Kb"></span> zusätzliche Dokumente: </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Mögliche Dateien: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Máx: 1024Kb"></span> zusätzliche Dokumente: </label> 
 				<div class="col-sm-10" style="padding-left: 0px;">
 				<div id="uploadFiles" class="col-sm-9">
 					<input class="form-control" type="file" name="archivo" />	
 				</div>
 				<div class="btn-toolbar col-sm-1">
-					<div class="btn-group btn-group-sm"><button class="btn btn-default" onclick="addFiles(this.form);" type="button"><span >Eine weitere datei hinzufügen</span></button></div>
+					<div class="btn-group btn-group-sm"><button class="btn btn-default" onclick="addFiles(this.form);" type="button"><span >Weitere Dateien einfügen</span></button></div>
 				</div>
 				</div>
 			</div>
@@ -878,7 +878,7 @@ Die Felder mit * sind Pflichtfelder.
 				<div class="col-sm-10" style="padding-left: 0px;">
 					<div class="col-sm-7" id="uploadFormLanguage">
 						<select class="form-control" name="add_idiomas">
-						<option selected disabled value=""> Presse "+" nach wahl... </option>
+						<option selected disabled value=""> + nach Auswahl </option>
 						<?php
 							$langNames = getDBcompletecolumnID($userLang, 'languages', $userLang);
 							
@@ -893,7 +893,7 @@ Die Felder mit * sind Pflichtfelder.
 					</div>
 					<div class="col-sm-4">
 						<select class="form-control" name="add_nidiomas">
-							<option selected value=""> Presse "+" nach wahl...</option>
+							<option selected value=""> + nach Auswahl</option>
 							<option value="A1">A1</option>
 							<option value="A2">A2</option>
 							<option value="B1">B1</option>
@@ -945,10 +945,10 @@ Die Felder mit * sind Pflichtfelder.
 			
 			<div class="form-group tooltip-demo"> <!-- Profesión -->
 				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Wenn ihr titel nicht in der liste angezeigt wird, wählen sie andere und kontaktieren sie uns bitte über administracion@perspectiva-alemania.com"></span> Beruf: *</label> -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title=""></span> Beruf: *</label>
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title=""></span> Berufserfahrung: *</label>
 				<div id="uploadFormProf" class="col-sm-9">
 					<select class="form-control" name="add_prof">
-						<option selected value=""> Presse "+" nach wahl... </option>
+						<option selected value=""> + nach Auswahl </option>
 						<option value="other"> Andere </option>
 						<?php 
 							//$eduNames = getDBcompleteColumnID(getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']), 'careers', 'id');
@@ -1048,7 +1048,8 @@ Die Felder mit * sind Pflichtfelder.
 		</div> <!-- Panel Body -->
 
 		<div class="panel-footer">
-			<label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> Ich habe die <a href="javascript:alert('Recuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nPara cualquier consulta no dudes en ponerte en contacto con nosotros.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');">Nutungzbedingungen</a> und Datenschutzbestimmungen gelesen und akzeptiert.</label>
+			<!-- <label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> Ich habe die <a href="javascript:alert('Recuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nPara cualquier consulta no dudes en ponerte en contacto con nosotros.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');">Nutungzbedingungen</a> und Datenschutzbestimmungen gelesen und akzeptiert.</label> -->
+			<label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> Ich habe die <a href="javascript:alert('Recuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nPara cualquier consulta no dudes en ponerte en contacto con nosotros.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');">Nutzungsbedingungen</a> und Datenschutzbestimmungen gelesen und akzeptiert.</label>
 			<div class="btn-group pull-right">
 				<button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSend(formu, '<?php echo getCurrentLanguage($_SERVER['SCRIPT_NAME']); ?>');">Senden</button>
 			</div>
