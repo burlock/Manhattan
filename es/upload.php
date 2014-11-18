@@ -910,9 +910,8 @@ Los campos que poseen * son obligatorios.
 				</div>
 			</div>
 			
-			<div class="form-group"> <!-- Educación -->
-				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Incluye los títulos que tengas de la siguiente forma: Titulo y Especialidad, Centro de estudios, Fechas de inicio y fin"></span> Educación: </label> -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title=""></span> Educación: *</label> 
+			<div class="form-group tooltip-demo"> <!-- Educación -->
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Incluye los títulos que tengas de la siguiente forma: Titulo y Especialidad, Centro de estudios, Fechas de inicio y fin"></span> Educación: *</label> 
 				<div class="col-sm-10" id="uploadFormDegree">
 					<div class="row" style="padding-left: 0px; margin-bottom: 10px;">
 						<div class="col-sm-11">
@@ -945,8 +944,7 @@ Los campos que poseen * son obligatorios.
 			</div>
 			
 			<div class="form-group tooltip-demo"> <!-- Profesión -->
-				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Si su título no aparece en el listado, seleccione Otra y póngase en contacto con nosotros a traves de administracion@perspectiva-alemania.com"></span> Profesión: *</label> -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title=""></span> Profesión: *</label>
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Si su título no aparece en el listado, seleccione Otra y póngase en contacto con nosotros a traves de administracion@perspectiva-alemania.com"></span> Profesión: *</label>
 				<div id="uploadFormProf" class="col-sm-9">
 					<select class="form-control" name="add_prof">
 						<option selected value=""> Pulse "+" tras elegir... </option>

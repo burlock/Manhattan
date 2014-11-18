@@ -910,14 +910,14 @@ Die Felder mit * sind Pflichtfelder.
 				</div>
 			</div>
 			
-			<div class="form-group"> <!-- Educación -->
+			<div class="form-group tooltip-demo"> <!-- Educación -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Umfasst die titel, die sie auf folgende weise haben: Titel und Spezialität, Zentrum der Studien, Anfangs und Enddatum"></span> Ausbildung: </label>
 				<div class="col-sm-10" id="uploadFormDegree">
 					<div class="row" style="padding-left: 0px; margin-bottom: 10px;">
 						<div class="col-sm-11">
 							<div class="row">
 								<div class="col-sm-12">
-									<input class="form-control" type="text" name="add_educ" placeholder='Titel (Drücken sie auf "+" nach wie ausbildung)' />
+									<input class="form-control" type="text" name="add_educ" placeholder='+ nach Auswahl' />
 								</div>
 							</div>
 							<div class="row">
@@ -944,8 +944,8 @@ Die Felder mit * sind Pflichtfelder.
 			</div>
 			
 			<div class="form-group tooltip-demo"> <!-- Profesión -->
-				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Wenn ihr titel nicht in der liste angezeigt wird, wählen sie andere und kontaktieren sie uns bitte über administracion@perspectiva-alemania.com"></span> Beruf: *</label> -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title=""></span> Berufserfahrung: *</label>
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Wenn ihr titel nicht in der liste angezeigt wird, wählen sie andere und kontaktieren sie uns bitte über administracion@perspectiva-alemania.com"></span> Berufserfahrung: *</label>
+				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title=""></span> Berufserfahrung: *</label> -->
 				<div id="uploadFormProf" class="col-sm-9">
 					<select class="form-control" name="add_prof">
 						<option selected value=""> + nach Auswahl </option>
@@ -966,7 +966,7 @@ Die Felder mit * sind Pflichtfelder.
 			</div>
 			
 			<div class="form-group"> <!-- Trayectoria/Experiencia -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_career">Was haben sie in den letzten jahren getan? </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_career">Berufliche Tätigkeiten der letzten Jahre </label> 
 				<div class="col-sm-10" id="uploadFormCareer">
 					<div class="row" style="padding-left: 0px; margin-bottom: 10px;">
 						<div class="col-sm-11">
@@ -1010,14 +1010,14 @@ Die Felder mit * sind Pflichtfelder.
 			<div class="form-group"> <!-- Salario -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanksalary">Gehaltsvorstellung: </label>
 				<div class="col-sm-10">
-					<input class="form-control" type="text" name="blanksalary" maxlength="7" placeholder="€ netto/jahr" onkeypress="return checkOnlyNumbers(event)">
+					<input class="form-control" type="text" name="blanksalary" maxlength="7" placeholder="€ Netto/Jahr" onkeypress="return checkOnlyNumbers(event)">
 				</div>
 			</div>
 
 			<div class="form-group"> <!-- Otros datos de Interés -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankother">Weitere Angaben: </label>
 				<div class="col-sm-10">
-					<textarea class="form-control" type="number" name="blankother" placeholder="Schreiben sie hier alle informationen, die angemessen und erscheint nicht in anderen bereichen..."></textarea>	
+					<textarea class="form-control" type="number" name="blankother" placeholder="Vermerken Sie hier alle wichtigen Daten, die nicht an anderer Stelle erscheinen"></textarea>
 				</div>
 			</div>		
 
@@ -1026,10 +1026,10 @@ Die Felder mit * sind Pflichtfelder.
 				<div class="col-sm-10">
 					<?php
 					
-					$tipArray = array(1 => 'Ich bin spezialisiert auf...', 
-									2 => 'In den letzten jahren ich gewonnen haben solide kenntnisse und erfahrungen im bereich der...', 
-									3 => 'Ich habe mehr als... jahrelange erfahrung in...',
-									4 => 'In den letzten... jahren haben meine berufliche tätigkeit im bereich entwickelt...', 
+					$tipArray = array(1 => 'Ich habe mich spezialisiert auf...', 
+									2 => 'In den letzten Jahren habe ich...', 
+									3 => 'Ich habe über... Jahre Erfahrung in...',
+									4 => '...', 
 									5 => '...', 
 									6 => '...', 
 									7 => '...', 

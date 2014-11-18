@@ -99,7 +99,7 @@
 			<div class="top-alert-container">
 				<div class="alert alert-success top-alert fade in">
 					<a href="#" class="close" data-dismiss="alert">&times;</a>
-					<strong>Erfolg!</strong> Aktualisierte passwort.
+					<strong>Erfolg!</strong> Passwort aktualisiert.
 				</div>
 			</div>					
 
