@@ -857,12 +857,12 @@ Die Felder mit * sind Pflichtfelder.
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="foto">Fotografie: </label>
 				<div class="col-sm-10">
 					<input class="form-control" type="file" name="foto" id="foto" onchange="checkJSPhotoExtension(this.id)">
-					<p class="help-block">Mögliche Dateien: JPG, JPEG o PNG. Máx: 1024Kb</p>
+					<p class="help-block">Mögliche Dateien: JPG, JPEG o PNG. Max: 1024Kb</p>
 				</div>
 			</div>
 
 			<div class="form-group tooltip-demo"> <!-- Archivos -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Mögliche Dateien: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Máx: 1024Kb"></span> zusätzliche Dokumente: </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Mögliche Dateien: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Max: 1024Kb"></span> zusätzliche Dokumente: </label> 
 				<div class="col-sm-10" style="padding-left: 0px;">
 				<div id="uploadFiles" class="col-sm-9">
 					<input class="form-control" type="file" name="archivo" />	
@@ -911,7 +911,8 @@ Die Felder mit * sind Pflichtfelder.
 			</div>
 			
 			<div class="form-group tooltip-demo"> <!-- Educación -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Umfasst die titel, die sie auf folgende weise haben: Titel und Spezialität, Zentrum der Studien, Anfangs und Enddatum"></span> Ausbildung: </label>
+				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Umfasst die titel, die sie auf folgende weise haben: Titel und Spezialität, Zentrum der Studien, Anfangs und Enddatum"></span> Ausbildung: </label> -->
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Bitte, Ausbildung folgender Weise einfügen: Bezeichnung der erworbenen Qualifikation, Bildungs- oder Ausbildungseinrichtung, Anfangs- und Enddatum"></span> Ausbildung: </label>
 				<div class="col-sm-10" id="uploadFormDegree">
 					<div class="row" style="padding-left: 0px; margin-bottom: 10px;">
 						<div class="col-sm-11">
@@ -922,7 +923,7 @@ Die Felder mit * sind Pflichtfelder.
 							</div>
 							<div class="row">
 								<div class="col-sm-12">
-									<input class="form-control" type="text" name="addEducCenter" placeholder="Lernzentrum" />
+									<input class="form-control" type="text" name="addEducCenter" placeholder="Bildungs- oder Ausbildungseinrichtung" />
 								</div>
 							</div>
 							<div class="row">
@@ -944,12 +945,13 @@ Die Felder mit * sind Pflichtfelder.
 			</div>
 			
 			<div class="form-group tooltip-demo"> <!-- Profesión -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Wenn ihr titel nicht in der liste angezeigt wird, wählen sie andere und kontaktieren sie uns bitte über administracion@perspectiva-alemania.com"></span> Berufserfahrung: *</label>
+				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Wenn ihr titel nicht in der liste angezeigt wird, wählen sie andere und kontaktieren sie uns bitte über administracion@perspectiva-alemania.com"></span> Berufserfahrung: *</label> -->
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Wenn Ihr Beruf nicht in der Liste aufgeführt ist, wählen Sie `Andere Berufe` und nehmen Sie bitte per E-Mail administracion@perspectiva-alemania.com Kontakt mit uns auf"></span> Berufserfahrung: *</label>
 				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title=""></span> Berufserfahrung: *</label> -->
 				<div id="uploadFormProf" class="col-sm-9">
 					<select class="form-control" name="add_prof">
 						<option selected value=""> + nach Auswahl </option>
-						<option value="other"> Andere </option>
+						<option value="other"> Andere Berufe </option>
 						<?php 
 							//$eduNames = getDBcompleteColumnID(getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']), 'careers', 'id');
 							$eduNames = getDBcompleteColumnID($userRow['language'], 'careers', 'id');

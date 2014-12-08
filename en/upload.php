@@ -881,12 +881,12 @@ Fields with * are mandatory.
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="foto">Photo: </label>
 				<div class="col-sm-10">
 					<input class="form-control" type="file" name="foto" id="foto" onchange="checkJSPhotoExtension(this.id)">
-					<p class="help-block">Supported types: JPG, JPEG o PNG. Máx: 1024Kb</p>
+					<p class="help-block">Supported types: JPG, JPEG o PNG. Max: 1024Kb</p>
 				</div>
 			</div>
 
 			<div class="form-group tooltip-demo"> <!-- Archivos -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Supported types: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Máx: 1024Kb"></span> Additional docs.: </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Supported types: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Max: 1024Kb"></span> Additional docs.: </label> 
 				<div class="col-sm-10" style="padding-left: 0px;">
 				<div id="uploadFiles" class="col-sm-9">
 					<input class="form-control" type="file" name="archivo" />	
