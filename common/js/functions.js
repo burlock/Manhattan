@@ -83,6 +83,7 @@ function checkYankieDate(yankieDate){
  * Called from onsubmit in "personalData.php"
  * If wished, it can be controlled here if form is also blanked, under limited characters or over-limited characters and more...
  */
+//Esta función no se usa porque según un correo quieren todos los mensajes emergentes en castellano
 function equalPassword(){
 	var formElements = document.getElementById("form");	
 	var passwd1 = formElements[0];
@@ -127,6 +128,22 @@ function equalPassword(){
 		break;
 	}
 }
+//Esta será la función a usar porque según un correo quieren todos los mensajes emergentes en castellano
+function equalPasswordES() {
+	var formElements = document.getElementById("form");	
+	var passwd1 = formElements[0];
+	var passwd2 = formElements[1];
+
+	if (passwd1.value==passwd2.value) {
+		alert("Contraseña actualizada con éxito.");
+		formElements.submit();
+		return true;
+	} else {
+		alert("Ambas contraseñas deben coincidir.");
+		return false;
+	}
+}
+
 
 
 
@@ -156,6 +173,7 @@ function jsAddYearsToDate(givenDate, numYears){
  * Entry (nie): String 
  * Called from "jsCheckFormXX" in 'functions.js', which is also another internal function in 'functions.js'. The first function is called from 'upload.php' when clicking submit button
  */
+//Esta función no se usa porque según un correo quieren todos los mensajes emergentes en castellano
 function jsCheckDNI_NIE_DE(nie){
 	var inputNie = document.getElementById(nie).value;
 	var nieResult = "";
@@ -206,6 +224,7 @@ function jsCheckDNI_NIE_DE(nie){
 	return nieResult;
 }
 
+//Esta función no se usa porque según un correo quieren todos los mensajes emergentes en castellano
 function jsCheckDNI_NIE_EN(nie){
 	var inputNie = document.getElementById(nie).value;
 	var nieResult = "";
@@ -255,7 +274,7 @@ function jsCheckDNI_NIE_EN(nie){
 	}
 	return nieResult;
 }
-
+//Esta será la función a usar porque según un correo quieren todos los mensajes emergentes en castellano
 function jsCheckDNI_NIE_ES(nie){
 	var inputNie = document.getElementById(nie).value;
 	var nieResult = "";
@@ -314,6 +333,7 @@ function jsCheckDNI_NIE_ES(nie){
  * Entry (legalAge): String that indicates the minimum legal age (would be ideal to take it from DB, but don't know how to do it with JS)
  * Called from "confirmFormSend" in 'functions.js'. The first function is called from 'upload.php' when clicking submit button
  */
+//Esta función no se usa porque según un correo quieren todos los mensajes emergentes en castellano
 function jsCheckFormDE(form, legalAge){
 	var result = true;
 	var message = "Wie folgt korrigiert werden:\n";
@@ -365,7 +385,7 @@ function jsCheckFormDE(form, legalAge){
 	}
 	return result;
 }
-
+//Esta función no se usa porque según un correo quieren todos los mensajes emergentes en castellano
 function jsCheckFormEN(form, legalAge){
 	var result = true;
 	var message = "It is needed to correct what is next:\n";
@@ -417,7 +437,7 @@ function jsCheckFormEN(form, legalAge){
 	}
 	return result;
 }
-
+//Esta será la función a usar porque según un correo quieren todos los mensajes emergentes en castellano
 function jsCheckFormES(form, legalAge){
 	var result = true;
 	var message = "Es preciso corregir lo siguiente:\n";
@@ -747,6 +767,7 @@ function confirmCheckedCVDeletion(userLang) {
  * Entry (userLang): String that identifies User language, in order to return the message in the proper language
  * Called from "upload.php"
  */
+//Esta función no se usa porque según un correo quieren todos los mensajes emergentes en castellano
 function confirmFormSend(form, userLang){
 	var legalAge = 18;
 	
@@ -797,6 +818,23 @@ function confirmFormSend(form, userLang){
 		break;
 	}
 }
+//Esta será la función a usar porque según un correo quieren todos los mensajes emergentes en castellano
+function confirmFormSendES(form){
+	if(jsCheckFormES(form)){
+		if(confirm('¿Confirma que ha revisado todos sus datos y que desea enviar el formulario?')){
+			//return document.formu.submit(form);
+			return document.formu.submit();
+		}
+		else{
+			return false;
+		}
+	}
+	//There is no else for this 'if', If false, will return an alert with all the errors submitted by user
+	else{
+		return false;
+	}
+}
+
 
 
 

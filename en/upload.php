@@ -250,7 +250,9 @@
 			var acceptedExts = /(jpg|png|jpeg)$/i.test(fileExt);
 			if(!acceptedExts){
 				var cleared = document.getElementById(fileId).value = "";
-				alert ("\'"+fileExt+"\' is not a valid extension for your photography.");
+				//alert ("\'"+fileExt+"\' is not a valid extension for your photography.");
+				//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+				alert ("\'"+fileExt+"\' no es una extensión válida para su fotografía.");
 				return false;
 			}
 		}
@@ -264,7 +266,9 @@
 			var acceptedExts = /(pdf|doc|docx|xls|xlsx|csv|txt|rtf)$/i.test(fileExt);
 			if(!acceptedExts){
 				var cleared = document.getElementById(fileId).value = "";
-				alert ("\'"+fileExt+"\' is not a valid extension for your document.");
+				//alert ("\'"+fileExt+"\' is not a valid extension for your document.");
+				//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+				alert ("\'"+fileExt+"\' no es una extensión válida para su documento.");
 				return false;
 			}
 		}
@@ -289,12 +293,16 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('<?php echo "You have already saved your CV. For security, your user has been disabled."; ?>');
+				<!-- alert('< ?php echo "You have already saved your CV. For security, your user has been disabled."; ?>'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('<?php echo "Usted ya ha guardado su CV. Por seguridad, su usuario ha sido desactivado."; ?>');
 				window.location.href='./endsession.php';
 			</script>
 			<?php 
 		}
-		elseif(!checkFullName($_POST['blankname'], $_POST['blanksurname'], $userRow['language'], $outName, $outSurname, $checkError)){
+		//elseif(!checkFullName($_POST['blankname'], $_POST['blanksurname'], $userRow['language'], $outName, $outSurname, $checkError)){
+		//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+		elseif(!checkFullNameES($_POST['blankname'], $_POST['blanksurname'], $outName, $outSurname, $checkError)){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
@@ -307,7 +315,9 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Given date is incorrect or indicates that you are not over legal age.');
+				<!-- alert('Error: Given date is incorrect or indicates that you are not over legal age.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: La fecha indica que no es mayor de edad o es incorrecta.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -316,7 +326,9 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Given NIE is incorrect.');
+				<!-- alert('Error: Given NIE is incorrect.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: Revise el NIE. El indicado es incorrecto.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -325,7 +337,9 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Given NIE already exists in database.');
+				<!-- alert('Error: Given NIE already exists in database.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: El NIE introducido ya existe en Base de Datos.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -376,14 +390,22 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Type, name or number was not indicated in address.');
+				<!-- alert('Error: Type, name or number was not indicated in address.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: No se ha indicado tipo, nombre o número en la dirección.');
 				window.location.href='home.php';
 			</script>
 			<?php
 		}
+		/*
 		elseif(((strlen($_POST['blankaddrtype']) > 0) || (strlen($_POST['blankaddrname']) > 0) || (strlen($_POST['blankaddrnum']) > 0) || (strlen($_POST['blankaddrportal']) > 0) || 
 		(strlen($_POST['blankaddrstair']) > 0) || (strlen($_POST['blankaddrfloor']) > 0) || (strlen($_POST['blankaddrdoor']) > 0)) && 
 		(!checkFullAddress($_POST['blankaddrname'], $_POST['blankaddrnum'], $userRow['language'], $outAddrName, $outAddrNumber, $checkError))){
+		*/
+		//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+		elseif(((strlen($_POST['blankaddrtype']) > 0) || (strlen($_POST['blankaddrname']) > 0) || (strlen($_POST['blankaddrnum']) > 0) || (strlen($_POST['blankaddrportal']) > 0) || 
+		(strlen($_POST['blankaddrstair']) > 0) || (strlen($_POST['blankaddrfloor']) > 0) || (strlen($_POST['blankaddrdoor']) > 0)) && 
+		(!checkFullAddressES($_POST['blankaddrname'], $_POST['blankaddrnum'], $outAddrName, $outAddrNumber, $checkError))){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
@@ -397,7 +419,9 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Mobile number is incorrect.');
+				<!-- alert('Error: Mobile number is incorrect.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: El número de móvil es incorrecto.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -407,7 +431,9 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Aditional phone number is incorrect.');
+				<!-- alert('Error: Aditional phone number is incorrect.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: El número de teléfono adicional es incorrecto.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -417,7 +443,9 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: E-mail is incorrect.');
+				<!-- alert('Error: E-mail is incorrect.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: Revise el correo electrónico. Formato incorrecto.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -447,7 +475,9 @@
 			}
 		}
 		*/
-		elseif(((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)) && (!checkDrivingLicense($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $userRow['language'], $checkError))){
+		//elseif(((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)) && (!checkDrivingLicense($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $userRow['language'], $checkError))){
+		//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+		elseif(((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)) && (!checkDrivingLicenseES($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $checkError))){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
@@ -557,7 +587,9 @@
 				unset($_POST['push_button']);
 				?>
 				<script type="text/javascript">
-					alert('There was a problem saving your CV.');
+					<!-- alert('There was a problem saving your CV.'); -->
+					<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+					alert('Hubo un problema guardando su CV.');
 					window.location.href='home.php';
 				</script>
 				<?php 
@@ -743,7 +775,9 @@ Fields with * are mandatory.
 				
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanknie">DNI/NIE: * </label>
 				<div class="col-sm-5">
-					<input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="12345678L (8 Nums.) / X1234567T (7 Nums.)" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE();" required/>
+					<!-- <input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="12345678L (8 Nums.) / X1234567T (7 Nums.)" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE();" required/> -->
+					<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+					<input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="12345678L (8 Nums.) / X1234567T (7 Nums.)" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE_ES();" required/>
 				</div>
 			</div>
 			
@@ -1073,7 +1107,9 @@ Fields with * are mandatory.
 		<div class="panel-footer">
 			<label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> I have read and accept the <a href="javascript:alert('Recuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nPara cualquier consulta no dudes en ponerte en contacto con nosotros.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');">terms of use</a> and privacy policy.</label>
 			<div class="btn-group pull-right">
-				<button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSend(formu, '<?php echo getCurrentLanguage($_SERVER['SCRIPT_NAME']); ?>');">Send</button>
+				<!-- <button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSend(formu, '< ?php echo getCurrentLanguage($_SERVER['SCRIPT_NAME']); ?>');">Send</button> -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				<button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSendES(formu);">Send</button>
 			</div>
 		</div> <!-- Panel Footer-->
 	</div> <!-- Panel -->
