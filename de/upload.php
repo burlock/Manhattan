@@ -250,7 +250,9 @@
 			var acceptedExts = /(jpg|png|jpeg)$/i.test(fileExt);
 			if(!acceptedExts){
 				var cleared = document.getElementById(fileId).value = "";
-				alert ("\'"+fileExt+"\' es ist keine gültige erweiterung für ihre fotografie.");
+				//alert ("\'"+fileExt+"\' es ist keine gültige erweiterung für ihre fotografie.");
+				//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+				alert ("\'"+fileExt+"\' no es una extensión válida para su fotografía.");
 				return false;
 			}
 		}
@@ -264,7 +266,9 @@
 			var acceptedExts = /(pdf|doc|docx|xls|xlsx|csv|txt|rtf)$/i.test(fileExt);
 			if(!acceptedExts){
 				var cleared = document.getElementById(fileId).value = "";
-				alert ("\'"+fileExt+"\' es ist keine gültige erweiterung für ihre dokument.");
+				//alert ("\'"+fileExt+"\' es ist keine gültige erweiterung für ihre dokument.");
+				//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+				alert ("\'"+fileExt+"\' no es una extensión válida para su documento.");
 				return false;
 			}
 		}
@@ -289,12 +293,16 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('<?php echo "Sie haben bereits ihren lebenslauf gespeichert. Aus sicherheitsgründen wurde ihre benutzer deaktiviert."; ?>');
+				<!-- alert('< ?php echo "Sie haben bereits ihren lebenslauf gespeichert. Aus sicherheitsgründen wurde ihre benutzer deaktiviert."; ?>'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('<?php echo "Usted ya ha guardado su CV. Por seguridad, su usuario ha sido desactivado."; ?>');
 				window.location.href='./endsession.php';
 			</script>
 			<?php 
 		}
-		elseif(!checkFullName($_POST['blankname'], $_POST['blanksurname'], $userRow['language'], $outName, $outSurname, $checkError)){
+		//elseif(!checkFullName($_POST['blankname'], $_POST['blanksurname'], $userRow['language'], $outName, $outSurname, $checkError)){
+		//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+		elseif(!checkFullNameES($_POST['blankname'], $_POST['blanksurname'], $outName, $outSurname, $checkError)){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
@@ -307,7 +315,9 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Das datum gibt an dass es nicht volljährig oder falsch ist.');
+				<!-- alert('Error: Das datum gibt an dass es nicht volljährig oder falsch ist.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: La fecha indica que no es mayor de edad o es incorrecta.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -316,7 +326,9 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Überprüfen sie den NIE. Die angezeigte zahl ist falsch.');
+				<!-- alert('Error: Überprüfen sie den NIE. Die angezeigte zahl ist falsch.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: Revise el NIE. El indicado es incorrecto.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -325,7 +337,9 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Der eingegebene NIE ist bereits in der datenbank vorhanden.');
+				<!-- alert('Error: Der eingegebene NIE ist bereits in der datenbank vorhanden.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: El NIE introducido ya existe en Base de Datos.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -376,14 +390,22 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Typ, namem oder nummer in der adresse nicht angezeigt.');
+				<!-- alert('Error: Typ, namem oder nummer in der adresse nicht angezeigt.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: No se ha indicado tipo, nombre o número en la dirección.');
 				window.location.href='home.php';
 			</script>
 			<?php
 		}
+		/*
 		elseif(((strlen($_POST['blankaddrtype']) > 0) || (strlen($_POST['blankaddrname']) > 0) || (strlen($_POST['blankaddrnum']) > 0) || (strlen($_POST['blankaddrportal']) > 0) || 
 		(strlen($_POST['blankaddrstair']) > 0) || (strlen($_POST['blankaddrfloor']) > 0) || (strlen($_POST['blankaddrdoor']) > 0)) && 
 		(!checkFullAddress($_POST['blankaddrname'], $_POST['blankaddrnum'], $userRow['language'], $outAddrName, $outAddrNumber, $checkError))){
+		*/
+		//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+		elseif(((strlen($_POST['blankaddrtype']) > 0) || (strlen($_POST['blankaddrname']) > 0) || (strlen($_POST['blankaddrnum']) > 0) || (strlen($_POST['blankaddrportal']) > 0) || 
+		(strlen($_POST['blankaddrstair']) > 0) || (strlen($_POST['blankaddrfloor']) > 0) || (strlen($_POST['blankaddrdoor']) > 0)) && 
+		(!checkFullAddressES($_POST['blankaddrname'], $_POST['blankaddrnum'], $outAddrName, $outAddrNumber, $checkError))){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
@@ -397,7 +419,9 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Die handy nummer ist falsch.');
+				<!-- alert('Error: Die handy nummer ist falsch.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: El número de móvil es incorrecto.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -407,7 +431,9 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: Zusätzliche telefonnummer ist falsch.');
+				<!-- alert('Error: Zusätzliche telefonnummer ist falsch.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: El número de teléfono adicional es incorrecto.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -417,7 +443,9 @@
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
-				alert('Error: E-mail ist falsch.');
+				<!-- alert('Error: E-mail ist falsch.'); -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				alert('Error: Revise el correo electrónico. Formato incorrecto.');
 				window.location.href='home.php';
 			</script>
 			<?php 
@@ -447,7 +475,9 @@
 			}
 		}
 		*/
-		elseif(((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)) && (!checkDrivingLicense($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $userRow['language'], $checkError))){
+		//elseif(((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)) && (!checkDrivingLicense($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $userRow['language'], $checkError))){
+		//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+		elseif(((strlen($_POST['blankdrivingtype']) > 0) || (strlen($_POST['blankdrivingdate']) > 0)) && (!checkDrivingLicenseES($_POST['blankdrivingtype'], $_POST['blankdrivingdate'], $checkError))){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
@@ -533,7 +563,9 @@
 				unset($_POST['push_button']);
 				?>
 				<script type="text/javascript">
-					alert('Es gab ein problem speichern ihren lebenslauf.');
+					<!-- alert('Es gab ein problem speichern ihren lebenslauf.'); -->
+					<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+					alert('Hubo un problema guardando su CV.');
 					window.location.href='home.php';
 				</script>
 				<?php 
@@ -719,7 +751,9 @@ Die Felder mit * sind Pflichtfelder.
 				
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanknie">Personalausweis: * </label>
 				<div class="col-sm-5">
-					<input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="12345678L (8 Zahlen) / X1234567T (7 Zahlen)" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE();" required/>
+					<!-- <input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="12345678L (8 Zahlen) / X1234567T (7 Zahlen)" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE();" required/> -->
+					<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+					<input class="form-control" type='text' name='blanknie' id='blanknie' maxlength="9" placeholder="12345678L (8 Nums.) / X1234567T (7 Nums.)" onkeyup="this.value=this.value.toUpperCase();" onblur="jsCheckDNI_NIE_ES();" required/>
 				</div>
 			</div>
 			
@@ -857,12 +891,12 @@ Die Felder mit * sind Pflichtfelder.
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="foto">Fotografie: </label>
 				<div class="col-sm-10">
 					<input class="form-control" type="file" name="foto" id="foto" onchange="checkJSPhotoExtension(this.id)">
-					<p class="help-block">Mögliche Dateien: JPG, JPEG o PNG. Máx: 1024Kb</p>
+					<p class="help-block">Mögliche Dateien: JPG, JPEG o PNG. Max: 1024Kb</p>
 				</div>
 			</div>
 
 			<div class="form-group tooltip-demo"> <!-- Archivos -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Mögliche Dateien: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Máx: 1024Kb"></span> zusätzliche Dokumente: </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" ><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Mögliche Dateien: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT o RTF. Max: 1024Kb"></span> zusätzliche Dokumente: </label> 
 				<div class="col-sm-10" style="padding-left: 0px;">
 				<div id="uploadFiles" class="col-sm-9">
 					<input class="form-control" type="file" name="archivo" />	
@@ -910,19 +944,20 @@ Die Felder mit * sind Pflichtfelder.
 				</div>
 			</div>
 			
-			<div class="form-group"> <!-- Educación -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Umfasst die titel, die sie auf folgende weise haben: Titel und Spezialität, Zentrum der Studien, Anfangs und Enddatum"></span> Ausbildung: </label>
+			<div class="form-group tooltip-demo"> <!-- Educación -->
+				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Umfasst die titel, die sie auf folgende weise haben: Titel und Spezialität, Zentrum der Studien, Anfangs und Enddatum"></span> Ausbildung: </label> -->
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_educ"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Bitte, Ausbildung folgender Weise einfügen: Bezeichnung der erworbenen Qualifikation, Bildungs- oder Ausbildungseinrichtung, Anfangs- und Enddatum"></span> Ausbildung: </label>
 				<div class="col-sm-10" id="uploadFormDegree">
 					<div class="row" style="padding-left: 0px; margin-bottom: 10px;">
 						<div class="col-sm-11">
 							<div class="row">
 								<div class="col-sm-12">
-									<input class="form-control" type="text" name="add_educ" placeholder='Titel (Drücken sie auf "+" nach wie ausbildung)' />
+									<input class="form-control" type="text" name="add_educ" placeholder='+ nach Auswahl' />
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-sm-12">
-									<input class="form-control" type="text" name="addEducCenter" placeholder="Lernzentrum" />
+									<input class="form-control" type="text" name="addEducCenter" placeholder="Bildungs- oder Ausbildungseinrichtung" />
 								</div>
 							</div>
 							<div class="row">
@@ -944,12 +979,13 @@ Die Felder mit * sind Pflichtfelder.
 			</div>
 			
 			<div class="form-group tooltip-demo"> <!-- Profesión -->
-				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Wenn ihr titel nicht in der liste angezeigt wird, wählen sie andere und kontaktieren sie uns bitte über administracion@perspectiva-alemania.com"></span> Beruf: *</label> -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title=""></span> Berufserfahrung: *</label>
+				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Wenn ihr titel nicht in der liste angezeigt wird, wählen sie andere und kontaktieren sie uns bitte über administracion@perspectiva-alemania.com"></span> Berufserfahrung: *</label> -->
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Wenn Ihr Beruf nicht in der Liste aufgeführt ist, wählen Sie `Andere Berufe` und nehmen Sie bitte per E-Mail administracion@perspectiva-alemania.com Kontakt mit uns auf"></span> Berufserfahrung: *</label>
+				<!-- <label id="uploadFormLabel" class="control-label col-sm-2" for="add_prof"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title=""></span> Berufserfahrung: *</label> -->
 				<div id="uploadFormProf" class="col-sm-9">
 					<select class="form-control" name="add_prof">
 						<option selected value=""> + nach Auswahl </option>
-						<option value="other"> Andere </option>
+						<option value="other"> Andere Berufe </option>
 						<?php 
 							//$eduNames = getDBcompleteColumnID(getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']), 'careers', 'id');
 							$eduNames = getDBcompleteColumnID($userRow['language'], 'careers', 'id');
@@ -966,7 +1002,7 @@ Die Felder mit * sind Pflichtfelder.
 			</div>
 			
 			<div class="form-group"> <!-- Trayectoria/Experiencia -->
-				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_career">Was haben sie in den letzten jahren getan? </label> 
+				<label id="uploadFormLabel" class="control-label col-sm-2" for="add_career">Berufliche Tätigkeiten der letzten Jahre </label> 
 				<div class="col-sm-10" id="uploadFormCareer">
 					<div class="row" style="padding-left: 0px; margin-bottom: 10px;">
 						<div class="col-sm-11">
@@ -1010,14 +1046,14 @@ Die Felder mit * sind Pflichtfelder.
 			<div class="form-group"> <!-- Salario -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blanksalary">Gehaltsvorstellung: </label>
 				<div class="col-sm-10">
-					<input class="form-control" type="text" name="blanksalary" maxlength="7" placeholder="€ netto/jahr" onkeypress="return checkOnlyNumbers(event)">
+					<input class="form-control" type="text" name="blanksalary" maxlength="7" placeholder="€ Netto/Jahr" onkeypress="return checkOnlyNumbers(event)">
 				</div>
 			</div>
 
 			<div class="form-group"> <!-- Otros datos de Interés -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankother">Weitere Angaben: </label>
 				<div class="col-sm-10">
-					<textarea class="form-control" type="number" name="blankother" placeholder="Schreiben sie hier alle informationen, die angemessen und erscheint nicht in anderen bereichen..."></textarea>	
+					<textarea class="form-control" type="number" name="blankother" placeholder="Vermerken Sie hier alle wichtigen Daten, die nicht an anderer Stelle erscheinen"></textarea>
 				</div>
 			</div>		
 
@@ -1026,10 +1062,10 @@ Die Felder mit * sind Pflichtfelder.
 				<div class="col-sm-10">
 					<?php
 					
-					$tipArray = array(1 => 'Ich bin spezialisiert auf...', 
-									2 => 'In den letzten jahren ich gewonnen haben solide kenntnisse und erfahrungen im bereich der...', 
-									3 => 'Ich habe mehr als... jahrelange erfahrung in...',
-									4 => 'In den letzten... jahren haben meine berufliche tätigkeit im bereich entwickelt...', 
+					$tipArray = array(1 => 'Ich habe mich spezialisiert auf...', 
+									2 => 'In den letzten Jahren habe ich...', 
+									3 => 'Ich habe über... Jahre Erfahrung in...',
+									4 => '...', 
 									5 => '...', 
 									6 => '...', 
 									7 => '...', 
@@ -1051,7 +1087,9 @@ Die Felder mit * sind Pflichtfelder.
 			<!-- <label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> Ich habe die <a href="javascript:alert('Recuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nPara cualquier consulta no dudes en ponerte en contacto con nosotros.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');">Nutungzbedingungen</a> und Datenschutzbestimmungen gelesen und akzeptiert.</label> -->
 			<label class "control-label" style="margin-bottom: 10px; margin-top: 5px;"><input type="checkbox" name="blanklopd" required> Ich habe die <a href="javascript:alert('Recuerda que en cualquier momento puedes ejercer tu derecho de oposición, acceso, rectificación y cancelación, en lo que respecta al tratamiento de tus datos personales por parte de PERSPECTIVA ALEMANIA, a través de un escrito a la siguiente dirección: Perspectiva Alemania, Paseo de la Habana 5, 1º-dcha., 28036 Madrid.\nPara cualquier consulta no dudes en ponerte en contacto con nosotros.\nPERSPECTIVA ALEMANIA\nadministración@perspectiva-alemania.com');">Nutzungsbedingungen</a> und Datenschutzbestimmungen gelesen und akzeptiert.</label>
 			<div class="btn-group pull-right">
-				<button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSend(formu, '<?php echo getCurrentLanguage($_SERVER['SCRIPT_NAME']); ?>');">Senden</button>
+				<!--  <button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSend(formu, '< ?php echo getCurrentLanguage($_SERVER['SCRIPT_NAME']); ?>');">Senden</button> -->
+				<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+				<button type="submit" name ="push_button" class="btn btn-primary" onclick="return confirmFormSendES(formu);">Senden</button>
 			</div>
 		</div> <!-- Panel Footer-->
 	</div> <!-- Panel -->

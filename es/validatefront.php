@@ -37,7 +37,9 @@
 		 * - When 'passExpiration' var is less than current date (when is a past date)
 		 */
 		//1st time user logs in or password reseted because user forgot its own password BUT not expirated password (In this case password length is 8 and not hashed)
-		if(($userRow['needPass']) && (!($userRow['passExpiration'] <= date('Y-m-d'))) && (!checkSimplePassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['language'], $keyError))){
+		//if(($userRow['needPass']) && (!($userRow['passExpiration'] <= date('Y-m-d'))) && (!checkSimplePassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['language'], $keyError))){
+		//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+		if(($userRow['needPass']) && (!($userRow['passExpiration'] <= date('Y-m-d'))) && (!checkSimplePassChangeES($_POST['newPassword'], $_POST['confirmNewPassword'], $keyError))){
 			//echo 'error checkpasschange no pasado con needpass y sin passexpiration.';
 			?>
 			<div class="top-alert-container">
@@ -50,7 +52,9 @@
 			<?php $wannaGoTo ='index.html';
 		}
 		//Expirated password BUT not first time user logs in neither password reseted
-		elseif(!($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkHashedPassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['pass'], $userRow['language'], $keyError))){
+		//elseif(!($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkHashedPassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['pass'], $userRow['language'], $keyError))){
+		//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+		elseif(!($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkHashedPassChangeES($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['pass'], $keyError))){
 			//echo 'error checkpasschange no pasado sin needpass y con passexpiration.';
 			?>
 			<div class="top-alert-container">
@@ -63,7 +67,9 @@
 			<?php $wannaGoTo ='index.html';
 		}
 		//Both 'needPass' == '1' and 'passExpiration' a past date. Password, in this case, is 8 characters length
-		elseif(($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkSimplePassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['language'], $keyError))){
+		//elseif(($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkSimplePassChange($_POST['newPassword'], $_POST['confirmNewPassword'], $userRow['language'], $keyError))){
+		//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+		elseif(($userRow['needPass']) && ($userRow['passExpiration'] <= date('Y-m-d')) && (!checkSimplePassChangeES($_POST['newPassword'], $_POST['confirmNewPassword'], $keyError))){
 			//echo 'error checkpasschange no pasado con needpass y passexpiration.';
 			?>
 			<div class="top-alert-container">
@@ -193,7 +199,9 @@
 
 					<div id='changePasswordModal' class='modal fade' tabindex='-1' role='dialog' aria-labelledby='changePasswordModalLabel' aria-hidden='true'>
 						<div class='modal-dialog'>
-							<form id='changePasswordForm' class='form-horizontal center-block' action='validatefront.php' method='post' onsubmit='return equalPassword(newPassword, confirmNewPassword)'>
+							<!-- <form id='changePasswordForm' class='form-horizontal center-block' action='validatefront.php' method='post' onsubmit='return equalPassword(newPassword, confirmNewPassword)'> -->
+							<!-- Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano -->
+							<form id='changePasswordForm' class='form-horizontal center-block' action='validatefront.php' method='post' onsubmit='return equalPasswordES(newPassword, confirmNewPassword)'>
 								<div class='modal-content panel-warning'>
 									<div class='modal-header panel-heading'>
 										<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>

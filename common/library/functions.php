@@ -647,6 +647,7 @@ function blowfishCrypt($password, $rounds = 7){
  * Entry (loggedUserLang): String that indicates language of the user which is trying to change its password
  * Exit (keyError): String with the error when needed (or void)
  */
+//Esta función no se usa porque según un correo quieren todos los mensajes emergentes en castellano
 function checkHashedPassChange($key1, $key2, $hashedKey, $loggedUserLang, &$keyError){
 	switch ($loggedUserLang){
 		case 'german':
@@ -745,6 +746,40 @@ function checkHashedPassChange($key1, $key2, $hashedKey, $loggedUserLang, &$keyE
 	$keyError = "";
 	return true;
 }
+//Esta será la función a usar porque según un correo quieren todos los mensajes emergentes en castellano
+function checkHashedPassChangeES($key1, $key2, $hashedKey, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Ambas contraseñas deben ser iguales";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "La contraseña debe tener al menos 6 caracteres";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "La contraseña no puede tener más de 16 caracteres";
+		return false;
+	}
+	if(!preg_match('`[a-z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra minúscula";
+		return false;
+	}
+	if(!preg_match('`[A-Z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra mayúscula";
+		return false;
+	}
+	if(!preg_match('`[0-9]`',$key1)){
+		$keyError = "La contraseña debe tener al menos un caracter numérico";
+		return false;
+	}
+	if(crypt($key1, $hashedKey) == $hashedKey){
+		$keyError = "La contraseña debe ser distinta a la última";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+
 
 
 
@@ -755,6 +790,7 @@ function checkHashedPassChange($key1, $key2, $hashedKey, $loggedUserLang, &$keyE
  * Entry (loggedUserLang): String that indicates language of the user which is trying to change its password
  * Exit (keyError): String with the error when needed (or void)
  */
+//Esta función no se usa porque según un correo quieren todos los mensajes emergentes en castellano
 function checkSimplePassChange($key1, $key2, $loggedUserLang, &$keyError){
 	switch ($loggedUserLang){
 		case 'german':
@@ -841,6 +877,36 @@ function checkSimplePassChange($key1, $key2, $loggedUserLang, &$keyError){
 	$keyError = "";
 	return true;
 }
+//Esta será la función a usar porque según un correo quieren todos los mensajes emergentes en castellano
+function checkSimplePassChangeES($key1, $key2, &$keyError){
+	if($key1 != $key2){
+		$keyError = "Ambos campos de contraseña no coinciden.";
+		return false;
+	}
+	if(strlen($key1) < 6){
+		$keyError = "La contraseña debe tener al menos 6 caracteres.";
+		return false;
+	}
+	if(strlen($key1) > 16){
+		$keyError = "La contraseña no puede tener más de 16 caracteres.";
+		return false;
+	}
+	if (!preg_match('`[a-z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra minúscula.";
+		return false;
+	}
+	if (!preg_match('`[A-Z]`',$key1)){
+		$keyError = "La contraseña debe tener al menos una letra mayúscula.";
+		return false;
+	}
+	if (!preg_match('`[0-9]`',$key1)){
+		$keyError = "La contraseña debe tener al menos un caracter numérico.";
+		return false;
+	}
+	$keyError = "";
+	return true;
+}
+
 
 
 
@@ -1120,6 +1186,8 @@ function checkDNI_NIE($nie){
  * Entry (loggedUserLang): String that indicates language of user whose driving license must be checked
  * Exit: Boolean
  */
+
+//Esta función no se usa porque según un correo quieren todos los mensajes emergentes en castellano
 function checkDrivingLicense($type, $licDate, $loggedUserLang, &$checkError){
 	switch ($loggedUserLang){
 		case 'german':
@@ -1170,6 +1238,24 @@ function checkDrivingLicense($type, $licDate, $loggedUserLang, &$checkError){
 	$checkError = "";
 	return true;
 }
+//Esta será la función a usar porque según un correo quieren todos los mensajes emergentes en castellano
+function checkDrivingLicenseES($type, $licDate, &$checkError){
+	if((strlen($type) > 0) && (strlen($licDate) == 0)){
+		$checkError = "Fecha de obtención del permiso de conducir no indicada.";
+		return false;
+	}
+	elseif((strlen($type) == 0) && (strlen($licDate) > 0)){
+		$checkError = "Tipo de permiso de conducir no indicado.";
+		return false;
+	}
+	elseif(!isPreviousDate($licDate)){
+		$checkError = "La fecha de permiso de conducir no puede ser futura";
+		return false;
+	}
+	$checkError = "";
+	return true;
+}
+
 
 
 
@@ -1397,7 +1483,9 @@ function checkEducation($eTittle, $eCenter, $eStart, $eEnd, $loggedUserLang, &$c
  * Entry (loggedUserLang): String that indicates language of the user whose address must be checked
  * Exit (outAddrName): Returned string for Address Name
  * Exit (outAddrNumber): Returned string for Address Number
- * Exit (checkError): String with text that includes a description of the error */
+ * Exit (checkError): String with text that includes a description of the error
+ */
+//Esta función no se usa porque según un correo quieren todos los mensajes emergentes en castellano
 function checkFullAddress($inName, $inNumber, $loggedUserLang, &$outAddrName, &$outAddrNumber, &$checkError){
 	$connection = connectDB();
 	
@@ -1441,6 +1529,23 @@ function checkFullAddress($inName, $inNumber, $loggedUserLang, &$outAddrName, &$
 	$checkError = "";
 	return true;
 }
+//Esta será la función a usar porque según un correo quieren todos los mensajes emergentes en castellano
+function checkFullAddressES($inName, $inNumber, &$outAddrName, &$outAddrNumber, &$checkError){
+	$connection = connectDB();
+	
+	$outAddrName = trim(htmlentities(mysqli_real_escape_string($connection, $inName), ENT_QUOTES, 'UTF-8'));
+	$outAddrNumber = trim(htmlentities(mysqli_real_escape_string($connection, $inNumber), ENT_QUOTES, 'UTF-8'));
+	if(strlen($outAddrName) < 2){
+		$checkError = "Error: Dirección no válida.";
+		return false;
+	}
+	elseif(strlen($outAddrNumber) < 1){
+		$checkError = "Error: Número no indicado o no válido";
+		return false;
+	}
+		return true;
+}
+
 
 
 
@@ -1453,6 +1558,7 @@ function checkFullAddress($inName, $inNumber, $loggedUserLang, &$outAddrName, &$
  * Exit (outSurname): Returned string for Surname
  * Exit (checkError): String with text that includes a description of the error
  */
+//Esta función no se usa porque según un correo quieren todos los mensajes emergentes en castellano
 function checkFullName($inName, $inSurname, $loggedUserLang, &$outName, &$outSurname, &$checkError){
 	$connection = connectDB();
 	
@@ -1485,6 +1591,19 @@ function checkFullName($inName, $inSurname, $loggedUserLang, &$outName, &$outSur
 	$checkError = "";
 	return true;
 }
+//Esta será la función a usar porque según un correo quieren todos los mensajes emergentes en castellano
+function checkFullNameES($inName, $inSurname, &$outName, &$outSurname, &$checkError){
+	$connection = connectDB();
+	
+	$outName = trim(htmlentities(mysqli_real_escape_string($connection, $inName), ENT_QUOTES, 'UTF-8'));
+	$outSurname = trim(htmlentities(mysqli_real_escape_string($connection, $inSurname), ENT_QUOTES, 'UTF-8'));
+	if((strlen($outName) < 3) || (strlen($outSurname) < 3)){
+		$checkError = "Nombre y Apellidos deben tener al menos 3 caracteres cada uno.";
+		return false;
+	}
+	return true;
+}
+
 
 
 

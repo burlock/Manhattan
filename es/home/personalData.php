@@ -112,7 +112,9 @@
 						if(isset($_POST['hiddenPOST'])){
 							switch ($_POST['hiddenPOST']){
 								case 'hChangePassSubmit':
-									if(!checkHashedPassChange($_POST['newPassword'], $_POST['confirmNewPassword'], getDBsinglefield('pass', 'users', 'login', $_SESSION['loglogin']), $userRow['language'], $keyError)){
+									//if(!checkHashedPassChange($_POST['newPassword'], $_POST['confirmNewPassword'], getDBsinglefield('pass', 'users', 'login', $_SESSION['loglogin']), $userRow['language'], $keyError)){
+									//Se pone en castellano porque según un correo quieren todos los mensajes emergentes en castellano
+									if(!checkHashedPassChangeES($_POST['newPassword'], $_POST['confirmNewPassword'], getDBsinglefield('pass', 'users', 'login', $_SESSION['loglogin']), $keyError)){
 										?>
 										<script type="text/javascript">
 											alert('<?php echo $keyError; ?>');
@@ -126,7 +128,7 @@
 										if(!executeDBquery("UPDATE `users` SET `pass`='".$newCryptedPass."', `needPass`='0', `passExpiration`='".addMonthsToDate(getDBsinglefield('value', 'otherOptions', 'key', 'expirationMonths'))."' WHERE `login`='".$_SESSION['loglogin']."'")){
 											?>
 											<script type="text/javascript">
-												alert('No fue posible actualizar su contraseña.');
+												alert('Error: No fue posible actualizar su contraseña.');
 												window.location.href='personalData.php';
 											</script>
 											<?php 
@@ -149,7 +151,7 @@
 									if(!executeDBquery("UPDATE `users` SET `language`='".$_POST['changeLanguage']."' WHERE `login`='".$_SESSION['loglogin']."'")){
 										?>
 										<script type="text/javascript">
-											alert('No fue posible actualizar su idioma.');
+											alert('Error: No fue posible actualizar su idioma.');
 											window.location.href='personalData.php';
 										</script>
 										<?php 
