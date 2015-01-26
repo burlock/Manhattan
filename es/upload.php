@@ -811,7 +811,8 @@ Los campos que poseen * son obligatorios.
 			<div class="form-group"> <!-- Teléfono Móvil & Teléfono Adicional -->
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankmobile">Tfno. móvil: * </label> 
 				<div class="col-sm-4">
-					<input class="form-control" type="text" name="blankmobile" maxlength="9" placeholder="[6-7]XXXXXXXX" required onkeypress="return checkOnlyNumbers(event)">
+					<!-- <input class="form-control" type="text" name="blankmobile" maxlength="9" placeholder="[6-7]XXXXXXXX" required onkeypress="return checkOnlyNumbers(event)"> -->
+					<input class="form-control" type="text" name="blankmobile" maxlength="18" placeholder="00[Cód.País]-XXXXXXXXX" required onkeypress="return checkDashedNumbers(event)">
 				</div>
 				
 				<label id="uploadFormLabel" class="control-label col-sm-2" for="blankphone">Otro teléfono: </label> 

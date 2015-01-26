@@ -158,7 +158,9 @@ else {
 		<div class="form-group" >  <!-- Teléfono Móvil y Teléfono adicional -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmobile">Handy: * </label>
 			<div class="col-sm-4">
-				<input class="form-control" type='text' name='eCCVmobile' maxlength='9' value="<?php echo $editedCVRow['mobile'] ?>" onkeypress="return checkOnlyNumbers(event)">										
+				<!-- <input class="form-control" type='text' name='eCCVmobile' maxlength='9' value="< ?php echo $editedCVRow['mobile'] ?>" onkeypress="return checkOnlyNumbers(event)"> -->
+				<!-- Relajación de las Restricciones del Móvil, según correo -->
+				<input class="form-control" type='text' name='eCCVmobile' maxlength='18' placeholder='00[Co.Code]-XXXXXXXXX' value="<?php echo $editedCVRow['mobile'] ?>" onkeypress="return checkDashedNumbers(event)">
 			</div>
 
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVphone">Andere telefon: </label>
@@ -422,12 +424,32 @@ else {
 		<div class="form-group" >  <!-- Estado del Candidato y Fecha de CV -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcandidateStatus">Zustand des kandidaten: * </label>	
 			<div class="col-sm-4">
+				<!--
 				<select class="form-control" name='eCCVcandidateStatus'>
 					<option value=''>-- wählen --</option>
 					<option value='available'>Verfügbar</option>
 					<option value='working'>Arbeiten</option>
 					<option value='discarded'>Ausgeschlossen</option>
 				</select>
+				-->
+			
+				<select class="form-control" name="eCCVcandidateStatus" >
+					<?php 
+					$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
+					$candStatus = getDBcompletecolumnID($userLang, 'candidateStatus', $userLang);
+					echo "<option value=''>-- wählen --</option>";
+					foreach($candStatus as $i){
+						$keyCandidate = getDBsinglefield('key', 'candidateStatus', $userLang, $i);
+						if($keyCandidate == $editedCVRow['candidateStatus']){
+							echo "<option selected value=" . $keyCandidate . ">" . $i . "</option>";
+						}
+						else{
+							echo "<option value=" . $keyCandidate . ">" . $i . "</option>";
+						}
+					}
+					?>
+				</select>
+
 			</div>
 
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcvDate">Datum CV: </label>

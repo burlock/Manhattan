@@ -112,6 +112,8 @@
 					
 					include $_SERVER['DOCUMENT_ROOT'] . '/common/code/checkedFormCheckings.php';
 					
+					$inDBMobile = trim(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'));
+					
 					if(!checkFullName($_POST['eCCVname'], $_POST['eCCVsurname'], $userRow['language'], $outName, $outSurname, $checkError)){
 						?>
 						<script type="text/javascript">
@@ -130,7 +132,18 @@
 						<?php 
 					}
 					
+					/*
 					elseif(!checkMobile(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'))){
+						?>
+						<script type="text/javascript">
+							alert('Error: Mobile is not properly written.');
+							window.location.href='checkedCVs.php?codvalue=<?php echo $_POST['eCCVnie'];  ?>';
+						</script>
+						<?php 
+					}
+					*/
+					// Relajación de las Restricciones del Móvil, según correo del 22/01
+					elseif(!checkPhone($inDBMobile)){
 						?>
 						<script type="text/javascript">
 							alert('Error: Mobile is not properly written.');
@@ -181,7 +194,7 @@
 							`country` = '".htmlentities($_POST['eCCVcountry'], ENT_QUOTES, 'UTF-8')."',
 							`province` = '".htmlentities($_POST['eCCVprovince'], ENT_QUOTES, 'UTF-8')."',
 							`city` = '".htmlentities($_POST['eCCVcity'], ENT_QUOTES, 'UTF-8')."',
-							`mobile` = '".htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8')."',
+							`mobile` = '".$inDBMobile."',
 							`mail` = '".htmlentities($_POST['eCCVmail'], ENT_QUOTES, 'UTF-8')."',
 							`drivingType` = '".htmlentities($_POST['eCCVdrivingType'], ENT_QUOTES, 'UTF-8')."',
 							`drivingDate` = '".htmlentities($_POST['eCCVdrivingDate'], ENT_QUOTES, 'UTF-8')."',
