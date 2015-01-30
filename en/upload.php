@@ -415,7 +415,9 @@
 			<?php
 		}
 		
-		elseif(!checkMobile($_POST['blankmobile'])){
+		//elseif(!checkMobile($_POST['blankmobile'])){
+		//Relajación de la restricción del móvil según correo del 22/01
+		elseif((strlen($_POST['blankmobile']) < 1) || (!checkPhone($_POST['blankmobile']))){
 			unset($_POST['push_button']);
 			?>
 			<script type="text/javascript">
