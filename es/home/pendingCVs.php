@@ -115,7 +115,10 @@
 					
 					$inDBMobile = trim(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'));
 					
+					//if(!checkFullNameES($_POST['eCCVname'], $_POST['eCCVsurname'], $outName, $outSurname, $checkError)){
+					//No se sabe si aquí quieren también los mensajes emergentes en español. De momento lo dejo en los 3 idiomas
 					if(!checkFullName($_POST['eCCVname'], $_POST['eCCVsurname'], $userRow['language'], $outName, $outSurname, $checkError)){
+						unset($_POST['eCurCVsend']);
 						?>
 						<script type="text/javascript">
 							alert('<?php echo $checkError; ?>');
@@ -125,6 +128,7 @@
 					}
 					
 					elseif(!checkBirthdate($_POST['eCCVbirthdate'], $userRow['language'], $outDate, $checkError)){
+						unset($_POST['eCurCVsend']);
 						?>
 						<script type="text/javascript">
 							alert('<?php echo $checkError; ?>');
@@ -145,6 +149,7 @@
 					*/
 					// Relajación de las Restricciones del Móvil, según correo del 22/01
 					elseif(!checkPhone($inDBMobile)){
+						unset($_POST['eCurCVsend']);
 						?>
 						<script type="text/javascript">
 							alert('Error: El Móvil no está debidamente escrito.');
@@ -154,6 +159,7 @@
 					}
 					
 					elseif(!filter_var(htmlentities($_POST['eCCVmail'], ENT_QUOTES, 'UTF-8'), FILTER_VALIDATE_EMAIL)){
+						unset($_POST['eCurCVsend']);
 						?>
 						<script type="text/javascript">
 							alert('Error: El E-mail no está debidamente escrito.');
@@ -163,6 +169,7 @@
 					}
 					
 					elseif(!strlen($_POST['eCCVcandidateStatus']) > 0){
+						unset($_POST['eCurCVsend']);
 						?>
 						<script type="text/javascript">
 							alert('No se ha seleccionado Estado para el Candidato.');
@@ -170,6 +177,18 @@
 						</script>
 						<?php 
 					}
+					
+					/* Incluimos esta comprobación, a priori innecesaria, porque si se produce un error en "pendingFormCheckings.php" que debiera impedir la grabación del CV, 
+					 * por la razón que sea, no aborta, provocando que el CV se valide aún teniendo errores.
+					 */
+					elseif(!isset($_POST['eCurCVsend'])){
+						?>
+						<script type="text/javascript">
+							window.location.href='pendingCVs.php?codvalue=<?php echo $_POST['eCCVnie'];  ?>';
+						</script>
+						<?php 
+					}
+					
 					else{
 						$inDBOtherPhone = trim(htmlentities($_POST['eCCVphone'], ENT_QUOTES, 'UTF-8'));
 						if(!checkPhone($inDBOtherPhone)){

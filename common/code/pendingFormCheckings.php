@@ -34,6 +34,7 @@ else {
 		else{
 			switch ($userRow['language']){
 				case 'german':
+					unset($_POST['eCurCVsend']);
 					?>
 					<script type="text/javascript">
 						alert('Fehler: Mindestens einer der Nationalitäten ist nicht richtig geschrieben.');
@@ -43,6 +44,7 @@ else {
 				break;
 				
 				case 'english':
+					unset($_POST['eCurCVsend']);
 					?>
 					<script type="text/javascript">
 						alert('Error: At least 1 of the nationalities is not properly written.');
@@ -52,6 +54,7 @@ else {
 				break;
 				
 				default:
+					unset($_POST['eCurCVsend']);
 					?>
 					<script type="text/javascript">
 						alert('Error: Al menos 1 de las nacionalidades no está debidamente escrita.');
@@ -115,6 +118,7 @@ else {
 		else{
 			switch ($userRow['language']){
 				case 'german':
+					unset($_POST['eCurCVsend']);
 					?>
 					<script type="text/javascript">
 						alert('Fehler: Mindestens einer der Sprachen nicht richtig geschrieben.');
@@ -124,6 +128,7 @@ else {
 				break;
 				
 				case 'english':
+					unset($_POST['eCurCVsend']);
 					?>
 					<script type="text/javascript">
 						alert('Error: At least 1 of the languages is not properly written.');
@@ -133,6 +138,7 @@ else {
 				break;
 				
 				default:
+					unset($_POST['eCurCVsend']);
 					?>
 					<script type="text/javascript">
 						alert('Error: Al menos 1 de los idiomas no está debidamente escrito.');
@@ -162,6 +168,7 @@ else {
 		$securedEducEnd = securizeString($_POST["eCCVeducEnd$i"]);
 		
 		if(!checkEducation($securedEducTittle, $securedEducCenter, $securedEducStart, $securedEducEnd, $userRow['language'], $checkError)){
+			unset($_POST['eCurCVsend']);
 			?>
 			<script type="text/javascript">
 				alert('<?php echo $checkError; ?>');
