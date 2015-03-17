@@ -112,6 +112,7 @@
 					
 					include $_SERVER['DOCUMENT_ROOT'] . '/common/code/checkedFormCheckings.php';
 					
+					/* LO DE ABAJO ESTÁ METIDO YA EN "checkedFormCheckings.php"
 					$inDBMobile = trim(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'));
 					
 					if(!checkFullName($_POST['eCCVname'], $_POST['eCCVsurname'], $userRow['language'], $outName, $outSurname, $checkError)){
@@ -134,16 +135,6 @@
 						<?php 
 					}
 					
-					/*
-					elseif(!checkMobile(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'))){
-						?>
-						<script type="text/javascript">
-							alert('Error: Mobile is not properly written.');
-							window.location.href='checkedCVs.php?codvalue=<?php echo $_POST['eCCVnie'];  ?>';
-						</script>
-						<?php 
-					}
-					*/
 					// Relajación de las Restricciones del Móvil, según correo del 22/01
 					elseif(!checkPhone($inDBMobile)){
 						unset($_POST['eCurCVsend']);
@@ -177,7 +168,7 @@
 					
 					/* Incluimos esta comprobación, a priori innecesaria, porque si se produce un error en "pendingFormCheckings.php" que debiera impedir la grabación del CV, 
 					 * por la razón que sea, no aborta, provocando que el CV se valide aún teniendo errores.
-					 */
+					 * /
 					elseif(!isset($_POST['eCurCVsend'])){
 						?>
 						<script type="text/javascript">
@@ -241,7 +232,36 @@
 							</script>
 							<?php 
 						}
-						else {
+						else{
+							//Once CV has been updated, it is checked if any file needs to be uploaded...
+							if($_FILES[candidatFiles][name][0]){
+								$userDir = $_SERVER['DOCUMENT_ROOT'] . "/cvs/".getDBsinglefield(userLogin, cvitaes, nie, $_POST[eCCVnie])."/";
+								if(ifCreateDir($userDir, 0777)){
+									//Every uploaded file is checked like if it was an array
+									for($i=0; $i<count($_FILES[candidatFiles][name]); $i++){
+										//Now files are checked about their restrictions to be uploaded
+										if(checkUploadedFileES($_FILES[candidatFiles][name][$i], $_FILES[candidatFiles][type][$i], $_FILES[candidatFiles][size][$i], $errorText) && is_uploaded_file($_FILES[candidatFiles][tmp_name][$i])){
+											$_FILES[candidatFiles][name][$i] = str_replace(" ","_",$_FILES[candidatFiles][name][$i]);
+											if(!move_uploaded_file($_FILES[candidatFiles][tmp_name][$i], $userDir.$_FILES[candidatFiles][name][$i])){
+												?>
+												<script type="text/javascript">
+													alert('Error CCVFUPLOAD02 saving file.');
+													window.location.href='checkedCVs.php';
+												</script>
+												<?php 
+											}
+										}
+										else{
+											?>
+											<script type="text/javascript">
+												alert('Error CCVFUPLOAD01: <?php echo $errorText; ?>');
+												window.location.href='checkedCVs.php';
+											</script>
+											<?php 
+										}
+									}
+								}
+							}
 							?>
 							<script type="text/javascript">
 								alert('CV checked successfully.');
@@ -251,6 +271,29 @@
 						}
 					}
 				}
+				*/
+				
+				/*
+				PASARA A LLAMARSE 'hPauseCV' EN LOS hiddenGET
+				elseif($_POST['eCurCVhist']){
+					if(!executeDBquery("UPDATE `cvitaes` SET `cvStatus`='paused' WHERE `nie`='".$_POST['eCCVnie']."'")){
+						?>
+						<script type="text/javascript">
+							alert('Error pausing CV.');
+							window.location.href='pendingCVs.php';
+						</script>
+						<?php
+					}
+					else{
+						?>
+						<script type="text/javascript">
+							alert('CV paused successfully.');
+							window.location.href='pendingCVs.php';
+						</script>
+						<?php
+					}
+					LO DE ENCIMA ESTÁ METIDO YA EN "checkedFormCheckings.php" */
+				}//isset($_POST[eCurCVsend])
 				
 				
 				elseif(isset($_GET['hiddenGET'])){
@@ -289,6 +332,59 @@
 								rmdir($userDir);
 							}
 						break;
+						
+						case 'hAddEduc':
+							if(!executeDBquery("INSERT INTO `userEducations` (`userNIE`) VALUES ('".$_GET[codvalue]."')")){
+								?>
+								<script type="text/javascript">
+									alert('Error including new education.');
+									window.location.href='checkedCVs.php';
+								</script>
+								<?php
+							}
+						break;
+						
+						case 'hAddExp':
+							if(!executeDBquery("INSERT INTO `userExperiences` (`userNIE`) VALUES ('".$_GET[codvalue]."')")){
+								?>
+								<script type="text/javascript">
+									alert('Error including new experience.');
+									window.location.href='checkedCVs.php';
+								</script>
+								<?php
+							}
+						break;
+						
+						case 'hDelCVFile':
+							$toDeleteFile = $_SERVER[DOCUMENT_ROOT]."/cvs/".$_GET[codvalue]."/".$_GET[dFile];
+							if(!unlink($toDeleteFile)){
+								?>
+								<script type="text/javascript">
+									alert('Error deleting file.');
+									window.location.href='checkedCVs.php?codvalue=<?php echo getDBsinglefield(nie, cvitaes, userLogin, $_GET[codvalue])?>';
+								</script>
+								<?php
+							}
+						break;
+						
+						case 'hPauseCV':
+							if(!executeDBquery("UPDATE `cvitaes` SET `cvStatus`='paused' WHERE `nie`='".$_GET[codvalue]."'")){
+								?>
+								<script type="text/javascript">
+									alert('Error pausing CV <?php echo $_GET[codvalue] ?>.');
+									window.location.href='checkedCVs.php';
+								</script>
+								<?php
+							}
+							else{
+								?>
+								<script type="text/javascript">
+									alert('CV <?php echo $_GET[codvalue] ?> paused successfully.');
+									window.location.href='checkedCVs.php';
+								</script>
+								<?php
+							}
+						break;
 					}
 					?>
 					<script type="text/javascript">
@@ -323,14 +419,19 @@
 								<?php 
 							}
 							?>
-							
-							<form id="editedCV" class="form-horizontal" role="form" name="editedCV" autocomplete="off" method="post" action="checkedCVs.php">
-								
+							<form id="editedCV" class="form-horizontal" role="form" name="editedCV" autocomplete="off" method="post" action="checkedCVs.php" enctype="multipart/form-data">
 								<?php
 								include $_SERVER['DOCUMENT_ROOT'] . '/common/code/en/checkingModal.php';
 								?>
-								
 								<div class="modal-footer">
+									<!-- <button type="button" class="btn btn-primary pull-left" name="eCurCVhist" >Pause CV</button> -->
+									<?php 
+									//Provisionalmente pondremos esto solo para "SuperAdmin"
+									if($_SESSION[logprofile] == 'SuperAdmin'){
+										echo "<a href=checkedCVs.php?codvalue='".$editedCVRow[nie]."'&hiddenGET=hPauseCV class='btn btn-primary pull-left'>Pause CV</a>";
+									}
+									//<a href=checkedCVs.php?codvalue=<?php echo $editedCVRow[nie] ? >&hiddenGET=hPauseCV class="btn btn-primary pull-left">Pause CV</a>
+									?>
 									<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 									<button type="submit" class="btn btn-primary" name="eCurCVsend">Modify previous checked CV<span class="glyphicon glyphicon-ok"> </span></button>
 								</div>

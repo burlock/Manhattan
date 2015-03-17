@@ -1136,6 +1136,40 @@ function checkBirthdate($inDate, $loggedUserLang, &$outDate, &$checkError){
 
 
 
+/* Checks whether Candidate's Status was chosen or not previously to send Form
+ * Entry (cvStatus): String that indicates status for the Candidate
+ * Entry (loggedUserLang): String that indicates language of user
+ * Exit (checkError): String with text that includes a description of the error
+ */
+/*
+function checkCandidateStatusM($cvStatus, $loggedUserLang, &$checkError){
+	switch($loggedUserLang){
+		case 'german':
+			if(!strlen($cvStatus) > 0){
+				$checkError = "Fehler: Keine Sonderstellung für den Kandidaten.";
+				return false;
+			}
+		break;
+		
+		case 'english':
+			if(!strlen($cvStatus) > 0){
+				$checkError = "Error: A Status for the Candidate was not selected.";
+				return false;
+			}
+		break;
+		
+		default:
+			if(!strlen($cvStatus) > 0){
+				$checkError = "Error: No se ha seleccionado Estado para el Candidato.";
+				return false;
+			}
+		break;
+	}
+}
+*/
+
+
+
 /* Checks whether a DNI (native) or NIE (abroad people with national document) is well-formatted and written or not
  * Entry (nie): String
  * Exit: Boolean
@@ -1550,7 +1584,7 @@ function checkFullAddressES($inName, $inNumber, &$outAddrName, &$outAddrNumber, 
 
 
 
-/* Checks whether a Name & Surname are both correct to be saved in a DB. Called from 'upload.php', 'pendingCVs.php' and 'checkedCVs.php'
+/* Checks whether a Name & Surname are both correct to be saved in a DB. Called from 'upload.php', 'checkedCVs.php', 'pausedCVs.php', and 'pendingCVs.php'
  * Entry (inName): Input string for Name
  * Entry (inSurname): Input string for Surname
  * Entry (loggedUserLang): String that indicates the language of the user whose name must be checked
@@ -1607,6 +1641,39 @@ function checkFullNameES($inName, $inSurname, &$outName, &$outSurname, &$checkEr
 
 
 
+/* Checks whether a MAIL account is valid or not
+ * Entry (inMail): String which contains email
+ * Entry (loggedUserLang): String that indicates the language of the user
+ * Exit (checkError): String with text that includes a description of the error
+ */
+/*
+function checkMailM($inMail, $loggedUserLang, &$checkError){
+	switch($loggedUserLang){
+		case 'german':
+			if(!filter_var(htmlentities($inMail, ENT_QUOTES, 'UTF-8'), FILTER_VALIDATE_EMAIL)){
+				$checkError = "Fehler: Die Email ist nicht richtig geschrieben.";
+				return false;
+			}
+		break;
+		
+		case 'english':
+			if(!filter_var(htmlentities($inMail, ENT_QUOTES, 'UTF-8'), FILTER_VALIDATE_EMAIL)){
+				$checkError = "Error: Email is not valid.";
+				return false;
+			}
+		break;
+		
+		default:
+			if(!filter_var(htmlentities($inMail, ENT_QUOTES, 'UTF-8'), FILTER_VALIDATE_EMAIL)){
+				$checkError = "Error: El Email no es válido.";
+				return false;
+			}
+		break;
+	}
+}
+*/
+
+
 
 /* Checks whether a MOBILE phone number is valid or not
  * Entry (mobile): Integer which contains a number
@@ -1625,6 +1692,7 @@ function checkMobile($mobile){
 	}
 	return true;
 }
+
 
 
 
@@ -1649,6 +1717,7 @@ function checkNationality($inNations, &$outNations){
 
 
 
+
 /* Checks whether a phone number is valid or not (00XX-XXXXXXXXXXXXX)
  * Entry (phone): Integer which contains a number
  * Exit: Boolean
@@ -1666,6 +1735,60 @@ function checkPhone($phone){
 	}
 	return true;
 }
+
+
+
+
+/* Checks whether a phone number is valid or not (00XX-XXXXXXXXXXXXX)
+ * Entry (phone): Integer which contains a number
+ * Entry (loggedUserLang): String that indicates the language of the user whose name must be checked
+ * Exit (checkError): String with text that includes a description of the error
+ * Exit: Boolean that indicates if input phone is valid or not
+ */
+function checkPhoneM($phone, $loggedUserLang, &$checkError){
+	$connection = connectDB();
+	
+	$outPhone = trim(htmlentities(mysqli_real_escape_string($connection, $phone)));
+	
+	switch ($loggedUserLang){
+		case 'german':
+			if(strlen($outPhone) > 18){
+				$checkError = "Fehler: Die Rufnummer kann nicht mehr als 18 Zeichen lang sein.";
+				return false;
+			}
+			elseif(!preg_match('/(00[0-9]{2}[-][0-9]{3,13})|(00[0-9]{3}[-][0-9]{3,12})/', $outPhone)){
+				$checkError = "Fehler: Die mobile ist nicht richtig geschrieben.";
+				return false;
+			}
+		break;
+		
+		case 'english':
+			if(strlen($outPhone) > 18){
+				$checkError = "Error: Phone number cannot be larger than 18 characters.";
+				return false;
+			}
+			elseif(!preg_match('/(00[0-9]{2}[-][0-9]{3,13})|(00[0-9]{3}[-][0-9]{3,12})/', $outPhone)){
+				$checkError = "Error: Phone format is not valid.";
+				return false;
+			}
+		break;
+		
+		default:
+			if(strlen($outPhone) > 18){
+				$checkError = "Error: El número de teléfono no puede tener más de 18 caracteres.";
+				return false;
+			}
+			elseif(!preg_match('/(00[0-9]{2}[-][0-9]{3,13})|(00[0-9]{3}[-][0-9]{3,12})/', $outPhone)){
+				$checkError = "Error: El formato del teléfono no es válido.";
+				return false;
+			}
+		break;
+	}
+	
+	$checkError = "";
+	return true;
+}
+
 
 
 
@@ -2019,6 +2142,7 @@ function accessGranted($filePath, $myFile, $userProfile){
  * Entry (loggedUserLang): Language of the 'Administrador' that is creating new Candidate. Used to know the language in which error messages must be reported to emerging window
  * Exit (addError): Output error text when something goes wrong
  */
+/* ESTA SERÁ LA FUNCIÓN USADA CON EL MÉTODO CLÁSICO QUE SOLO TIENE EL BOTÓN "Crear Candidato" (pa_XXXXXX) */
 function addCandidate($newUser, $loggedUserLang, &$addError){
 	$nextUserNumber = getNextCandidateNumber();
 	//Se podría controlar el error de cada comando o función a ejecutar (a futuro)
@@ -2049,10 +2173,43 @@ function addCandidate($newUser, $loggedUserLang, &$addError){
 	$addError = "";
 	return true;
 }
+/* ESTA FUNCIÓN ES LA QUE SE USARÁ CUANDO SE CREE UN Candidato MEDIANTE LA CREACIÓN RÁPIDA (sobao.pasiego)
+function addCandidate($newUser, $loggedUserLang, &$addError){
+	//$nextUserNumber = getNextCandidateNumber();
+	//Se podría controlar el error de cada comando o función a ejecutar (a futuro)
+	//executeDBquery("UPDATE `otherOptions` SET `value`='".$nextUserNumber."' WHERE `key`='lastCandidate'");
+	$candProfNumUsers = getDBsinglefield(numUsers, profiles, name, Candidato);
+	$candProfNumUsers += 1;
+	executeDBquery("UPDATE `profiles` SET `numUsers`='".$candProfNumUsers."' WHERE `name`='Candidato'");
+	//Creating newUser's folder to store his/her data when updating his/her CV
+	$userDir = $_SERVER['DOCUMENT_ROOT'] . "/cvs/".$newUser."/";
+	if(!ifCreateDir($userDir, 0777)){
+		switch($loggedUserLang) {
+			case 'german':
+				$addError = "Fehler beim Benutzer Verzeichnissystem erstellen (ADCUUSERDIR)";
+				return false;
+			break;
+			
+			case 'english':
+				$addError = "Error creating Candidate\'s directories system (ADCUUSERDIR)";
+				return false;
+			break;
+			
+			default:
+				$addError = "Error al crear el sistema de directorios del Candidato (ADCUUSERDIR)";
+				return false;
+			break;
+		}
+	}
+	$addError = "";
+	return true;
+}
+*/
 
 
 
-/* Checks whether uploaded files (NON images) are valid or not. COMENTADO DE MOMENTO EN 'upload.php'
+
+/* Checks whether uploaded files (NON images) are valid or not. COMENTADO DE MOMENTO EN 'upload.php'. PERO USADO EN 'checkedCVs.php'
  * PRE: $_FILES must be isset() and file must be properly uploaded to TMP directory
  * Entry (fileName): Input resource which includes information about one file
  * Exit (errorText): Output text when something goes wrong 
@@ -2064,13 +2221,11 @@ function checkUploadedFileES($fileName, $fileType, $fileSize, &$errorText){
 	$whitelist = array('pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'txt', 'rtf');
 	//$errorText = 'naaa';
 	if(!in_array(end(explode('.', $lowerCase)), $whitelist)){
-		$errorText = 'Tipo de ficheros no válido';
-		//echo 'chunog';
+		$errorText = 'Tipo de ficheros no válido.';
 		return false;
 	}
 	if($fileSize > 1048576){
-		$errorText = 'El límite de tamaño para un fichero es de 1MB';
-		//echo 'Chungo: ';
+		$errorText = 'Límite de 1MB de tamaño excedido.';
 		return false;
 	}
 	$errorText ="";
@@ -2081,11 +2236,11 @@ function checkUploadedFile($fileName, $fileType, $fileSize, &$errorText){
 	//All these extensions will be the only-supported ones
 	$whitelist = array('pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'txt', 'rtf');
 	if(!in_array(end(explode('.', $lowerCase)), $whitelist)){
-		$errorText = 'Error: Invalid file type.';
+		$errorText = 'Invalid file type.';
 		return false;
 	}
 	if($fileSize > 1048576){
-		$errorText = 'Error: 1MB file size exceeded.';
+		$errorText = '1MB file size exceeded.';
 		return false;
 	}
 	$errorText ="";
@@ -2120,9 +2275,8 @@ function getNextCandidateName(){
 
 
 
-/* Gets the name for 'myFile' to make this variable dynamic
+/* Gets the name for 'myFile' to make this variable dynamic (i.e. 'pendingCVs' for '/en/home/pendingCVs.php')
  * Entry (filePath): String that contains full relative path, from 'myFile' name could be reached
- * Entry (userCurProject): String that contains key name of user's project 
  * Exit (): String that corresponds to 'myFile' name
  */
 function getMyFile($filePath){
@@ -2184,9 +2338,9 @@ function getPendingCVs(){
 
 
 
-/* Gets the name (and ONLY the name, without any path) of the PHP script
+/* Gets the name (and ONLY the name, without any path, and WITHOUT ".php" extension) of the PHP script
  * Entry (filePath): String that contains full relative path (i.e. "/es/home/pendingCVs.php")
- * Exit (): String that only contains the name of PHP file (i.e. "pendingCVs.php")
+ * Exit (): String that only contains the name of PHP file (i.e. "pendingCVs")
  * PRE: filePath must not be empty
  */
 function getPhpFileName($filePath){
@@ -2195,6 +2349,19 @@ function getPhpFileName($filePath){
 	
 	//return substr(mb_strrchr($filePath, "/"), 1);
 	return substr(mb_strrchr($filePath, "/"), 1, -4);
+}
+
+
+
+/* Gets the name AND ".php" EXTENSION of a script (without path). I.E. for "/es/home/pendingCVs.php" it will extract "pendingCVs.php"
+ * Entry (filePath): String that contains full relative path (i.e. "/es/home/pendingCVs.php")
+ * Exit (): String that only contains the name of PHP file (i.e. "pendingCVs.php")
+ * PRE: filePath must not be empty
+ */
+function getPhpScript($filePath){
+	//'mb_strrchr' Finds the last occurrence of a character in a string and returns the right part of the string
+	
+	return mb_strrchr($filePath, "/");
 }
 
 

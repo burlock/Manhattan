@@ -762,6 +762,32 @@ function confirmCheckedCVDeletion(userLang) {
 
 
 
+/* Double-checks deletion of a previously uploaded file that corresponds to an existing CV
+ * Called in "checkedCVs.php", "pausedCVs.php" and "pendingCVs.php" (via "checkedFormCheckings.php")
+ */
+function confirmDelCVFile(userLang) {
+	switch(userLang){
+		case "german":
+			return confirm('Bist du sicher, diese Datei zu löschen?');
+		break;
+		
+		case "english":
+			return confirm('Are you sure you want to delete this file?');
+		break;
+		
+		case "spanish":
+			return confirm('¿Está seguro de borrar este archivo?');
+		break;
+		
+		default:
+			alert ('Idioma no encontrado');
+		break;
+	}
+}
+
+
+
+
 /* Double-checks sending of Candidate's CV submit
  * Entry (form): Is the COMPLETE form that will be sent if all the inside checkings are OK
  * Entry (userLang): String that identifies User language, in order to return the message in the proper language

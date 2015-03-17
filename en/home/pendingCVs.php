@@ -111,8 +111,10 @@
 				/*****  Code executed when trying to validate a CV  *****/
 				if (isset($_POST['eCurCVsend'])) {
 					
-					include $_SERVER['DOCUMENT_ROOT'] . '/common/code/pendingFormCheckings.php';
+					//include $_SERVER['DOCUMENT_ROOT'] . '/common/code/pendingFormCheckings.php';
+					include $_SERVER['DOCUMENT_ROOT'] . '/common/code/checkedFormCheckings.php';
 					
+					/* LO DE ABAJO ESTÁ METIDO YA EN "checkedFormCheckings.php"
 					$inDBMobile = trim(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'));
 					
 					//if(!checkFullNameES($_POST['eCCVname'], $_POST['eCCVsurname'], $outName, $outSurname, $checkError)){
@@ -137,16 +139,6 @@
 						<?php 
 					}
 					
-					/*
-					elseif(!checkMobile(htmlentities($_POST['eCCVmobile'], ENT_QUOTES, 'UTF-8'))){
-						?>
-						<script type="text/javascript">
-							alert('Error: Mobile is not properly written.');
-							window.location.href='pendingCVs.php?codvalue=<?php echo $_POST['eCCVnie'];  ?>';
-						</script>
-						<?php 
-					}
-					*/
 					// Relajación de las Restricciones del Móvil, según correo del 22/01
 					elseif(!checkPhone($inDBMobile)){
 						unset($_POST['eCurCVsend']);
@@ -180,7 +172,7 @@
 					
 					/* Incluimos esta comprobación, a priori innecesaria, porque si se produce un error en "pendingFormCheckings.php" que debiera impedir la grabación del CV, 
 					 * por la razón que sea, no aborta, provocando que el CV se valide aún teniendo errores.
-					 */
+					 * /
 					elseif(!isset($_POST['eCurCVsend'])){
 						?>
 						<script type="text/javascript">
@@ -244,7 +236,36 @@
 							</script>
 							<?php 
 						}
-						else {
+						else{
+							//Once CV has been updated, it is checked if any file needs to be uploaded...
+							if($_FILES[candidatFiles][name][0]){
+								$userDir = $_SERVER['DOCUMENT_ROOT'] . "/cvs/".getDBsinglefield(userLogin, cvitaes, nie, $_POST[eCCVnie])."/";
+								if(ifCreateDir($userDir, 0777)){
+									//Every uploaded file is checked like if it was an array
+									for($i=0; $i<count($_FILES[candidatFiles][name]); $i++){
+										//Now files are checked about their restrictions to be uploaded
+										if(checkUploadedFileES($_FILES[candidatFiles][name][$i], $_FILES[candidatFiles][type][$i], $_FILES[candidatFiles][size][$i], $errorText) && is_uploaded_file($_FILES[candidatFiles][tmp_name][$i])){
+											$_FILES[candidatFiles][name][$i] = str_replace(" ","_",$_FILES[candidatFiles][name][$i]);
+											if(!move_uploaded_file($_FILES[candidatFiles][tmp_name][$i], $userDir.$_FILES[candidatFiles][name][$i])){
+												?>
+												<script type="text/javascript">
+													alert('Error PECVFUPLOAD02 saving file.');
+													window.location.href='pendingCVs.php';
+												</script>
+												<?php 
+											}
+										}
+										else{
+											?>
+											<script type="text/javascript">
+												alert('Error PECVFUPLOAD01: <?php echo $errorText; ?>');
+												window.location.href='pendingCVs.php';
+											</script>
+											<?php 
+										}
+									}
+								}
+							}
 							?>
 							<script type="text/javascript">
 								alert('CV checked successfully.');
@@ -252,6 +273,28 @@
 							</script>
 							<?php
 						}
+					}
+					LO DE ENCIMA ESTÁ METIDO YA EN "checkedFormCheckings.php" */
+				}//isset($_POST[eCurCVsend])
+				/*****  End of Code executed when trying to validate a CV  *****/
+				
+				
+				elseif($_POST['eCurCVhist']){
+					if(!executeDBquery("UPDATE `cvitaes` SET `cvStatus`='paused' WHERE `nie`='".$_POST['eCCVnie']."'")){
+						?>
+						<script type="text/javascript">
+							alert('Error pausing CV.');
+							window.location.href='pendingCVs.php';
+						</script>
+						<?php
+					}
+					else{
+						?>
+						<script type="text/javascript">
+							alert('CV paused successfully.');
+							window.location.href='pendingCVs.php';
+						</script>
+						<?php
 					}
 				}
 				
@@ -292,6 +335,17 @@
 								rmdir($userDir);
 							}
 						break;
+						
+						case 'hAddEduc':
+							if(!executeDBquery("INSERT INTO `userEducations` (`userNIE`) VALUES ('".$_GET['codvalue']."')")){
+								?>
+								<script type="text/javascript">
+									alert('Error including new education.');
+									window.location.href='pendingCVs.php';
+								</script>
+								<?php
+							}
+						break;
 					}
 					?>
 					<script type="text/javascript">
@@ -327,13 +381,15 @@
 								}
 								?>
 								
-								<form id="editedCV" class="form-horizontal" role="form" name="editedCV" autocomplete="off" method="post" action="pendingCVs.php">
-									
+								<form id="editedCV" class="form-horizontal" role="form" name="editedCV" autocomplete="off" method="post" action="pendingCVs.php" enctype="multipart/form-data">
 									<?php
 									include $_SERVER['DOCUMENT_ROOT'] . '/common/code/en/checkingModal.php';
 									?>
 									
 									<div class="modal-footer">
+										<!-- LA SIGUIENTE LINEA VALDRIA SI SOLO USARAMOS 1 CV... COMO SE DECIDA USAR MÁS DE UNO, NO VALE -->
+										<!-- Si un CV está Pending no puede ser pausado -->
+										<!-- <button type="submit" class="btn btn-primary pull-left" name="eCurCVhist" >Pause CV</button> -->
 										<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 										<button type="submit" class="btn btn-primary" name="eCurCVsend">Check CV <span class="glyphicon glyphicon-ok"> </span></button>
 									</div>

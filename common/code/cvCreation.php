@@ -197,11 +197,14 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 				$texto= $texto."<tr><td><b> - ".getDBsinglefield(german, languages, key, $lang_a[$i])."</b></td><td>".$langT_a[$i]."</td></tr>";
 				*/
 				if($langT_a[$i] == 'mothertongue'){
-					$texto_pdf = $texto_pdf."<tr><td><b> - ".getDBsinglefield(german, languages, key, $lang_a[$i])."</b></td><td>Muttersprache</td></tr>";
+					//AL PARECER NI EL utf8_decode() NI EL utf8_encode() FUNCIONAN EN DINAHOSTING, POR LO QUE VUELVO A LO ANTERIOR
+					//$texto_pdf = $texto_pdf."<tr><td><b> - ".utf8_decode(getDBsinglefield(german, languages, key, $lang_a[$i]))."</b></td><td></td><td>Muttersprache</td></tr>";
+					//$texto_pdf = $texto_pdf."<tr><td><b> - ".utf8_encode(getDBsinglefield(german, languages, key, $lang_a[$i]))."</b></td><td></td><td>Muttersprache</td></tr>";
+					$texto_pdf = $texto_pdf."<tr><td><b> - ".getDBsinglefield(german, languages, key, $lang_a[$i])."</b></td><td></td><td>Muttersprache</td></tr>";
 					$texto= $texto."<tr><td><b> - ".getDBsinglefield(german, languages, key, $lang_a[$i])."</b></td><td>Muttersprache</td></tr>";
 				}
 				else{
-					$texto_pdf = $texto_pdf."<tr><td><b> - ".getDBsinglefield(german, languages, key, $lang_a[$i])."</b></td><td>".$langT_a[$i]."</td></tr>";
+					$texto_pdf = $texto_pdf."<tr><td><b> - ".getDBsinglefield(german, languages, key, $lang_a[$i])."</b></td><td></td><td>".$langT_a[$i]."</td></tr>";
 					$texto= $texto."<tr><td><b> - ".getDBsinglefield(german, languages, key, $lang_a[$i])."</b></td><td>".$langT_a[$i]."</td></tr>";
 				}
 			}
@@ -216,9 +219,15 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 				$texto_pdf = $texto_pdf."<tr><td style='font-size:150%'><b>·</b></td><td>Familienstand: </td><td> ".$fila[marital]."</td></tr>";
 				$texto_pdf = $texto_pdf."<tr><td style='font-size:150%'><b>·</b></td><td>Kinder: </td><td> ".$fila[sons]."</td></tr>";
 				*/
-				$texto_pdf = $texto_pdf."<tr><td><b> - </b></td><td><b>F&uuml;hrerschein und Ausstellungsdatum: </b></td><td> ".$fila[drivingType]." / ".date("d-m-Y", strtotime($fila[drivingDate]))."</td></tr>";
-				$texto_pdf = $texto_pdf."<tr><td><b> - </b></td><td><b>Familienstand: </b></td><td> ".getDBsinglefield(german, maritalStatus, key, $fila[marital])."</td></tr>";
-				$texto_pdf = $texto_pdf."<tr><td><b> - </b></td><td><b>Kinder: </b></td><td> ".$fila[sons]."</td></tr>";
+				//if($fila[drivingType] < 1)
+				if(strlen($fila[drivingType]) < 1){
+					$texto_pdf = $texto_pdf."<tr><td><b> - </b></td><td><b>F&uuml;hrerschein und Ausstellungsdatum: </b></td><td></td><td> Keine Lizenz</td></tr>";
+				}
+				else{
+					$texto_pdf = $texto_pdf."<tr><td><b> - </b></td><td><b>F&uuml;hrerschein und Ausstellungsdatum: </b></td><td></td><td> ".$fila[drivingType]." / ".date("d-m-Y", strtotime($fila[drivingDate]))."</td></tr>";
+				}
+				$texto_pdf = $texto_pdf."<tr><td><b> - </b></td><td><b>Familienstand: </b></td><td></td><td> ".getDBsinglefield(german, maritalStatus, key, $fila[marital])."</td></tr>";
+				$texto_pdf = $texto_pdf."<tr><td><b> - </b></td><td><b>Kinder: </b></td><td></td><td> ".$fila[sons]."</td></tr>";
 			$texto_pdf = $texto_pdf."</table><br>";
 			
 			$texto = $texto."<br><br><img src='../../common/img/Angaben.jpg' />";
@@ -228,7 +237,12 @@ if ($resultado = mysqli_query($enlace, $consulta)) {
 				$texto = $texto."<tr><td style='font-size:150%'><b>·</b></td><td>Familienstand: &nbsp</td><td> ".$fila[marital]."</td></tr>";
 				$texto = $texto."<tr><td style='font-size:150%'><b>·</b></td><td>Kinder: &nbsp</td><td> ".$fila[sons]."</td></tr>";
 				*/
-				$texto = $texto."<tr><td><b> - </b></td><td><b>F&uuml;hrerschein und Ausstellungsdatum: &nbsp</b></td><td> ".$fila[drivingType]." / ".date("d-m-Y", strtotime($fila[drivingDate]))."</td></tr>";
+				if(strlen($fila[drivingType]) < 1){
+					$texto = $texto."<tr><td><b> - </b></td><td><b>F&uuml;hrerschein und Ausstellungsdatum: &nbsp</b></td><td> Keine Lizenz</td></tr>";
+				}
+				else{
+					$texto = $texto."<tr><td><b> - </b></td><td><b>F&uuml;hrerschein und Ausstellungsdatum: &nbsp</b></td><td> ".$fila[drivingType]." / ".date("d-m-Y", strtotime($fila[drivingDate]))."</td></tr>";
+				}
 				$texto = $texto."<tr><td><b> - </b></td><td><b>Familienstand: &nbsp</b></td><td> ".getDBsinglefield(german, maritalStatus, key, $fila[marital])."</td></tr>";
 				$texto = $texto."<tr><td><b> - </b></td><td><b>Kinder: &nbsp</b></td><td> ".$fila[sons]."</td></tr>";
 			$texto = $texto."</table><br>";

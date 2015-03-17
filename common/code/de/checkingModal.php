@@ -160,12 +160,12 @@ else {
 			<div class="col-sm-4">
 				<!-- <input class="form-control" type='text' name='eCCVmobile' maxlength='9' value="< ?php echo $editedCVRow['mobile'] ?>" onkeypress="return checkOnlyNumbers(event)"> -->
 				<!-- Relajación de las Restricciones del Móvil, según correo -->
-				<input class="form-control" type='text' name='eCCVmobile' maxlength='18' placeholder='00[Co.Code]-XXXXXXXXX' value="<?php echo $editedCVRow['mobile'] ?>" onkeypress="return checkDashedNumbers(event)">
+				<input class="form-control" type='text' name='eCCVmobile' maxlength='18' placeholder='Bei. 0034-699000000' value="<?php echo $editedCVRow['mobile'] ?>" onkeypress="return checkDashedNumbers(event)">
 			</div>
 
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVphone">Andere telefon: </label>
 			<div class="col-sm-4">
-				<input class="form-control" type='text' name='eCCVphone' maxlength='18' placeholder='00[COD. PAIS]-NUMERO' value="<?php echo $editedCVRow['phone'] ?>" onkeypress="return checkDashedNumbers(event)">
+				<input class="form-control" type='text' name='eCCVphone' maxlength='18' placeholder='Bei. 0034-910000000' value="<?php echo $editedCVRow['phone'] ?>" onkeypress="return checkDashedNumbers(event)">
 			</div>
 		</div>
 		
@@ -249,7 +249,11 @@ else {
 		</div>
 		
 		<div class="form-group" >  <!-- Educación -->
-			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducation">Ausbildung: * </label>
+			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducation">
+				Ausbildung: *
+				<!-- <br><a href=< ?php echo $_SERVER[SCRIPT_NAME] ?>?codvalue=< ?php echo $editedCVRow[nie] ?>&hiddenGET=hAddEduc>+ Ausbildung</a> -->
+				<br><a href=<?php echo $_SERVER[SCRIPT_NAME] ?>?codvalue=<?php echo $editedCVRow[nie] ?>&hiddenGET=hAddEduc class="btn btn-info btn-xs">+ Ausbildung</a>
+			</label>
 			<div class="col-sm-10">
 				<?php
 				$educIDs = getDBcolumnvalue('idEdu', 'userEducations', 'userNIE', $editedCVRow['nie']);
@@ -304,7 +308,11 @@ else {
 		</div>
 		
 		<div class="form-group" >  <!-- Experiencia -->
-			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperience">Letzten jahren: </label>
+			<!-- <label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperience">Letzten jahren: </label> -->
+			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperience">
+				Letzten jahren:
+				<br><a href=<?php echo $_SERVER[SCRIPT_NAME] ?>?codvalue=<?php echo $editedCVRow[nie] ?>&hiddenGET=hAddExp class="btn btn-info btn-xs">+ Erfahrung</a>
+			</label>
 			<div class="col-sm-10">
 				<?php
 				$experIDs = getDBcolumnvalue('idExp', 'userExperiences', 'userNIE', $editedCVRow['nie']);
@@ -387,16 +395,20 @@ else {
 			<div class="col-sm-10">
 				<?php
 				$userFilesArray  = scandir($userFilesDir);
-				foreach ($userFilesArray as $value){
-					if (preg_match("/\w+/i", $value)) {
+				foreach($userFilesArray as $value){
+					if(preg_match("/\w+/i", $value)){
+						echo "<a class='btn btn-danger btn-xs' href='$_SERVER[SCRIPT_NAME]?codvalue=" . $editedCVRow[userLogin] . "&dFile=" . $value . "&hiddenGET=hDelCVFile' onclick='return confirmDelCVFile(\"" . getCurrentLanguage($_SERVER['SCRIPT_NAME']) . "\");'><span class='glyphicon glyphicon-remove'></span></a>&nbsp";
 						echo "<a href=/de/home/downloadFileSingle.php?doc=".$userFilesDir.$value.">$value</a><br>";
 					}
 				}
-				?>		
+				?>
+				<div id="uploadFiles" class="col-sm9">
+					<input class="form-control" type="file" name="candidatFiles[]" multiple="multiple">
+				</div>
 			</div>
 		</div>
 		
-		<div class="panel panel-default">
+		<div class="panel panel-default"> <!-- 10 Habilidades -->
 			<div class="panel-heading">
 				<h3 class="panel-title">Wesentliche berufliche Inhalte</h3>
 			</div>
@@ -417,7 +429,7 @@ else {
 		<div class="form-group" >  <!-- Comentarios -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcomments">Kommentare: </label>	
 			<div class="col-sm-10">
-				<textarea class="form-control" type='text' name='eCCVcomments' value="<?php echo ($editedCVRow['comments']) ?>"><?php echo ($editedCVRow['comments']) ?></textarea>
+				<textarea class="form-control" type='text' rows='5' name='eCCVcomments' value="<?php echo ($editedCVRow['comments']) ?>"><?php echo ($editedCVRow['comments']) ?></textarea>
 			</div>
 		</div>
 		
