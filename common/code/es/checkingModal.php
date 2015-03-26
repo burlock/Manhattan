@@ -1,14 +1,14 @@
 <?php
 session_start();
 
-if (!$_SESSION['loglogin']){
+if(!$_SESSION[loglogin]){
 	?>
 	<script type="text/javascript">
-		window.location.href='/es/index.html';
+		window.location.href='/<?php echo getUserLangDigits($userRow[language]); ?>/index.html';
 	</script>
 	<?php
 }
-else {
+else{
 	?>
 	
 	<div class="modal-body">
@@ -18,14 +18,14 @@ else {
 			<div class="col-sm-10">
 				<input class="form-control" type='text' name='eCCVname' value="<?php echo ($editedCVRow['name']) ?>" autocomplete="off" />
 			</div>
-		</div>
+		</div> <!-- Fin Nombre -->
 
 		<div class="form-group"> <!-- Apellidos -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsurname">Apellidos: * </label>
 			<div class="col-sm-10">
 				<input class="form-control" type='text' name='eCCVsurname' value="<?php echo ($editedCVRow['surname']) ?>" autocomplete="off"/>
 			</div>
-		</div>
+		</div> <!-- Fin Apellidos -->
 		
 		<div class="form-group"> <!-- Fecha de Nacimiento & NIE -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVbirthdate">Fecha de nacimiento: * </label>
@@ -37,9 +37,9 @@ else {
 			<div class="col-sm-4">
 				<input class="form-control" type='text' name='eCCVnie' value="<?php echo ($editedCVRow['nie']) ?>" onkeyup='this.value=this.value.toUpperCase();' readonly/>
 			</div>
-		</div>
+		</div> <!-- Fin Fecha de Nacimiento & NIE -->
 		
-		<div class="form-group tooltip-demo">  <!-- Nacionalidad -->
+		<div class="form-group tooltip-demo"> <!-- Nacionalidad -->
 			<?php
 			//$nationalityQueryResult = getDBDistCompleteColID("english", "countries", "english");
 			$nationalityQueryResult = getDBDistCompleteColID("german", "countries", "german");
@@ -47,10 +47,9 @@ else {
 			?>
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVnationalities"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="auto" title='Spanien, <?php echo $nationalities_string; ?>'></span> Nacionalidad: * </label>
 			<div class="col-sm-10">
-				<!-- <input class="form-control" type='text' name='eCCVnationalities' value="< ?php echo implode("|", getDBcolumnvalue('keyCountry', 'userCountries', 'userNIE', $editedCVRow['nie'])); ?>" data-role='tagsinput' /> -->
 				<input class="form-control" type='text' name='eCCVnationalities' value="<?php echo implode("|", getDBcolumnvalue('keyCountry', 'userNationalities', 'userNIE', $editedCVRow['nie'])); ?>" data-role='tagsinput' />
 			</div>
-		</div>
+		</div> <!-- Fin Nacionalidad -->
 		
 		<div class="form-group"> <!-- Sexo -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVsex">Sexo: * </label>
@@ -68,9 +67,9 @@ else {
 					?>
 				</div>
 			</div>
-		</div>
+		</div> <!-- Fin Sexo -->
 		
-		<div class="form-group">  <!-- Tipo Dirección & Nombre Dirección -->
+		<div class="form-group"> <!-- Tipo Dirección & Nombre Dirección -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrtype">Tipo de dirección: </label>
 			<div class="col-sm-3">
 				<select class="form-control" name="eCCVaddrtype">
@@ -100,9 +99,9 @@ else {
 			<div class="col-sm-5">
 				<input class="form-control" type='text' name='eCCVaddrName' value="<?php echo ($editedCVRow['addrName']) ?>">
 			</div>
-		</div>
+		</div> <!-- Fin Tipo Dirección & Nombre Dirección -->
 		
-		<div class="form-group" >  <!-- Número, Portal y Escalera -->
+		<div class="form-group"> <!-- Número, Portal y Escalera -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrNum">Número: </label>
 			<div class="col-sm-2">
 				<input class="form-control" type='text' name='eCCVaddrNum' maxlength='4' value="<?php echo ($editedCVRow['addrNum']) ?>" onkeyup='this.value=this.value.toUpperCase();'>
@@ -117,43 +116,43 @@ else {
 			<div class="col-sm-2">
 				<input class="form-control" type='text' name='eCCVaddrStair' maxlength='4' value="<?php echo ($editedCVRow['stair']) ?>" onkeyup='this.value=this.value.toUpperCase();'>
 			</div>
-		</div>
+		</div> <!-- Fin Número, Portal y Escalera -->
 		
-		<div class="form-group" >  <!-- Piso y Puerta -->
+		<div class="form-group"> <!-- Piso y Puerta -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrFloor">Planta: </label>
 			<div class="col-sm-3">
 				<input class="form-control" type='text' name='eCCVaddrFloor' maxlength='4' value="<?php echo ($editedCVRow['addrFloor']) ?>">
 			</div>
-
+			
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVaddrDoor">Puerta: </label>	
 			<div class="col-sm-3">
 				<input class="form-control" type='text' name='eCCVaddrDoor' maxlength='4' value="<?php echo ($editedCVRow['addrDoor']) ?>" onkeyup='this.value=this.value.toUpperCase();'>
 			</div>
-		</div>
+		</div> <!-- Fin Piso y Puerta -->
 		
-		<div class="form-group" >  <!-- Código Postal y Localidad -->
+		<div class="form-group"> <!-- Código Postal y Localidad -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVpostal">Código postal: </label>
 			<div class="col-sm-3">
 				<input class="form-control" type='text' name='eCCVpostal' maxlength='5' value="<?php echo $editedCVRow['postalCode'] ?>" onkeypress="return checkOnlyNumbers(event)">
 			</div>
-
+			
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcity">Ciudad: </label>
 			<div class="col-sm-5">
 				<input class="form-control" type='text' name='eCCVcity' value="<?php echo ($editedCVRow['city']) ?>">										
 			</div>
-		</div>	
+		</div> <!-- Fin Código Postal y Localidad -->	
 		
-		<div class="form-group" >  <!-- Provincia y País -->
+		<div class="form-group"> <!-- Provincia y País -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVprovince">Provincia: </label>
 			<div class="col-sm-4">
 				<input class="form-control" type='text' name='eCCVprovince' value="<?php echo ($editedCVRow['province']) ?>">										
 			</div>
-
+			
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcountry">País: </label>
 			<div class="col-sm-4">
 				<input class="form-control" type='text' name='eCCVcountry' value="<?php echo ($editedCVRow['country']) ?>">										
 			</div>
-		</div>
+		</div> <!-- Fin Provincia y País -->
 		
 		<div class="form-group" >  <!-- Teléfono Móvil y Teléfono adicional -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVmobile">Móvil: * </label>
@@ -179,7 +178,6 @@ else {
 		<div class="form-group" >  <!-- Carnet de Conducir -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVdrivingType">Carnet de conducir: </label>										
 			<div class="col-sm-4">
-				<!-- <input class="form-control" type='text' name='eCCVdrivingType' value="< ?php echo ($editedCVRow['drivingType']) ?>"> -->
 				<select class="form-control" name="eCCVdrivingType">
 					<?php
 					$drivingTypes = getDBcompletecolumnID('key', 'drivingTypes', 'id');
@@ -241,7 +239,6 @@ else {
 			
 			$hashedLanguages = array_combine(getDBcolumnvalue('keyLanguage', 'userLanguages', 'userNIE', $editedCVRow['nie']), getDBcolumnvalue('level', 'userLanguages', 'userNIE', $editedCVRow['nie']));
 			?>
-			<!-- <label id="editCVLabel" class="control-label col-sm-2" for="eCCVlanguagesMerged">Languages: * </label> -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVlanguagesMerged"><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="auto" title='<?php echo $languageString; ?>'></span> Idiomas: * </label>
 			<div class="col-sm-10">
 				<input class="form-control" type='text' name='eCCVlanguagesMerged' value="<?php foreach ($hashedLanguages as $lang => $lv) { echo ($lang) . ':' . ($lv) . '|'; } ?>" data-role='tagsinput'>
@@ -251,7 +248,6 @@ else {
 		<div class="form-group" >  <!-- Educación -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducation">
 				Educación: * 
-				<!-- <br><a href=< ?php echo $_SERVER[SCRIPT_NAME] ?>?codvalue=< ?php echo $editedCVRow[nie] ?>&hiddenGET=hAddEduc>+ Educación</a> -->
 				<br><a href=<?php echo $_SERVER[SCRIPT_NAME] ?>?codvalue=<?php echo $editedCVRow[nie] ?>&hiddenGET=hAddEduc class="btn btn-info btn-xs">Añadir Educación</a>
 			</label>
 			<div class="col-sm-10">
@@ -263,38 +259,43 @@ else {
 				else{
 					$j = 0;
 					foreach($educIDs as $i){
-						echo "	<div class='panel panel-default'>";
-						echo "		<div class='panel-heading'>";
-						echo "			<h3 class='panel-title'>Educación #". ($j+1) ."</h3>";
-						echo "		</div>";
-						echo "		<div class='panel-body'>";
-						echo "			<div class='form-group'>";
-						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVeducTittle$j'>Título: </label>";
-						echo " 				<div class='col-sm-10'>";
-						echo "					<input class='form-control' type='text' name='eCCVeducTittle$j' value='" . getDBsinglefield('educTittle', 'userEducations', 'idEdu', $i) . "' >";
-						echo " 				</div>";
-						echo "			</div>";
-						echo "			<div class='form-group'>";
-						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVeducCenter$j'>Centro: </label>";
-						echo " 				<div class='col-sm-10'>";
-						echo "					<input class='form-control' type='text' name='eCCVeducCenter$j' value='" . getDBsinglefield('educCenter', 'userEducations', 'idEdu', $i) . "' >";
-						echo " 				</div>";
-						echo "			</div>";
-						echo "			<div class='form-group'>";
-						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVeducStart$j'>Inicio: </label>";
-						echo " 				<div class='col-sm-4'>";
-						echo "					<input class='form-control' type='date' name='eCCVeducStart$j' value='" . getDBsinglefield('educStart', 'userEducations', 'idEdu', $i) . "' >";
-						echo " 				</div>";
-						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVeducEnd$j'>Fin: </label>";
-						echo " 				<div class='col-sm-4'>";
-						echo "					<input class='form-control' type='date' name='eCCVeducEnd$j' value='" . getDBsinglefield('educEnd', 'userEducations', 'idEdu', $i) . "' >";
-						echo " 				</div>";
-						echo "			</div>";
-						echo "		</div>";
-						echo "	</div>";
+						?>
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<a class="btn btn-danger btn-xs pull-right glyphicon glyphicon-trash" href=<?php echo $_SERVER[SCRIPT_NAME] ?>?codvalue=<?php echo $editedCVRow[nie] ?>&hiddenGET=hDelEduc&hiddenID=<?php echo $i; ?> ></a>
+								<h3 class="panel-title">Educación # <?php echo ($j+1); ?></h3>
+							</div>
+							<div class="panel-body">
+								<div class="form-group">
+									<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducTittle<?php echo $j; ?>">Título</label>
+									<div class="col-sm-10">
+										<input class="form-control" type="text" name="eCCVeducTittle<?php echo $j; ?>" value="<?php echo getDBsinglefield(educTittle, userEducations, idEdu, $i); ?>">
+									</div>
+								</div>
+								<div class="form-group">
+									<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducCenter<?php echo $j; ?>">Centro: </label>
+									<div class="col-sm-10">
+										<input class="form-control" type="text" name="eCCVeducCenter<?php echo $j; ?>" value="<?php echo getDBsinglefield(educCenter, userEducations, idEdu, $i) ?>">
+									</div>
+								</div>
+								<div class="form-group">
+									<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducStart<?php echo $j; ?>">Inicio: </label>
+									<div class="col-sm-4">
+										<input class="form-control" type="date" name="eCCVeducStart<?php echo $j; ?>" value="<?php echo getDBsinglefield(educStart, userEducations, idEdu, $i); ?>">
+									</div>
+									<label id="editCVLabel" class="control-label col-sm-2" for="eCCVeducEnd<?php echo $j; ?>">Fin: </label>
+									<div class="col-sm-4">
+										<input class="form-control" type="date" name="eCCVeducEnd<?php echo $j; ?>" value="<?php echo getDBsinglefield(educEnd, userEducations, idEdu, $i); ?>">
+									</div>
+								</div>
+							</div>
+						</div>
+						<?php 
 						$j++;
 					}//Foreach
-					echo "<input type='hidden' name='eCCVcontEduc' value='$j' />";
+					?>
+					<input type="hidden" name="eCCVcontEduc" value="<?php echo $j; ?>" />
+					<?php 
 				}
 				?>
 			</div>
@@ -308,7 +309,6 @@ else {
 		</div>
 		
 		<div class="form-group" >  <!-- Experiencia -->
-			<!-- <label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperience">Últimos años: </label> -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperience">
 				Últimos años:
 				<br><a href=<?php echo $_SERVER[SCRIPT_NAME] ?>?codvalue=<?php echo $editedCVRow[nie] ?>&hiddenGET=hAddExp class="btn btn-info btn-xs">Añadir Experiencia</a>
@@ -322,54 +322,59 @@ else {
 				else{
 					$j = 0;
 					foreach($experIDs as $i){
-						echo "	<div class='panel panel-default'>";
-						echo "		<div class='panel-heading'>";
-						echo "			<h3 class='panel-title'>Experiencia #". ($j+1) ."</h3>";
-						echo "		</div>";
-						echo "		<div class='panel-body'>";
-						echo "			<div class='form-group'>";
-						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperCompany$j'>Compañía: </label>";
-						echo " 				<div class='col-sm-10'>";
-						echo "					<input class='form-control' type='text' name='eCCVexperCompany$j' value='" . getDBsinglefield('expCompany', 'userExperiences', 'idExp', $i) . "' >";
-						echo " 				</div>";
-						echo "			</div>";
-						echo "			<div class='form-group'>";
-						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperPos$j'>Posición: </label>";
-						echo " 				<div class='col-sm-10'>";
-						echo "					<input class='form-control' type='text' name='eCCVexperPos$j' value='" . getDBsinglefield('expPosition', 'userExperiences', 'idExp', $i) . "' >";
-						echo " 				</div>";
-						echo "			</div>";
-						echo "			<div class='form-group'>";
-						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperCity$j'>Ciudad: </label>";
-						echo " 				<div class='col-sm-4'>";
-						echo "					<input class='form-control' type='text' name='eCCVexperCity$j' value='" . getDBsinglefield('expCity', 'userExperiences', 'idExp', $i) . "' >";
-						echo " 				</div>";
-						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperCountry$j'>País: </label>";
-						echo " 				<div class='col-sm-4'>";
-						echo "					<input class='form-control' type='text' name='eCCVexperCountry$j' value='" . getDBsinglefield('expCountry', 'userExperiences', 'idExp', $i) . "' >";
-						echo " 				</div>";
-						echo "			</div>";
-						echo "			<div class='form-group'>";
-						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperStart$j'>Inicio: </label>";
-						echo " 				<div class='col-sm-4'>";
-						echo "					<input class='form-control' type='date' name='eCCVexperStart$j' value='" . getDBsinglefield('expStart', 'userExperiences', 'idExp', $i) . "' >";
-						echo " 				</div>";
-						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperEnd$j'>Fin: </label>";
-						echo " 				<div class='col-sm-4'>";
-						echo "					<input class='form-control' type='date' name='eCCVexperEnd$j' value='" . getDBsinglefield('expEnd', 'userExperiences', 'idExp', $i) . "' >";
-						echo " 				</div>";
-						echo "			</div>";
-						echo "			<div class='form-group'>";
-						echo "				<label id='editCVLabel' class='control-label col-sm-2' for='eCCVexperDesc$j'>Descripción: </label>";
-						echo " 				<div class='col-sm-10'>";
-						echo "					<input class='form-control' type='text' name='eCCVexperDesc$j' value='" . getDBsinglefield('expDescription', 'userExperiences', 'idExp', $i) . "' >";
-						echo " 				</div>";
-						echo "			</div>";
-						echo "		</div>";
-						echo "	</div>";
+						?>
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<a class="btn btn-danger btn-xs pull-right glyphicon glyphicon-trash" href=<?php echo $_SERVER[SCRIPT_NAME] ?>?codvalue=<?php echo $editedCVRow[nie] ?>&hiddenGET=hDelExp&hiddenID=<?php echo $i; ?> ></a>
+								<h3 class="panel-title">Experiencia # <?php echo ($j+1); ?></h3>
+							</div>
+							<div class="panel-body">
+								<div class="form-group">
+									<label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperCompany<?php echo $j; ?>">Compañía: </label>
+									<div class="col-sm-10">
+										<input class="form-control" type="text" name="eCCVexperCompany<?php echo $j; ?>" value="<?php echo getDBsinglefield(expCompany, userExperiences, idExp, $i); ?>">
+									</div>
+								</div>
+								<div class="form-group">
+									<label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperPos<?php echo $j; ?>">Posición: </label>
+									<div class="col-sm-10">
+										<input class="form-control" type="text" name="eCCVexperPos<?php echo $j; ?>" value="<?php echo getDBsinglefield(expPosition, userExperiences, idExp, $i); ?>">
+									</div>
+								</div>
+								<div class="form-group">
+									<label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperCity<?php echo $j; ?>">Ciudad: </label>
+									<div class="col-sm-4">
+										<input class="form-control" type="text" name="eCCVexperCity<?php echo $j; ?>" value="<?php echo getDBsinglefield(expCity, userExperiences, idExp, $i); ?>">
+									</div>
+									<label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperCountry<?php echo $j; ?>">País: </label>
+									<div class="col-sm-4">
+										<input class="form-control" type="text" name="eCCVexperCountry<?php echo $j; ?>" value="<?php echo getDBsinglefield(expCountry, userExperiences, idExp, $i); ?>">
+									</div>
+								</div>
+								<div class="form-group">
+									<label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperStart<?php echo $j; ?>">Inicio: </label>
+									<div class="col-sm-4">
+										<input class="form-control" type="date" name="eCCVexperStart<?php echo $j; ?>" value="<?php echo getDBsinglefield(expStart, userExperiences, idExp, $i); ?>">
+									</div>
+									<label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperEnd<?php echo $j; ?>">Fin: </label>
+									<div class="col-sm-4">
+										<input class="form-control" type="date" name="eCCVexperEnd<?php echo $j; ?>" value="<?php echo getDBsinglefield(expEnd, userExperiences, idExp, $i); ?>">
+									</div>
+								</div>
+								<div class="form-group">
+									<label id="editCVLabel" class="control-label col-sm-2" for="eCCVexperDesc<?php echo $j; ?>">Descripción: </label>
+									<div class="col-sm-10">
+										<input class="form-control" type="text" name="eCCVexperDesc<?php echo $j; ?>" value="<?php echo getDBsinglefield(expDescription, userExperiences, idExp, $i); ?>">
+									</div>
+								</div>
+							</div>
+						</div>
+						<?php 
 						$j++;
 					}//Foreach
-					echo "<input type='hidden' name='eCCVcontExp' value='$j' />";
+					?>
+					<input type="hidden" name="eCCVcontExp" value="<?php echo $j; ?>" />
+					<?php 
 				}
 				?>
 			</div>
@@ -397,24 +402,8 @@ else {
 				$userFilesArray  = scandir($userFilesDir);
 				foreach($userFilesArray as $value){
 					if(preg_match("/\w+/i", $value)){
-						//echo "<button type='button' class='btn btn-primary'<span class='glyphicon glyphicon-remove'></span></button>";
-						//echo "<button type='submit' class='btn btn-secondary' name='eCurCVsend'><span class='glyphicon glyphicon-remove'> </span></button>";
-						//echo "<button type='button' class='btn btn-secondary' name='eCurCVsend'><span class='glyphicon glyphicon-remove'> </span></button>";
-						// OK echo "<button type='button' class='btn btn-danger btn-xs' name='eCurCVsend'><span class='glyphicon glyphicon-remove'></span></button>&nbsp;";
-						/* ESTO MUESTRA BIEN BOTÓN Y ENLACE, AUNQUE EL BOTON NO TIENE FUNCIONALIDAD
-						echo "<button type='button' class='btn btn-danger btn-xs' id='delCVFile'><span class='glyphicon glyphicon-remove'></span></button>&nbsp;";
-						echo "<a href=/es/home/downloadFileSingle.php?doc=".$userFilesDir.$value.">$value</a><br>";
-						*/
-						//echo "<a class='btn btn-danger btn-xs' href='$_SERVER[SCRIPT_NAME]?codvalue=" . $value . "&hiddenGET=hDelCVFile' onclick='return confirmDelCVFile(\"" . getCurrentLanguage($_SERVER['SCRIPT_NAME']) . "\");'><span class='glyphicon glyphicon-remove'></span></a>&nbsp";
 						echo "<a class='btn btn-danger btn-xs' href='$_SERVER[SCRIPT_NAME]?codvalue=" . $editedCVRow[userLogin] . "&dFile=" . $value . "&hiddenGET=hDelCVFile' onclick='return confirmDelCVFile(\"" . getCurrentLanguage($_SERVER['SCRIPT_NAME']) . "\");'><span class='glyphicon glyphicon-remove'></span></a>&nbsp";
 						echo "<a href=/es/home/downloadFileSingle.php?doc=".$userFilesDir.$value.">$value</a><br>";
-						/*
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-						<button type="submit" class="btn btn-primary" name="eCurCVsend">Modificar CV previamente revisado <span class="glyphicon glyphicon-ok"> </span></button>
-						
-						echo "<td><a href='checkedCVs.php?codvalue=" . $cvRow['id'] . "&hiddenGET=hDelCheckedCV' onclick='return confirmCheckedCVDeletion(\"spanish\");'>Borrar</a></td>"
-						 */
-						//echo "<br>";
 					}
 				}
 				?>
@@ -442,7 +431,7 @@ else {
 			</div>
 		</div>
 		
-		<div class="form-group" >  <!-- Comentarios -->
+		<div class="form-group"> <!-- Comentarios -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcomments">Comentarios: </label>	
 			<div class="col-sm-10">
 				<textarea class="form-control" type='text' rows='5' name='eCCVcomments' value="<?php echo ($editedCVRow['comments']) ?>"><?php echo ($editedCVRow['comments']) ?></textarea>
@@ -452,15 +441,6 @@ else {
 		<div class="form-group" >  <!-- Estado del Candidato y Fecha de CV -->
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcandidateStatus">Estado del Candidato: * </label>	
 			<div class="col-sm-4">
-				<!--
-				<select class="form-control" name='eCCVcandidateStatus'>
-					<option value=''>-- Elegir --</option>
-					<option value='available'>Disponible</option>
-					<option value='working'>Colocado</option>
-					<option value='discarded'>Descartado</option>
-				</select>
-				-->
-			
 				<select class="form-control" name="eCCVcandidateStatus" >
 					<?php 
 					$userLang = getDBsinglefield('language', 'users', 'login', $_SESSION['loglogin']);
@@ -477,7 +457,6 @@ else {
 					}
 					?>
 				</select>
-
 			</div>
 
 			<label id="editCVLabel" class="control-label col-sm-2" for="eCCVcvDate">Fecha CV: </label>
